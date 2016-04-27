@@ -193,6 +193,9 @@ function zerif_scripts() {
 
     wp_enqueue_style('zerif_responsive_style', get_template_directory_uri() . '/css/responsive.css', array('zerif_style'), 'v1');
 
+    wp_enqueue_style('roteiro_style', get_template_directory_uri() . '/css/roteiro.css');
+    wp_enqueue_style('roteiro_responsivo_style', get_template_directory_uri() . '/css/roteiro-responsivo.css');
+
     if ( wp_is_mobile() ){
         
         wp_enqueue_style( 'zerif_style_mobile', get_template_directory_uri() . '/css/style-mobile.css', array('zerif_bootstrap_style', 'zerif_style'),'v1' );
@@ -220,6 +223,8 @@ function zerif_scripts() {
 
     /* zerif script */
     wp_enqueue_script('zerif_script', get_template_directory_uri() . '/js/zerif.js', array("jquery", "zerif_knob_nav"), '20120206', true);
+    wp_enqueue_script('roteiro_script', get_template_directory_uri() . '/js/roteiro.js', true);
+    wp_enqueue_script('rougeanus', get_template_directory_uri() . '/js/rougeanus.js', true);
 
     if (is_singular() && comments_open() && get_option('thread_comments')) {
 
@@ -1174,3 +1179,6 @@ function zerif_lite_update_options_in_pirate_forms() {
 }
 
 show_admin_bar( false );
+
+include_once get_template_directory().'/metaboxes/setup.php';
+include_once get_template_directory().'/metaboxes/loco-spec.php';

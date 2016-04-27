@@ -1,0 +1,66 @@
+/********************* Custom Sizes *********************/
+
+	@media only screen and (max-width : 1200px) {
+		.vencedora-premio-img {
+		    width: 30%;
+		}
+		.vencedora-premio-meta {
+		    max-width: 56%;
+		    margin-left: 0px;
+		}
+		.vencedora-premio {
+			width: 95%;
+		}
+		.vencedora-premio-container {
+			padding-left: 8px;
+		}
+	}
+
+/********************* Tablet *********************/
+@media only screen and (min-width: 768px) and (max-width: 1024px)  {
+	.vencedora-content-meta {
+		width: 64%;
+	}
+	.container-casos {
+		padding: 0;
+		border: none;
+		padding-right: 15px;
+	}
+	.casos-item {
+		height: auto;
+	}
+	.thumb-casos a, .thumb-casos img {
+		width: 100%;
+	}
+}
+
+/********************* Tablet portrait *********************/
+@media only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait) {
+}
+
+
+/********************* Mobile *********************/
+@media only screen and (max-width: 767px)  {
+	.container-casos {
+		padding: 0;
+		border: none;
+	}
+	.casos-item {
+		height: auto;
+		padding: 0;
+	}
+	.vencedoras-header {
+		padding: 0
+	}
+	.container-vencedoras {
+		margin: 0;
+	}
+	.vencedora-content-meta {
+		width: auto;
+		max-width: 62%;
+		text-align: left;
+	}
+	.vencedoras-content {
+		text-align: center;
+	}
+}
