@@ -82,6 +82,8 @@ class FrmStyle {
 					$new_instance['post_content'][ $setting ] = str_replace( '#', '', $new_instance['post_content'][ $setting ] );
 				} else if ( in_array( $setting, array( 'submit_style', 'important_style', 'auto_width' ) ) && ! isset( $new_instance['post_content'][ $setting ] ) ) {
 					$new_instance['post_content'][ $setting ] = 0;
+                } else if ( $setting == 'font' ) {
+                	$new_instance['post_content'][ $setting ] = $this->force_balanced_quotation( $new_instance['post_content'][ $setting ] );
                 }
             }
 
@@ -100,7 +102,8 @@ class FrmStyle {
      * Create static css file
      */
 	public function save_settings( $styles ) {
-        $filename = FrmAppHelper::plugin_path() .'/css/custom_theme.css.php';
+		$filename = FrmAppHelper::plugin_path() . '/css/custom_theme.css.php';
+		update_option( 'frm_last_style_update', date('njGi') );
 
         if ( ! is_file($filename) ) {
             return;
@@ -108,12 +111,12 @@ class FrmStyle {
 
         $defaults = $this->get_defaults();
         $uploads = wp_upload_dir();
-        $target_path = $uploads['basedir'] .'/formidable';
-        $needed_dirs = array( $target_path, $target_path .'/css' );
+		$target_path = $uploads['basedir'] . '/formidable';
+		$needed_dirs = array( $target_path, $target_path . '/css' );
         $dirs_exist = true;
 
         $saving = true;
-        $css = '/* '. __( 'WARNING: Any changes made to this file will be lost when your Formidable settings are updated', 'formidable' ) .' */'. "\n";
+		$css = '/* ' . __( 'WARNING: Any changes made to this file will be lost when your Formidable settings are updated', 'formidable' ) . ' */' . "\n";
 
         ob_start();
         $frm_style = $this;
@@ -123,7 +126,7 @@ class FrmStyle {
 
         $access_type = get_filesystem_method();
         if ( $access_type === 'direct' ) {
-        	$creds = request_filesystem_credentials( site_url() .'/wp-admin/', '', false, false, array() );
+			$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, array() );
 		} else {
 			$creds = $this->get_ftp_creds( $access_type );
 		}
@@ -149,12 +152,12 @@ class FrmStyle {
                     }
             	}
 
-                $index_path = $target_path .'/index.php';
+				$index_path = $target_path . '/index.php';
                 $wp_filesystem->put_contents( $index_path, "<?php\n// Silence is golden.\n?>", $chmod_file );
 
                 // only write the file if the folders exist
                 if ( $dirs_exist ) {
-                    $css_file = $target_path .'/css/formidablepro.css';
+					$css_file = $target_path . '/css/formidablepro.css';
                     $wp_filesystem->put_contents( $css_file, $css, $chmod_file );
                 }
             }
@@ -262,7 +265,7 @@ class FrmStyle {
         if ( empty($temp_styles) ) {
             global $wpdb;
             // make sure there wasn't a conflict with the query
-            $query = $wpdb->prepare('SELECT * FROM '. $wpdb->posts .' WHERE post_type=%s AND post_status=%s ORDER BY post_title ASC LIMIT 99', FrmStylesController::$post_type, 'publish');
+			$query = $wpdb->prepare( 'SELECT * FROM ' . $wpdb->posts . ' WHERE post_type=%s AND post_status=%s ORDER BY post_title ASC LIMIT 99', FrmStylesController::$post_type, 'publish' );
             $temp_styles = FrmAppHelper::check_cache('frm_backup_style_check', 'frm_styles', $query, 'get_results');
 
             if ( empty($temp_styles) ) {
@@ -371,8 +374,12 @@ class FrmStyle {
 
             'title_size'        => '20px',
             'title_color'       => '444444',
+			'title_margin_top'  => '10px',
+			'title_margin_bottom' => '10px',
             'form_desc_size'    => '14px',
             'form_desc_color'   => '666666',
+			'form_desc_margin_top' => '10px',
+			'form_desc_margin_bottom' => '25px',
 
             'font'              => '"Lucida Grande","Lucida Sans Unicode",Tahoma,sans-serif',
             'font_size'         => '14px',
@@ -398,6 +405,7 @@ class FrmStyle {
             'auto_width'        => false,
             'field_pad'         => '6px 10px',
             'field_margin'      => '20px',
+			'field_weight' => 'normal',
             'text_color'        => '555555',
             //'border_color_hv'   => 'cccccc',
             'border_color'      => 'cccccc',
@@ -406,8 +414,10 @@ class FrmStyle {
 
             'bg_color'          => 'ffffff',
             //'bg_color_hv'       => 'ffffff',
+			'remove_box_shadow' => '',
             'bg_color_active'   => 'ffffff',
 			'border_color_active' => '66afe9',
+			'remove_box_shadow_active' => '',
             'text_color_error'  => '444444',
             'bg_color_error'    => 'ffffff',
 			'border_color_error' => 'B94A48',
@@ -477,7 +487,7 @@ class FrmStyle {
     }
 
 	public function get_field_name( $field_name, $post_field = 'post_content' ) {
-		return 'frm_style_setting'. ( empty($post_field) ? '' : '['. $post_field .']' ) .'[' . $field_name . ']';
+		return 'frm_style_setting' . ( empty( $post_field ) ? '' : '[' . $post_field . ']' ) . '[' . $field_name . ']';
 	}
 
 	public static function get_bold_options() {
@@ -488,5 +498,21 @@ class FrmStyle {
 			'bold' => __( 'bold', 'formidable' ),
 			800 => 800, 900 => 900,
 		);
+	}
+
+
+	/**
+	 * Don't let imbalanced font families ruin the whole stylesheet
+	 */
+	public function force_balanced_quotation( $value ) {
+		$balanced_characters = array( '"', "'" );
+		foreach ( $balanced_characters as $char ) {
+			$char_count = substr_count( $value, $char );
+			$is_balanced = $char_count % 2 == 0;
+			if ( ! $is_balanced ) {
+				$value .= $char;
+			}
+		}
+		return $value;
 	}
 }

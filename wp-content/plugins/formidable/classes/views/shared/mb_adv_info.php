@@ -1,7 +1,9 @@
 <div id="taxonomy-linkcategory" class="categorydiv <?php echo $class ?>">
 	<ul id="category-tabs" class="category-tabs frm-category-tabs">
 		<li class="tabs" ><a href="#frm-insert-fields-box" id="frm_insert_fields_tab"><?php _e( 'Insert Fields', 'formidable' ); ?></a></li>
+		<?php if ( ! empty( $cond_shortcodes ) ) { ?>
 		<li class="hide-if-no-js"><a href="#frm-conditionals"><?php _e( 'Conditionals', 'formidable' ); ?></a></li>
+		<?php } ?>
 		<li class="hide-if-no-js"><a href="#frm-adv-info-tab"><?php _e( 'Advanced', 'formidable' ); ?></a></li>
 		<?php if ( $settings_tab ) { ?>
 		<li id="frm_html_tab" class="hide-if-no-js frm_hidden"><a href="#frm-html-tags" id="frm_html_tags_tab" ><?php _e( 'HTML Tags', 'formidable' ); ?></a></li>
@@ -41,7 +43,7 @@
 				if ( $f->type == 'data' ) {
 					//get all fields from linked form
                     if ( isset($f->field_options['form_select']) && is_numeric($f->field_options['form_select']) ) {
-                        $linked_form = FrmDb::get_var( $wpdb->prefix .'frm_fields', array( 'id' => $f->field_options['form_select'] ), 'form_id' );
+						$linked_form = FrmDb::get_var( $wpdb->prefix . 'frm_fields', array( 'id' => $f->field_options['form_select'] ), 'form_id' );
                         if ( ! in_array( $linked_form, $linked_forms ) ) {
                             $linked_forms[] = $linked_form;
 							$linked_fields = FrmField::getAll( array( 'fi.type not' => FrmField::no_save_fields(), 'fi.form_id' => $linked_form ) );
@@ -88,8 +90,8 @@
         </ul>
 	</div>
 
-	<div id="frm-conditionals" class="tabs-panel">
 	<?php if ( ! empty( $cond_shortcodes ) ) { ?>
+	<div id="frm-conditionals" class="tabs-panel">
 	    <ul class="subsubsub">
 	        <li><a href="javascript:void(0)" class="current frmids"><?php _e( 'IDs', 'formidable' ) ?></a> |</li>
 	        <li><a href="javascript:void(0)" class="frmkeys"><?php _e( 'Keys', 'formidable' ) ?></a></li>
@@ -126,7 +128,7 @@
 		foreach ( $cond_shortcodes as $skey => $sname ) {
 	    ?>
 	    <li class="frm_col_<?php echo esc_attr( $col ) ?>">
-	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="if 125 <?php echo esc_attr($skey) ?>][/if 125"><?php echo esc_html( $sname ) ?></a>
+	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="if x <?php echo esc_attr($skey) ?>][/if x"><?php echo esc_html( $sname ) ?></a>
 	    </li>
 	    <?php
 	        $col = ( $col == 'one' ) ? 'two' : 'one';
@@ -134,10 +136,8 @@
 	    }
         ?>
         </ul>
-    <?php } else {
-            FrmAppHelper::update_message('use inline conditional logic');
-          } ?>
 	</div>
+	<?php } ?>
 
 	<div id="frm-adv-info-tab" class="tabs-panel">
 		<ul class="frm_code_list">
@@ -146,7 +146,9 @@
 		foreach ( $adv_shortcodes as $skey => $sname ) {
 	    ?>
 	    <li class="frm_col_<?php echo esc_attr( $col ) ?>">
-	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code <?php echo is_array( $sname ) ? 'frm_help' : ''; ?>" data-code="125 <?php echo esc_attr( $skey ) ?>" <?php echo is_array( $sname ) ? 'title="'. esc_attr( $sname['title'] ) .'"' : ''; ?>><?php echo is_array( $sname ) ? $sname['label'] : $sname; ?></a>
+			<a href="javascript:void(0)" class="frmbutton button frm_insert_code <?php echo is_array( $sname ) ? 'frm_help' : ''; ?>" data-code="x <?php echo esc_attr( $skey ) ?>" <?php echo is_array( $sname ) ? 'title="' . esc_attr( $sname['title'] ) . '"' : ''; ?>>
+				<?php echo is_array( $sname ) ? $sname['label'] : $sname; ?>
+			</a>
 	    </li>
 	    <?php
 	        $col = ($col == 'one') ? 'two' : 'one';
@@ -155,20 +157,19 @@
         ?>
         <?php if ( isset($file) ) { ?>
         <li class="frm_col_<?php echo esc_attr( $col ) ?>">
-	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="<?php echo esc_attr($file->id) ?> size=thumbnail html=1"><?php _e( 'Image Size', 'formidable' ) ?></a>
+	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="<?php echo esc_attr($file->id) ?> show_image=1"><?php _e( 'Show image', 'formidable' ) ?></a>
 	    </li>
 	    <li class="frm_col_<?php echo $col = (($col == 'one') ? 'two' : 'one') ?>">
 	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="<?php echo esc_attr($file->id) ?> show=id"><?php _e( 'Image ID', 'formidable' ) ?></a>
 	    </li>
 	    <li class="frm_col_<?php echo $col = (($col == 'one') ? 'two' : 'one') ?>">
-	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="<?php echo esc_attr($file->id) ?> show=label"><?php _e( 'Image Name', 'formidable' ) ?></a>
+	        <a href="javascript:void(0)" class="frmbutton button frm_insert_code" data-code="<?php echo esc_attr($file->id) ?> show_filename=1"><?php _e( 'Image Name', 'formidable' ) ?></a>
 	    </li>
 	    <?php } ?>
         </ul>
 
         <div class="clear"></div>
         <?php
-        //FrmAppHelper::update_message('all of the advanced shortcode options');
 
         if ( isset($uid) && ! empty($user_fields) ) {
             $col = 'one'; ?>
@@ -217,7 +218,7 @@
 
     <?php
     if ( $settings_tab ) {
-        include(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/mb_html_tab.php');
+		include( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/mb_html_tab.php' );
     }
     ?>
 </div>

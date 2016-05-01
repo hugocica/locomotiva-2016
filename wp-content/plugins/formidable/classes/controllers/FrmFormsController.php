@@ -3,13 +3,26 @@
 class FrmFormsController {
 
     public static function menu() {
-        add_submenu_page('formidable', 'Formidable | '. __( 'Forms', 'formidable' ), __( 'Forms', 'formidable' ), 'frm_view_forms', 'formidable', 'FrmFormsController::route' );
+		$menu_label = __( 'Forms', 'formidable' );
+		if ( ! FrmAppHelper::pro_is_installed() ) {
+			$menu_label .= ' (Lite)';
+		}
+		add_submenu_page('formidable', 'Formidable | ' . $menu_label, $menu_label, 'frm_view_forms', 'formidable', 'FrmFormsController::route' );
 
-	    add_filter('get_user_option_managetoplevel_page_formidablecolumnshidden', 'FrmFormsController::hidden_columns' );
-
-	    add_filter('manage_toplevel_page_formidable_columns', 'FrmFormsController::get_columns', 0 );
-		add_filter('manage_toplevel_page_formidable_sortable_columns', 'FrmFormsController::get_sortable_columns' );
+		self::maybe_load_listing_hooks();
     }
+
+	public static function maybe_load_listing_hooks() {
+		$action = FrmAppHelper::simple_get( 'frm_action', 'sanitize_title' );
+		if ( ! empty( $action ) && ! in_array( $action, array( 'list', 'trash', 'untrash' ) ) ) {
+			return;
+		}
+
+		add_filter('get_user_option_managetoplevel_page_formidablecolumnshidden', 'FrmFormsController::hidden_columns' );
+
+		add_filter('manage_toplevel_page_formidable_columns', 'FrmFormsController::get_columns', 0 );
+		add_filter('manage_toplevel_page_formidable_sortable_columns', 'FrmFormsController::get_sortable_columns' );
+	}
 
     public static function head() {
         wp_enqueue_script('formidable-editinplace');
@@ -57,7 +70,7 @@ class FrmFormsController {
 			$all_templates = FrmForm::getAll( array( 'is_template' => 1 ), 'name' );
 
             $values['id'] = $id;
-            require(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/new.php');
+			require( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/new.php' );
         }
     }
 
@@ -92,10 +105,11 @@ class FrmFormsController {
             $values = FrmAppHelper::setup_edit_vars($form, 'forms', $fields, true);
 			$all_templates = FrmForm::getAll( array( 'is_template' => 1 ), 'name' );
 
-            require(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/new.php');
+			require( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/new.php' );
         } else {
             FrmForm::update( $id, $values, true );
-            die(FrmAppHelper::js_redirect(admin_url('admin.php?page=formidable&frm_action=settings&id='. $id)));
+			$url = admin_url( 'admin.php?page=formidable&frm_action=settings&id=' . $id );
+			die( FrmAppHelper::js_redirect( $url ) );
         }
     }
 
@@ -133,33 +147,31 @@ class FrmFormsController {
 		return self::get_settings_vars( $id, array(), $message );
     }
 
-    public static function edit_key() {
-        check_ajax_referer( 'frm_ajax', 'nonce' );
-        FrmAppHelper::permission_check('frm_edit_forms', 'hide');
+	public static function edit_key() {
+		$values = self::edit_in_place_value( 'form_key' );
+		echo wp_kses( stripslashes( FrmForm::getKeyById( $values['form_id'] ) ), array() );
+		wp_die();
+	}
 
-		$form_key = FrmAppHelper::get_post_param( 'update_value', '', 'sanitize_title' );
-		$values = array( 'form_key' => trim( $form_key ) );
+	public static function edit_description() {
+		$values = self::edit_in_place_value( 'description' );
+		echo wp_kses_post( FrmAppHelper::use_wpautop( stripslashes( $values['description'] ) ) );
+		wp_die();
+	}
 
-		$form_id = FrmAppHelper::get_post_param( 'form_id', '', 'absint' );
-		FrmForm::update( $form_id, $values );
-		$key = FrmForm::getKeyById( $form_id );
-		echo stripslashes( $key );
-        wp_die();
-    }
-
-    public static function edit_description() {
-        check_ajax_referer( 'frm_ajax', 'nonce' );
-        FrmAppHelper::permission_check('frm_edit_forms', 'hide');
+	private static function edit_in_place_value( $field ) {
+		check_ajax_referer( 'frm_ajax', 'nonce' );
+		FrmAppHelper::permission_check('frm_edit_forms', 'hide');
 
 		$form_id = FrmAppHelper::get_post_param( 'form_id', '', 'absint' );
 		$value = FrmAppHelper::get_post_param( 'update_value', '', 'wp_filter_post_kses' );
 
-		FrmForm::update( $form_id, array( 'description' => $value ) );
+		$values = array( $field => trim( $value ) );
+		FrmForm::update( $form_id, $values );
+		$values['form_id'] = $form_id;
 
-		$description = FrmAppHelper::use_wpautop( stripslashes( $value ) );
-        echo $description;
-        wp_die();
-    }
+		return $values;
+	}
 
 	public static function update( $values = array() ) {
 		if ( empty( $values ) ) {
@@ -207,6 +219,7 @@ class FrmFormsController {
 	 * @since 2.0
 	 */
 	public static function _create_from_template() {
+		FrmAppHelper::permission_check('frm_edit_forms');
 		check_ajax_referer( 'frm_ajax', 'nonce' );
 
 		$current_form = FrmAppHelper::get_param( 'this_form', '', 'get', 'absint' );
@@ -255,14 +268,14 @@ class FrmFormsController {
         if ( ! defined( 'ABSPATH' ) && ! defined( 'XMLRPC_REQUEST' ) ) {
             global $wp;
             $root = dirname( dirname( dirname( dirname( __FILE__ ) ) ) );
-            include_once( $root.'/wp-config.php' );
+			include_once( $root . '/wp-config.php' );
             $wp->init();
             $wp->register_globals();
         }
 
 		self::register_pro_scripts();
 
-		header( 'Content-Type: text/html; charset='. get_option( 'blog_charset' ) );
+		header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
 
 		$key = FrmAppHelper::simple_get( 'form', 'sanitize_title' );
 		if ( $key == '' ) {
@@ -274,7 +287,7 @@ class FrmFormsController {
 			$form = FrmForm::getAll( array(), '', 1 );
         }
 
-        require(FrmAppHelper::plugin_path() .'/classes/views/frm-entries/direct.php');
+		require( FrmAppHelper::plugin_path() . '/classes/views/frm-entries/direct.php' );
         wp_die();
     }
 
@@ -282,7 +295,7 @@ class FrmFormsController {
 		if ( FrmAppHelper::pro_is_installed() ) {
 			wp_register_script( 'jquery-frm-rating', FrmAppHelper::plugin_url() . '/pro/js/jquery.rating.min.js', array( 'jquery' ), '4.11', true );
 			wp_register_script( 'jquery-maskedinput', FrmAppHelper::plugin_url() . '/pro/js/jquery.maskedinput.min.js', array( 'jquery' ), '1.4', true );
-			wp_register_script( 'jquery-chosen', FrmAppHelper::plugin_url() .'/pro/js/chosen.jquery.min.js', array( 'jquery' ), '1.2.0', true );
+			wp_register_script( 'jquery-chosen', FrmAppHelper::plugin_url() . '/pro/js/chosen.jquery.min.js', array( 'jquery' ), '1.5.1', true );
 		}
 	}
 
@@ -323,7 +336,7 @@ class FrmFormsController {
 		$params = FrmForm::list_page_params();
 
 		//check nonce url
-		check_admin_referer($status .'_form_' . $params['id']);
+		check_admin_referer( $status . '_form_' . $params['id'] );
 
 		$count = 0;
 		if ( FrmForm::set_status( $params['id'], $available_status[ $status ]['new_status'] ) ) {
@@ -331,7 +344,7 @@ class FrmFormsController {
 		}
 
 		$available_status['untrash']['message'] = sprintf(_n( '%1$s form restored from the Trash.', '%1$s forms restored from the Trash.', $count, 'formidable' ), $count );
-		$available_status['trash']['message'] = sprintf( _n( '%1$s form moved to the Trash. %2$sUndo%3$s', '%1$s forms moved to the Trash. %2$sUndo%3$s', $count, 'formidable' ), $count, '<a href="' . esc_url( wp_nonce_url( '?page=formidable&frm_action=untrash&form_type='. ( isset( $_REQUEST['form_type'] ) ? sanitize_title( $_REQUEST['form_type'] ) : '' ) . '&id=' . $params['id'], 'untrash_form_' . $params['id'] ) ) . '">', '</a>' );
+		$available_status['trash']['message'] = sprintf( _n( '%1$s form moved to the Trash. %2$sUndo%3$s', '%1$s forms moved to the Trash. %2$sUndo%3$s', $count, 'formidable' ), $count, '<a href="' . esc_url( wp_nonce_url( '?page=formidable&frm_action=untrash&form_type=' . ( isset( $_REQUEST['form_type'] ) ? sanitize_title( $_REQUEST['form_type'] ) : '' ) . '&id=' . $params['id'], 'untrash_form_' . $params['id'] ) ) . '">', '</a>' );
 
 		$message = $available_status[ $status ]['message'];
 
@@ -349,7 +362,7 @@ class FrmFormsController {
         }
 
         $current_page = isset( $_REQUEST['form_type'] ) ? $_REQUEST['form_type'] : '';
-        $message = sprintf(_n( '%1$s form moved to the Trash. %2$sUndo%3$s', '%1$s forms moved to the Trash. %2$sUndo%3$s', $count, 'formidable' ), $count, '<a href="'. esc_url(wp_nonce_url( '?page=formidable&frm_action=list&action=bulk_untrash&form_type='. $current_page .'&item-action[]='. implode('item-action[]=', $ids), 'bulk-toplevel_page_formidable' )) .'">', '</a>' );
+		$message = sprintf( _n( '%1$s form moved to the Trash. %2$sUndo%3$s', '%1$s forms moved to the Trash. %2$sUndo%3$s', $count, 'formidable' ), $count, '<a href="' . esc_url( wp_nonce_url( '?page=formidable&frm_action=list&action=bulk_untrash&form_type=' . $current_page . '&item-action[]=' . implode( 'item-action[]=', $ids ), 'bulk-toplevel_page_formidable' ) ) . '">', '</a>' );
 
         return $message;
     }
@@ -415,7 +428,10 @@ class FrmFormsController {
 	*/
 	public static function insert_form_button() {
 		if ( current_user_can('frm_view_forms') ) {
-			$content = '<a href="#TB_inline?width=50&height=50&inlineId=frm_insert_form" class="thickbox button add_media frm_insert_form" title="' . esc_attr__( 'Add forms and content', 'formidable' ) . '"><span class="frm-buttons-icon wp-media-buttons-icon"></span> Formidable</a>';
+			$menu_name = FrmAppHelper::get_menu_name();
+			$content = '<a href="#TB_inline?width=50&height=50&inlineId=frm_insert_form" class="thickbox button add_media frm_insert_form" title="' . esc_attr__( 'Add forms and content', 'formidable' ) . '">
+				<span class="frm-buttons-icon wp-media-buttons-icon"></span> ' .
+				$menu_name . '</a>';
 			echo wp_kses_post( $content );
 		}
 	}
@@ -434,10 +450,11 @@ class FrmFormsController {
 
         $shortcodes = apply_filters('frm_popup_shortcodes', $shortcodes);
 
-        include(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/insert_form_popup.php');
+		include( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/insert_form_popup.php' );
     }
 
     public static function get_shortcode_opts() {
+		FrmAppHelper::permission_check('frm_view_forms');
         check_ajax_referer( 'frm_ajax', 'nonce' );
 
 		$shortcode = FrmAppHelper::get_post_param( 'shortcode', '', 'sanitize_text_field' );
@@ -445,8 +462,8 @@ class FrmFormsController {
             wp_die();
         }
 
-        echo '<div id="sc-opts-'. esc_attr( $shortcode ) .'" class="frm_shortcode_option">';
-        echo '<input type="radio" name="frmsc" value="'. esc_attr($shortcode) .'" id="sc-'. esc_attr($shortcode) .'" class="frm_hidden" />';
+		echo '<div id="sc-opts-' . esc_attr( $shortcode ) . '" class="frm_shortcode_option">';
+		echo '<input type="radio" name="frmsc" value="' . esc_attr( $shortcode ) . '" id="sc-' . esc_attr( $shortcode ) . '" class="frm_hidden" />';
 
         $form_id = '';
         $opts = array();
@@ -469,7 +486,7 @@ class FrmFormsController {
 			unset( $opts['form_id'] );
 		}
 
-        include(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/shortcode_opts.php');
+		include( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/shortcode_opts.php' );
 
         echo '</div>';
 
@@ -501,7 +518,7 @@ class FrmFormsController {
             die();
         }
 
-        require(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/list.php');
+		require( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/list.php' );
     }
 
 	public static function get_columns( $columns ) {
@@ -578,7 +595,7 @@ class FrmFormsController {
         }
 
         if ( $form->parent_form_id ) {
-            wp_die( sprintf(__( 'You are trying to edit a child form. Please edit from %1$shere%2$s', 'formidable' ), '<a href="'. esc_url(admin_url('admin.php') .'?page=formidable&frm_action=edit&id='. $form->parent_form_id) .'">', '</a>' ));
+			wp_die( sprintf( __( 'You are trying to edit a child form. Please edit from %1$shere%2$s', 'formidable' ), '<a href="' . esc_url( admin_url( 'admin.php?page=formidable&frm_action=edit&id=' . $form->parent_form_id ) ) . '">', '</a>' ));
         }
 
 		$frm_field_selection = FrmField::field_selection();
@@ -608,9 +625,9 @@ class FrmFormsController {
         } else if ( defined('DOING_AJAX') ) {
             wp_die();
         } else if ( $create_link ) {
-            require(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/new.php');
+			require( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/new.php' );
         } else {
-            require(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/edit.php');
+			require( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/edit.php' );
         }
     }
 
@@ -635,7 +652,7 @@ class FrmFormsController {
 
         $styles = apply_filters('frm_get_style_opts', array());
 
-        require(FrmAppHelper::plugin_path() .'/classes/views/frm-forms/settings.php');
+		require( FrmAppHelper::plugin_path() . '/classes/views/frm-forms/settings.php' );
     }
 
     public static function mb_tags_box( $form_id, $class = '' ) {
@@ -726,6 +743,7 @@ class FrmFormsController {
     }
 
     public static function get_email_html() {
+		FrmAppHelper::permission_check('frm_view_forms');
         check_ajax_referer( 'frm_ajax', 'nonce' );
 		echo FrmEntryFormat::show_entry( array(
 			'form_id'       => FrmAppHelper::get_post_param( 'form_id', '', 'absint' ),
@@ -823,10 +841,10 @@ class FrmFormsController {
         _deprecated_function( __FUNCTION__, '1.07.05', 'FrmXMLController::add_default_templates()' );
 
         $path = untrailingslashit(trim($path));
-        $templates = glob( $path .'/*.php' );
+		$templates = glob( $path . '/*.php' );
 
 		for ( $i = count( $templates ) - 1; $i >= 0; $i-- ) {
-            $filename = str_replace( '.php', '', str_replace( $path.'/', '', $templates[ $i ] ) );
+			$filename = str_replace( '.php', '', str_replace( $path . '/', '', $templates[ $i ] ) );
 			$template_query = array( 'form_key' => $filename );
             if ( $template ) {
                 $template_query['is_template'] = 1;
@@ -910,8 +928,8 @@ class FrmFormsController {
             case 'update_settings':
 				return self::$action( $vars );
             default:
-                do_action('frm_form_action_'. $action);
-                if ( apply_filters('frm_form_stop_action_'. $action, false) ) {
+				do_action( 'frm_form_action_' . $action );
+				if ( apply_filters( 'frm_form_stop_action_' . $action, false ) ) {
                     return;
                 }
 
@@ -970,14 +988,14 @@ class FrmFormsController {
         if ( count($actions) == 1 ) {
             $wp_admin_bar->add_menu( array(
                 'title' => 'Edit Form',
-                'href'  => admin_url('admin.php?page=formidable&frm_action=edit&id='. current( array_keys( $actions ) )),
+				'href'  => admin_url( 'admin.php?page=formidable&frm_action=edit&id=' . current( array_keys( $actions ) ) ),
                 'id'    => 'frm-forms',
             ) );
         } else {
             $wp_admin_bar->add_menu( array(
         		'id'    => 'frm-forms',
         		'title' => '<span class="ab-icon"></span><span class="ab-label">' . __( 'Edit Forms', 'formidable' ) . '</span>',
-        		'href'  => admin_url( 'admin.php?page=formidable&frm_action=edit&id='. current( array_keys( $actions ) ) ),
+				'href'  => admin_url( 'admin.php?page=formidable&frm_action=edit&id=' . current( array_keys( $actions ) ) ),
         		'meta'  => array(
 					'title' => __( 'Edit Forms', 'formidable' ),
         		),
@@ -987,7 +1005,7 @@ class FrmFormsController {
 
         		$wp_admin_bar->add_menu( array(
         			'parent'    => 'frm-forms',
-        			'id'        => 'edit_form_'. $form_id,
+					'id'        => 'edit_form_' . $form_id,
         			'title'     => empty($name) ? __( '(no title)') : $name,
 					'href'      => admin_url( 'admin.php?page=formidable&frm_action=edit&id=' . $form_id ),
         		) );
@@ -1005,7 +1023,7 @@ class FrmFormsController {
 					$sc .= ' ' . $k . '="' . esc_attr( $v ) . '"';
 				}
 			}
-            return $sc .']';
+			return $sc . ']';
         }
 
         $shortcode_atts = shortcode_atts( array(
@@ -1118,14 +1136,14 @@ class FrmFormsController {
             do_action('frm_display_form_action', $params, $fields, $form, $title, $description);
             if ( apply_filters('frm_continue_to_new', true, $form->id, $params['action']) ) {
                 $values = FrmEntriesHelper::setup_new_vars($fields, $form);
-                include(FrmAppHelper::plugin_path() .'/classes/views/frm-entries/new.php');
+				include( FrmAppHelper::plugin_path() . '/classes/views/frm-entries/new.php' );
             }
             return;
         }
 
         if ( ! empty($errors) ) {
             $values = $fields ? FrmEntriesHelper::setup_new_vars($fields, $form) : array();
-            include(FrmAppHelper::plugin_path() .'/classes/views/frm-entries/new.php');
+			include( FrmAppHelper::plugin_path() . '/classes/views/frm-entries/new.php' );
             return;
         }
 
@@ -1159,13 +1177,13 @@ class FrmFormsController {
         $message = apply_filters('frm_main_feedback', $message, $form, $created);
 
         if ( ! isset($form->options['show_form']) || $form->options['show_form'] ) {
-            require(FrmAppHelper::plugin_path() .'/classes/views/frm-entries/new.php');
+			require( FrmAppHelper::plugin_path() . '/classes/views/frm-entries/new.php' );
         } else {
             global $frm_vars;
 			self::maybe_load_css( $form, $values['custom_style'], $frm_vars['load_css'] );
 
-            $include_extra_container = 'frm_forms'. FrmFormsHelper::get_form_style_class($values);
-            include(FrmAppHelper::plugin_path() .'/classes/views/frm-entries/errors.php');
+			$include_extra_container = 'frm_forms' . FrmFormsHelper::get_form_style_class( $values );
+			include( FrmAppHelper::plugin_path() . '/classes/views/frm-entries/errors.php' );
         }
 
 		do_action( 'frm_after_entry_processed', array( 'entry_id' => $created, 'form' => $form ) );
@@ -1176,6 +1194,7 @@ class FrmFormsController {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_register_script( 'formidable', FrmAppHelper::plugin_url() . "/js/formidable{$suffix}.js", array( 'jquery' ), $version, true );
 		wp_register_script( 'jquery-placeholder', FrmAppHelper::plugin_url() . '/js/jquery/jquery.placeholder.js', array( 'jquery' ), '2.0.7', true );
+		add_filter( 'script_loader_tag', 'FrmFormsController::defer_script_loading', 10, 2 );
 
 		if ( FrmAppHelper::is_admin() ) {
 			// don't load this in back-end
@@ -1194,6 +1213,13 @@ class FrmFormsController {
 			self::footer_js( 'header' );
 			$frm_vars['css_loaded'] = true;
 		}
+	}
+
+	public static function defer_script_loading( $tag, $handle ) {
+	    if ( 'recaptcha-api' == $handle && ! strpos( $tag, 'defer' ) ) {
+	        $tag = str_replace( ' src', ' defer="defer" async="async" src', $tag );
+		}
+	    return $tag;
 	}
 
 	public static function footer_js( $location = 'footer' ) {

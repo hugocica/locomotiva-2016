@@ -45,31 +45,10 @@
 
 <div class="field-group clearfix frm-half">
 	<label><?php _e( 'Direction', 'formidable' ) ?></label>
-	<select name="<?php echo esc_attr( $frm_style->get_field_name('direction') ) ?>" id="frm_form_align">
+	<select name="<?php echo esc_attr( $frm_style->get_field_name('direction') ) ?>" id="frm_direction">
 		<option value="ltr" <?php selected($style->post_content['direction'], 'ltr') ?>><?php _e( 'Left to Right', 'formidable' ) ?></option>
 		<option value="rtl" <?php selected($style->post_content['direction'], 'rtl') ?>><?php _e( 'Right to Left', 'formidable' ) ?></option>
 	</select>
-</div>
-
-<div class="clear"></div>
-<div class="field-group clearfix frm-half">
-	<label><?php _e( 'Title Size', 'formidable' ) ?></label>
-	<input type="text" name="<?php echo esc_attr( $frm_style->get_field_name('title_size') ) ?>" id="frm_title_size" value="<?php echo esc_attr( $style->post_content['title_size'] ) ?>" />
-</div>
-
-<div class="field-group clearfix frm-half">
-	<label><?php _e( 'Color', 'formidable' ) ?></label>
-	<input type="text" name="<?php echo esc_attr( $frm_style->get_field_name('title_color') ) ?>" id="frm_title_color" class="hex" value="<?php echo esc_attr( $style->post_content['title_color'] ) ?>" />
-</div>
-
-<div class="field-group clearfix frm-half">
-	<label><?php _e( 'Description Size', 'formidable' ) ?></label>
-	<input type="text" name="<?php echo esc_attr( $frm_style->get_field_name('form_desc_size') ) ?>" id="frm_form_desc_size" value="<?php echo esc_attr( $style->post_content['form_desc_size'] ) ?>" />
-</div>
-
-<div class="field-group clearfix frm-half">
-	<label><?php _e( 'Color', 'formidable' ) ?></label>
-	<input type="text" name="<?php echo esc_attr( $frm_style->get_field_name('form_desc_color') ) ?>" id="frm_form_desc_color" class="hex" value="<?php echo esc_attr( $style->post_content['form_desc_color'] ) ?>" />
 </div>
 
 <div class="clear"></div>

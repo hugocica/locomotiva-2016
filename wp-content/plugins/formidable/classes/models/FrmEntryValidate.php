@@ -17,7 +17,7 @@ class FrmEntryValidate {
         }
 
         if ( ! isset($values['item_key']) || $values['item_key'] == '' ) {
-            $_POST['item_key'] = $values['item_key'] = FrmAppHelper::get_unique_key('', $wpdb->prefix .'frm_items', 'item_key');
+			$_POST['item_key'] = $values['item_key'] = FrmAppHelper::get_unique_key( '', $wpdb->prefix . 'frm_items', 'item_key' );
         }
 
         $where = apply_filters('frm_posted_field_ids', array( 'fi.form_id' => $values['form_id'] ) );
@@ -65,9 +65,7 @@ class FrmEntryValidate {
         // Check for values in "Other" fields
         FrmEntriesHelper::maybe_set_other_validation( $posted_field, $value, $args );
 
-        if ( isset($posted_field->field_options['default_blank']) && $posted_field->field_options['default_blank'] && $value == $posted_field->default_value ) {
-            $value = '';
-        }
+		self::maybe_clear_value_for_default_blank_setting( $posted_field, $value );
 
 		// Check for an array with only one value
 		// Don't reset values in "Other" fields because array keys need to be preserved
@@ -76,21 +74,31 @@ class FrmEntryValidate {
 		}
 
         if ( $posted_field->required == '1' && ! is_array( $value ) && trim( $value ) == '' ) {
-            $frm_settings = FrmAppHelper::get_settings();
-			$errors[ 'field' . $args['id'] ] = ( ! isset( $posted_field->field_options['blank'] ) || $posted_field->field_options['blank'] == '' ) ? $frm_settings->blank_msg : $posted_field->field_options['blank'];
+			$errors[ 'field' . $args['id'] ] = FrmFieldsHelper::get_error_msg( $posted_field, 'blank' );
         } else if ( $posted_field->type == 'text' && ! isset( $_POST['item_name'] ) ) {
             $_POST['item_name'] = $value;
         }
 
-        self::validate_url_field($errors, $posted_field, $value, $args);
-        self::validate_email_field($errors, $posted_field, $value, $args);
+		if ( $value != '' ) {
+			self::validate_url_field( $errors, $posted_field, $value, $args );
+			self::validate_email_field( $errors, $posted_field, $value, $args );
+			self::validate_number_field( $errors, $posted_field, $value, $args );
+			self::validate_phone_field( $errors, $posted_field, $value, $args );
+		}
 
         FrmEntriesHelper::set_posted_value($posted_field, $value, $args);
 
         self::validate_recaptcha($errors, $posted_field, $args);
 
         $errors = apply_filters('frm_validate_field_entry', $errors, $posted_field, $value, $args);
+		$errors = apply_filters( 'frm_validate_' . $posted_field->type . '_field_entry', $errors, $posted_field, $value, $args );
     }
+
+	private static function maybe_clear_value_for_default_blank_setting( $field, &$value ) {
+		if ( FrmField::is_option_true_in_object( $field, 'default_blank' ) && $value == $field->default_value ) {
+			$value = '';
+		}
+	}
 
 	public static function validate_url_field( &$errors, $field, &$value, $args ) {
 		if ( $value == '' || ! in_array( $field->type, array( 'website', 'url', 'image' ) ) ) {
@@ -101,7 +109,7 @@ class FrmEntryValidate {
             $value = '';
         } else {
             $value = esc_url_raw( $value );
-            $value = preg_match('/^(https?|ftps?|mailto|news|feed|telnet):/is', $value) ? $value : 'http://'. $value;
+			$value = preg_match( '/^(https?|ftps?|mailto|news|feed|telnet):/is', $value ) ? $value : 'http://' . $value;
         }
 
         //validate the url format
@@ -120,6 +128,80 @@ class FrmEntryValidate {
 			$errors[ 'field' . $args['id'] ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
         }
     }
+
+	public static function validate_number_field( &$errors, $field, $value, $args ) {
+		//validate the number format
+		if ( $field->type != 'number' ) {
+			return;
+		}
+
+		if ( ! is_numeric( $value) ) {
+			$errors[ 'field' . $args['id'] ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
+		}
+
+		// validate number settings
+		if ( $value != '' ) {
+			$frm_settings = FrmAppHelper::get_settings();
+			// only check if options are available in settings
+			if ( $frm_settings->use_html && isset( $field->field_options['minnum'] ) && isset( $field->field_options['maxnum'] ) ) {
+				//minnum maxnum
+				if ( (float) $value < $field->field_options['minnum'] ) {
+					$errors[ 'field' . $args['id'] ] = __( 'Please select a higher number', 'formidable' );
+				} else if ( (float) $value > $field->field_options['maxnum'] ) {
+					$errors[ 'field' . $args['id'] ] = __( 'Please select a lower number', 'formidable' );
+				}
+			}
+		}
+	}
+
+	public static function validate_phone_field( &$errors, $field, $value, $args ) {
+		if ( $field->type != 'phone' ) {
+			return;
+		}
+
+		$pattern = self::phone_format( $field );
+
+		if ( ! preg_match( $pattern, $value ) ) {
+			$errors[ 'field' . $args['id'] ] = FrmFieldsHelper::get_error_msg( $field, 'invalid' );
+		}
+	}
+
+	public static function phone_format( $field ) {
+		$default_format = '^((\+\d{1,3}(-|.| )?\(?\d\)?(-| |.)?\d{1,5})|(\(?\d{2,6}\)?))(-|.| )?(\d{3,4})(-|.| )?(\d{4})(( x| ext)\d{1,5}){0,1}$';
+		if ( FrmField::is_option_empty( $field, 'format' ) ) {
+			$pattern = $default_format;
+		} else {
+			$pattern = FrmField::get_option( $field, 'format' );
+		}
+
+		$pattern = apply_filters( 'frm_phone_pattern', $pattern, $field );
+
+		//check if format is already a regular expression
+		if ( strpos( $pattern, '^' ) !== 0 ) {
+			//if not, create a regular expression
+			$pattern = preg_replace( '/\d/', '\d', preg_quote( $pattern ) );
+			$pattern = str_replace( 'a', '[a-z]', $pattern );
+			$pattern = str_replace( 'A', '[A-Z]', $pattern );
+			$pattern = str_replace( '*', 'w', $pattern );
+			$pattern = str_replace( '/', '\/', $pattern );
+
+			if ( strpos( $pattern, '\?' ) !== false ) {
+				$parts = explode( '\?', $pattern );
+				$pattern = '';
+				foreach ( $parts as $part ) {
+					if ( empty( $pattern ) ) {
+						$pattern .= $part;
+					} else {
+						$pattern .= '(' . $part . ')?';
+					}
+				}
+			}
+			$pattern = '^' . $pattern . '$';
+		}
+
+		$pattern = '/' . $pattern . '/';
+		return $pattern;
+	}
 
 	public static function validate_recaptcha( &$errors, $field, $args ) {
         if ( $field->type != 'captcha' || FrmAppHelper::is_admin() || apply_filters( 'frm_is_field_hidden', false, $field, stripslashes_deep( $_POST ) ) ) {
@@ -154,6 +236,10 @@ class FrmEntryValidate {
         if ( isset( $response['success'] ) && ! $response['success'] ) {
             // What happens when the CAPTCHA was entered incorrectly
 			$errors[ 'field' . $args['id'] ] = ( ! isset( $field->field_options['invalid'] ) || $field->field_options['invalid'] == '' ) ? $frm_settings->re_msg : $field->field_options['invalid'];
+        } else if ( is_wp_error( $resp ) ) {
+			$error_string = $resp->get_error_message();
+			$errors[ 'field' . $args['id'] ] = __( 'There was a problem verifying your recaptcha', 'formidable' );
+			$errors[ 'field' . $args['id'] ] .= ' ' . $error_string;
         }
     }
 
@@ -182,7 +268,7 @@ class FrmEntryValidate {
 
 	private static function is_akismet_spam( $values ) {
 		global $wpcom_api_key;
-		return ( ( function_exists( 'akismet_http_post' ) || is_callable('Akismet::http_post') ) && ( get_option('wordpress_api_key') || $wpcom_api_key ) && self::akismet( $values ) );
+		return ( is_callable('Akismet::http_post') && ( get_option('wordpress_api_key') || $wpcom_api_key ) && self::akismet( $values ) );
 	}
 
 	private static function is_akismet_enabled_for_user( $form_id ) {

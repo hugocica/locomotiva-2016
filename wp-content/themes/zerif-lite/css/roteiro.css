@@ -1,5 +1,5 @@
 /********************************* GERAL *********************************/
-	
+
 	::selection {
 		background-color: #FF3333;
 	}
@@ -17,6 +17,7 @@
 		padding-bottom: 4px;
 		border-bottom: 3px solid #FF3333;
 		position: relative;
+		margin-bottom: 30px;
 	}
 	h2.section-title.inverse {
 		color: #fff;
@@ -90,11 +91,15 @@
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
+    font-size: 14px;
 	}
 	#copyright-container .cr-box {
 		text-align: left;
 		height: 45px;
 	}
+  .about-text p {
+    margin-bottom: 0;
+  }
 
 /********************************* HOME *********************************/
 
@@ -150,10 +155,23 @@
 
 /********************************* A EMPRESA *********************************/
 
-	.locomodivo-pic img {
-		width: 100%;
-		height: 250px;
+	.destaque-image.empresa {
+		height: 340px;
+		background-position: center;
+		background-size: cover;
+		background-repeat: no-repeat;
+	}
+	.locomodivo-pic {
+		width: 200px;
+		height: 200px;
+		border-radius: 50%;
+		background-position: 50%;
+		background-size: cover;
+		margin: 0 auto;
 	}
 	.locomodivo-content {
-		background-color: #c3c3c3;
+		background-color: transparent;
+	}
+	.locomodivo-content h3, .locomodivo-content p {
+		margin-bottom: 0;
 	}

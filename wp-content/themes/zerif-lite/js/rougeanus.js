@@ -5,12 +5,9 @@
 * Free to use under the MIT license.
 * http://www.opensource.org/licenses/mit-license.php
 *
-* Cagerize Version
-* Author Evandro Carreira
+* Rougeanus Version
+* Author Hugo Cicarelli
 *
-* Modified: 06/2014
-* Cagerize with Evandrose Version
-* By Andre Cupini
 */
 
 
@@ -20,12 +17,11 @@
 
     rougeanusimg = $('<img />',
      { id: 'rougeanus',
-     src: templateDir+'/images/rougeanus.png', 
-     //alt:'Hello, I am Nicolaus, please to meet you!'})
+     src: templateDir+'/images/rougeanus.png',
      alt:'Hello, I am Rougeanus Bealissimas with Daniose nervous, please to meet you!'})
     .appendTo($('body'));
 
-    //Append Nicolaus and Style
+    //Append Rouge and Style
     rougeanus = $('#rougeanus');
     rougeanus.css({
       "position":"fixed",
@@ -90,4 +86,3 @@
   }
 
 })(jQuery);
-
