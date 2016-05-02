@@ -44,24 +44,16 @@
 		endif;
 	?>
 
-	<div class="members-list-container">
+	<div class="members-list-container clearfix">
 		<?php
 			if ($locomodivos_config['show'] == 'Sim') { ?>
 				<h2 class="section-title"><span>Conheça nossos</span>Membros</h2>
 			<?php
 				$aux_padding = 0;
-
+				sort($locomodivos_config['locodivos']);
 				foreach ($locomodivos_config['locodivos'] as $locomodivo) {
-					if ($aux_padding == 0) {
-						$class = "padding-left-0 padding-right-30";
-					} elseif ($aux_padding == 2) {
-						$class = "padding-right-0 padding-left-30";
-						$aux_padding = 0;
-					} else {
-						$class = "margin-left-15 margin-right-15";
-					} ?>
-
-					<div class="locomodivo col-md-3 <?php echo $class; ?>">
+					?>
+					<div class="locomodivo col-md-3">
 						<figure class="locomodivo-pic" style="background-image: url(<?php echo $locomodivo['photo']; ?>);" data-normal="<?php echo $locomodivo['photo']; ?>" data-hover="<?php echo $locomodivo['photo_hover']; ?>">
 						</figure>
 						<div class="locomodivo-content">

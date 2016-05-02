@@ -192,13 +192,20 @@
 	.destaque-logo {
 		vertical-align: middle;
 	}
+	.members-list-container {
+		padding-bottom: 45px;
+	}
+	.locomodivo {
+		margin: 15px 0;
+	}
 	.locomodivo-pic {
 		width: 200px;
 		height: 200px;
 		border-radius: 50%;
-		background-position: 50%;
+		background-position: 50% 0;
 		background-size: cover;
 		margin: 0 auto;
+		transition: background-image ease-in-out .5s;
 	}
 	.locomodivo-content {
 		background-color: transparent;
