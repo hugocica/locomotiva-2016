@@ -160,6 +160,37 @@
 		background-position: center;
 		background-size: cover;
 		background-repeat: no-repeat;
+		padding: 60px 0;
+		margin-bottom: 30px;
+	}
+	.destaque-image .destaque-texto {
+		text-align: left;
+		vertical-align: middle;
+	}
+	.destaque-image .destaque-texto blockquote {
+		background-color: #FF3333;
+		color: #fff;
+		font-weight: 300;
+		font-size: 18px;
+		line-height: 42px;
+		padding: 7px 0 5px;
+		max-width: 100%;
+		display: inline;
+		box-shadow: 10px 0px 0px #FF3333, -10px 0 0 #FF3333;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		margin: 0;
+		position: relative;
+		left: 10px;
+	}
+	.destaque-image .destaque-texto p {
+		color: #fff;
+		margin-top: 30px;
+		background-color: rgba(0, 0, 0, 0.6);
+		padding: 5px 10px;
+	}
+	.destaque-logo {
+		vertical-align: middle;
 	}
 	.locomodivo-pic {
 		width: 200px;
