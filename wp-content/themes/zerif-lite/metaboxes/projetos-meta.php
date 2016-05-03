@@ -18,6 +18,10 @@
 		<label for="<?php $mb->the_name(); ?>">Descrição do projeto</label>
 		<p><input type="text" id="<?php $mb->the_name(); ?>" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>"/></p>
 
+		<?php $mb->the_field('link'); ?>
+		<label for="<?php $mb->the_name(); ?>">Link do projeto <span style="font-size: 14px; font-style: italic;">(Opcional)</span></label>
+		<p><input type="text" id="<?php $mb->the_name(); ?>" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>"/></p>
+
 		<div class="col-md-12">
 			<?php $mb->the_field('photo'); ?>
 			<label for="<?php $mb->the_name(); ?>">Foto do projeto</label>

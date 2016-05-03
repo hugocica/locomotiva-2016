@@ -103,23 +103,38 @@
 		text-align: left;
 		height: 45px;
 	}
-  .about-text p {
-    margin-bottom: 0;
-	text-align: left;
-  }
-  .dev-container {
-	  height: 45px;
-	  vertical-align: middle;
-  }
-  .dev-container p {
-	  display: inline-block;
-  }
-  .dev-box {
-	  display: inline-block;
-	  vertical-align: middle;
-	  border: 2px solid #fff;
-	  padding: 3px 8px;
-  }
+	.about-text p {
+		margin-bottom: 0;
+		text-align: left;
+	}
+	.dev-container {
+		  height: 45px;
+		  vertical-align: middle;
+	}
+	.dev-container p {
+		  display: inline-block;
+	}
+	.dev-box {
+		display: inline-block;
+		vertical-align: middle;
+		border: 2px solid #fff;
+		padding: 3px 8px;
+		margin-left: 4px;
+	}
+	.dev-box .fa-github {
+		-webkit-transition: -webkit-transform .8s ease-in-out;
+	  	-ms-transition: -ms-transform .8s ease-in-out;
+		transition: transform .8s ease-in-out;
+	  	font-size: 24px;
+	}
+	.dev-box:hover a {
+		color: #fff;
+	}
+	.dev-box:hover .fa-github {
+		transform: rotate(360deg);
+		-ms-transform:rotate(360deg);
+		-webkit-transform:rotate(360deg);
+	}
 
 /********************************* HOME *********************************/
 
@@ -233,3 +248,5 @@
 	.locomodivo-content h3, .locomodivo-content p {
 		margin-bottom: 0;
 	}
+
+/********************************* PROJETOS *********************************/

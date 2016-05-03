@@ -7,7 +7,7 @@
 <?php get_header(); ?>
 
 <?php
-	$locomodivos_config = get_post_meta( get_the_ID(), '_locomodivos_metabox', true );
+	$projetos = get_post_meta( get_the_ID(), '_projetos_metabox', true );
 	$destaque_config = get_post_meta( get_the_ID(), '_destaque_metabox', true );
 ?>
 
@@ -23,8 +23,13 @@
 	<div class="destaque-image projetos" style="background-image: url(<?php echo $thumb; ?>);">
 		<div class="container">
 			<div class="destaque-texto col-md-7 padding-left-0">
-				<blockquote><?php echo $destaque_config['frase_destaque']; ?></blockquote>
-				<p><?php echo $destaque_config['texto_destaque']; ?></p>
+				<?php if ( !empty($destaque_config['frase_destaque']) ) { ?>
+					<blockquote><?php echo $destaque_config['frase_destaque']; ?></blockquote>
+				<?php } ?>
+
+				<?php if ( !empty($destaque_config['texto_destaque']) ) { ?>
+					<p><?php echo $destaque_config['texto_destaque']; ?></p>
+				<?php } ?>
 			</div>
 			<div class="destaque-logo col-md-5 padding-right-0">
 				<?php if ( !empty($destaque_config['foto_destaque']) ) { ?>
@@ -38,16 +43,23 @@
 
 	<div class="container">
 		<?php
+		/*
 		if (have_posts()) :
 			while (have_posts()) : the_post();
 				the_content();
 			endwhile;
 		endif;
-	?>
+		*/
+		?>
 
-	<div class="projects-list-container clearfix">
-
-	</div>
+		<div class="projects-list-container clearfix">
+			<?php
+				if ( $projetos['show'] == 'Sim' ) { ?>
+					<h2 class="section-title"><span>Conheça nossos</span>Projetos</h2>
+			<?php
+				}
+			?>
+		</div>
 
 	</div>
 
