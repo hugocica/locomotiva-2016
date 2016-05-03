@@ -35,9 +35,9 @@
 		display: block;
 		top: 100%;
 		left: 10px;
-		border-top: 12px solid #FF3333;
-		border-left: 14px solid transparent;
-		border-right: 14px solid transparent;
+		border-top: 10px solid #FF3333;
+		border-left: 12px solid transparent;
+		border-right: 12px solid transparent;
 	}
 	h2.section-title.inverse:after {
 		border-top-color: #fff;
@@ -82,16 +82,22 @@
 	footer#footer {
 		background-color: #FF3333;
 		color: #fff;
+		padding: 25px 0;
+	}
+	footer#footer h2.section-title {
+		font-size: 20px;
+		line-height: 20px;
 	}
 	#copyright-container {
 		background-color: #414141;
 		color: #fff;
+		padding: 5px 0;
 	}
 	#copyright-container p {
 		display: inline-block;
 		vertical-align: middle;
 		margin: 0;
-    font-size: 14px;
+	    font-size: 12px;
 	}
 	#copyright-container .cr-box {
 		text-align: left;
@@ -99,6 +105,20 @@
 	}
   .about-text p {
     margin-bottom: 0;
+	text-align: left;
+  }
+  .dev-container {
+	  height: 45px;
+	  vertical-align: middle;
+  }
+  .dev-container p {
+	  display: inline-block;
+  }
+  .dev-box {
+	  display: inline-block;
+	  vertical-align: middle;
+	  border: 2px solid #fff;
+	  padding: 3px 8px;
   }
 
 /********************************* HOME *********************************/
@@ -155,7 +175,7 @@
 
 /********************************* A EMPRESA *********************************/
 
-	.destaque-image.empresa {
+	.destaque-image {
 		height: 340px;
 		background-position: center;
 		background-size: cover;
@@ -171,7 +191,7 @@
 		background-color: #FF3333;
 		color: #fff;
 		font-weight: 300;
-		font-size: 18px;
+		font-size: 22px;
 		line-height: 42px;
 		padding: 7px 0 5px;
 		max-width: 100%;
@@ -205,7 +225,7 @@
 		background-position: 50% 0;
 		background-size: cover;
 		margin: 0 auto;
-		transition: background-image ease-in-out .5s;
+		transition: background-image linear .5s;
 	}
 	.locomodivo-content {
 		background-color: transparent;

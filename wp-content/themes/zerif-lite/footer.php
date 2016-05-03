@@ -13,12 +13,15 @@
 	<div class="container">
 
 		<div class="about-text col-md-4">
-			<p>Locomotiva - Empresa Júnior de Rádio e TV</p>	
+			<p>Locomotiva - Empresa Júnior de Rádio e TV</p>
 			<p>Unesp Bauru</p>
 		</div>
 
 		<div class="col-md-4">
-			
+			<h2 class="section-title inverse">Parceiros</h2>
+			<div>
+				<img src="<?php echo get_template_directory_uri(); ?>/images/jrcom.png" alt="Jr.COM Empresa Júnior de Computação">
+			</div>
 		</div>
 
 		<div class="contato-box col-md-4">
@@ -31,13 +34,16 @@
 
 <div id="copyright-container">
 	<div class="container">
-		<div class="cr-box col-md-9">
+		<div class="cr-box col-md-8">
 			<p>© COPYRIGHT 2016. locomotivajr.com.br TODOS OS DIREITOS RESERVADOS.</p>
 			<div class="support-div"></div>
 		</div>
-		<div class="dev-box col-md-3">
-			<p>Parceria e Desenvolvimento:</p>
-			<img src="<?php echo get_template_directory_uri(); ?>/images/jrcom.png" alt="Jr.COM Empresa Júnior de Computação">
+		<div class="dev-container col-md-4">
+			<p>Desenvolvimento:</p>
+			<div class="dev-box">
+				<span>Hugo Cicarelli</span>
+			</div>
+			<div class="support-div"></div>
 		</div>
 	</div>
 </div>

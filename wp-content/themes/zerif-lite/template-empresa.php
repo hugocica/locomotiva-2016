@@ -35,6 +35,7 @@
 			</div>
 		</div>
 	</div>
+
 	<div class="container">
 		<?php
 		if (have_posts()) :
@@ -42,29 +43,29 @@
 				the_content();
 			endwhile;
 		endif;
-	?>
-
-	<div class="members-list-container clearfix">
-		<?php
-			if ($locomodivos_config['show'] == 'Sim') { ?>
-				<h2 class="section-title"><span>Conheça nossos</span>Membros</h2>
-			<?php
-				$aux_padding = 0;
-				sort($locomodivos_config['locodivos']);
-				foreach ($locomodivos_config['locodivos'] as $locomodivo) {
-					?>
-					<div class="locomodivo col-md-3">
-						<figure class="locomodivo-pic" style="background-image: url(<?php echo $locomodivo['photo']; ?>);" data-normal="<?php echo $locomodivo['photo']; ?>" data-hover="<?php echo $locomodivo['photo_hover']; ?>">
-						</figure>
-						<div class="locomodivo-content">
-							<h3><?php echo $locomodivo['nome']; ?></h3>
-							<p><?php echo $locomodivo['cargo']; ?></p>
-						</div>
-					</div>
-				<?php $aux_padding++;
-				}
-			}
 		?>
+
+		<div class="members-list-container clearfix">
+			<?php
+				if ($locomodivos_config['show'] == 'Sim') { ?>
+					<h2 class="section-title"><span>Conheça nossos</span>Membros</h2>
+				<?php
+					$aux_padding = 0;
+					sort($locomodivos_config['locodivos']);
+					foreach ($locomodivos_config['locodivos'] as $locomodivo) {
+						?>
+						<div class="locomodivo col-md-3">
+							<figure class="locomodivo-pic" style="background-image: url(<?php echo $locomodivo['photo']; ?>);" data-normal="<?php echo $locomodivo['photo']; ?>" data-hover="<?php echo $locomodivo['photo_hover']; ?>">
+							</figure>
+							<div class="locomodivo-content">
+								<h3><?php echo $locomodivo['nome']; ?></h3>
+								<p><?php echo $locomodivo['cargo']; ?></p>
+							</div>
+						</div>
+					<?php $aux_padding++;
+					}
+				}
+			?>
 		</div>
 
 	</div>
