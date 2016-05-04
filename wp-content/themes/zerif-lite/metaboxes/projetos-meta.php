@@ -39,8 +39,8 @@
 	<?php endwhile; ?>
 
 	<p style="margin-bottom:15px; padding-top:5px;">
-		<a href="#" class="docopy-projeto button">Adicionar projeto</a>
-		<a style="float:right; margin:0 10px;" href="#" class="dodelete-projeto button">Remover Todos</a>
+		<a href="#" class="docopy-projetos button">Adicionar projeto</a>
+		<a style="float:right; margin:0 10px;" href="#" class="dodelete-projetos button">Remover Todos</a>
 	</p>
 
 </div>

@@ -56,15 +56,39 @@
 			<?php
 				if ( $projetos['show'] == 'Sim' ) { ?>
 					<h2 class="section-title"><span>Conheça nossos</span>Projetos</h2>
-			<?php
-				}
-			?>
+
+					<div class="project-list">
+						<?php if ( !empty($projetos['projetos']) ) {
+							$flag_row = true;
+							foreach ($projetos['projetos'] as $projeto): ?>
+								<div class="projeto-item <?php echo ($flag_row)?'row-even':'row-odd'; ?> clearfix">
+									<div class="projeto-img col-md-6 <?php echo ($flag_row)?'':'pull-right'; ?>" style="background-image: url(<?php echo $projeto['photo']; ?>)"></div>
+									<div class="projeto-meta col-md-6 <?php echo ($flag_row)?'img-left':'img-right'; ?>">
+										<?php if ( !empty($projeto['titulo']) ) { ?>
+											<h3><?php echo $projeto['titulo']; ?></h3>
+										<?php } ?>
+										<?php if ( !empty($projeto['descricao']) ) { ?>
+											<p><?php echo $projeto['descricao']; ?></p>
+										<?php } ?>
+										<?php if ( !empty($projeto['link']) ) { ?>
+											<a target="_blank" href="<?php echo $projeto['link']; ?>">Link para o projeto</a>
+										<?php } ?>
+									</div>
+								</div>
+							<?php $flag_row = !$flag_row;
+							endforeach;
+						} ?>
+					</div>
+			<?php } ?>
 		</div>
 
 	</div>
 
 	<script>
 		jQuery(document).ready(function($) {
+			$('.projeto-item').each(function() {
+				$(this).children('.projeto-img').height($(this).children('.projeto-meta').outerHeight());
+			});
 		});
 	</script>
 

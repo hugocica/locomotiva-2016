@@ -17,13 +17,8 @@
 
 <div id="content" class="site-content empresa">
 
-<?php
-	$thumb = wp_get_attachment_url( get_post_thumbnail_id($post->ID) );
-?>
-	<div class="mapa">
+	<div id="mapa" style="height: 340px;"></div>
 
-	</div>
-    
 	<div class="container">
 		<?php
 		if (have_posts()) :
@@ -31,46 +26,36 @@
 				the_content();
 			endwhile;
 		endif;
-	?>
-
-	<div class="members-list-container clearfix">
-		<?php
-			if ($locomodivos_config['show'] == 'Sim') { ?>
-				<h2 class="section-title"><span>Conheça nossos</span>Membros</h2>
-			<?php
-				$aux_padding = 0;
-				sort($locomodivos_config['locodivos']);
-				foreach ($locomodivos_config['locodivos'] as $locomodivo) {
-					?>
-					<div class="locomodivo col-md-3">
-						<figure class="locomodivo-pic" style="background-image: url(<?php echo $locomodivo['photo']; ?>);" data-normal="<?php echo $locomodivo['photo']; ?>" data-hover="<?php echo $locomodivo['photo_hover']; ?>">
-						</figure>
-						<div class="locomodivo-content">
-							<h3><?php echo $locomodivo['nome']; ?></h3>
-							<p><?php echo $locomodivo['cargo']; ?></p>
-						</div>
-					</div>
-				<?php $aux_padding++;
-				}
-			}
 		?>
+
+		<div class="contato-container clearfix">
+			<div class="contato-info col-md-6">
+				<h2 class="section-title"><span>Dados de</span>Contato</h2>
+			</div>
+			<div class="contato-form col-md-6"></div>
 		</div>
 
 	</div>
 
 	<script>
-		jQuery(document).ready(function($) {
-			$('.locomodivo-pic').on({
-				mouseenter: function() {
-					console.log($(this).data('hover'));
-					$(this).css('background-image', 'url('+$(this).data('hover')+')');
+		function initMap() {
+			var mapDiv = document.getElementById('mapa');
+			var map = new google.maps.Map(mapDiv, {
+				center: {
+					lat: -22.3395788,
+					lng: -49.0491374
 				},
-				mouseleave: function() {
-					console.log('saiu');
-					$(this).css('background-image', 'url('+$(this).data('normal')+')');
-				}
+				zoom: 16,
+				scrollwheel: false,
+				mapTypeControl: false,
 			});
-		});
+			var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+			var marker = new google.maps.Marker({
+				position: map.center,
+				map: map,
+			});
+		}
 	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOdjfdmluXaFzlClwUTXMEvWOhWmMSxlI&callback=initMap" async defer></script>
 
 <?php get_footer(); ?>

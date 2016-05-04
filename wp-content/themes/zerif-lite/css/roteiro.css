@@ -250,3 +250,51 @@
 	}
 
 /********************************* PROJETOS *********************************/
+
+	.project-list {
+
+	}
+	.projeto-item.row-even {
+		/*background: #f1f1f1;*/
+	}
+	.projeto-img {
+		background-size: cover;
+		background-position: 50% 0;
+		background-repeat: no-repeat;
+		height: 100%;
+	}
+	.projeto-meta {
+		text-align: left;
+		padding: 25px 30px;
+	}
+	.projeto-meta.img-right {
+		text-align: right;
+	}
+	.projeto-meta h3 {
+		font-weight: 700;
+		text-transform: uppercase;
+		margin-bottom: 20px;
+	}
+	.projeto-meta h3:after {
+		content: '';
+		display: block;
+		background-color: #FF3333;
+		width: 70px;
+		height: 4px;
+		position: absolute;
+		left: 30px;
+	}
+	.projeto-meta.img-right h3:after {
+		left: auto;
+		right: 30px;
+	}
+	.projeto-meta p {
+
+	}
+	.projeto-meta a {
+		color: #fff;
+		background-color: #FF3333;
+		border-radius: 4px;
+		padding: 8px 12px;
+		text-transform: uppercase;
+	}
