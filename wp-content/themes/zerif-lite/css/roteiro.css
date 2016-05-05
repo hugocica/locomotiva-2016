@@ -252,10 +252,10 @@
 /********************************* PROJETOS *********************************/
 
 	.project-list {
-
+		padding-bottom: 45px;
 	}
 	.projeto-item.row-even {
-		background: #F1F1F1;
+		background: rgba(189, 189, 192, 0.1);
 	}
 	.projeto-img {
 		background-size: cover;
@@ -297,4 +297,31 @@
 		border-radius: 4px;
 		padding: 8px 12px;
 		text-transform: uppercase;
+	}
+
+/********************************* CONTATO *********************************/
+
+	#mapa {
+		margin-bottom: 35px;
+	}
+	.contato-info {
+		padding-bottom: 30px;
+	}
+	.contato-info-meta {
+		text-align: left;
+		margin-bottom: 8px;
+	}
+	.contato-info-meta i {
+		font-size: 24px;
+		display: inline-block;
+		vertical-align: middle;
+		width: 20px;
+		text-align: center;
+		margin-right: 12px;
+	}
+	.contato-info-meta p {
+		display: inline-block;
+		vertical-align: middle;
+		margin-bottom: 0;
+		font-size: 16px;
 	}
