@@ -81,14 +81,14 @@
 			var iconBase = '<?php echo get_template_directory_uri(); ?>/images/mapa-pin.png';
 			marker = new google.maps.Marker({
 				position: map.center,
-				animation: google.maps.Animation.DROP,
+				animation: google.maps.Animation.BOUNCE,
 				map: map,
 				icon: iconBase
 			});
-			marker.addListener('click', toggleBounce);
-			marker.addListener('click', function() {
-				infowindow.open(map, marker);
-			});
+			// marker.addListener('click', toggleBounce);
+			// marker.addListener('click', function() {
+			// 	infowindow.open(map, marker);
+			// });
 		}
 		function toggleBounce() {
 			if (marker.getAnimation() !== null) {
