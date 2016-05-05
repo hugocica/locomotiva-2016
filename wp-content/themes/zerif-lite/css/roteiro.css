@@ -304,6 +304,9 @@
 	#mapa {
 		margin-bottom: 35px;
 	}
+	.contato-container {
+		margin: 0 -15px;
+	}
 	.contato-info {
 		padding-bottom: 30px;
 	}
@@ -324,4 +327,5 @@
 		vertical-align: middle;
 		margin-bottom: 0;
 		font-size: 16px;
+		max-width: 92%;
 	}

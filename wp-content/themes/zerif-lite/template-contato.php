@@ -33,30 +33,37 @@
 				<h2 class="section-title"><span>Dados de</span>Contato</h2>
 				<?php if ( !empty($contato_config['contato_endereco']) ) ?>
 					<div class="contato-info-endereco contato-info-meta">
-						<p><i class="fa fa-map-marker" aria-hidden="true"></i><?php echo $contato_config['contato_endereco']; ?></p>
+						<i class="fa fa-map-marker" aria-hidden="true"></i>
+						<p><strong>Endereço:</strong> <?php echo $contato_config['contato_endereco']; ?></p>
 					</div>
 				<?php if ( !empty($contato_config['contato_email']) ) ?>
 					<div class="contato-info-email contato-info-meta">
-						<p><i class="fa fa-envelope" aria-hidden="true"></i><?php echo $contato_config['contato_email']; ?></p>
+						<i class="fa fa-envelope" aria-hidden="true"></i>
+						<p><strong>E-mail:</strong> <?php echo $contato_config['contato_email']; ?></p>
 					</div>
 				<?php if ( !empty($contato_config['contato_telefone']) ) ?>
 					<div class="contato-info-telefone contato-info-meta">
-						<p><i class="fa fa-phone" aria-hidden="true"></i><?php echo $contato_config['contato_telefone']; ?></p>
+						<i class="fa fa-phone" aria-hidden="true"></i>
+						<p><strong>Telefone:</strong> <?php echo $contato_config['contato_telefone']; ?></p>
 					</div>
 				<?php if ( !empty($contato_config['contato_horario']) ) ?>
 					<div class="contato-info-horario contato-info-meta">
-						<p><i class="fa fa-clock-o" aria-hidden="true"></i><?php echo $contato_config['contato_horario']; ?></p>
+						<i class="fa fa-clock-o" aria-hidden="true"></i>
+						<p><strong>Horário de Funcionamento:</strong> <?php echo $contato_config['contato_horario']; ?></p>
 					</div>
 			</div>
 			<div class="contato-form col-md-6">
-				<?php if ( $contato_config['show_form'] == 'Sim' ) { ?>
-				<?php } ?>
+				<?php if ( $contato_config['show_form'] == 'Sim' ) {
+					echo '<h2 class="section-title"><span>Formulário de</span>Contato</h2>';
+					echo do_shortcode('[formidable id=2]');
+				} ?>
 			</div>
 		</div>
 
 	</div>
 
 	<script>
+		var marker
 		function initMap() {
 			var mapDiv = document.getElementById('mapa');
 			var map = new google.maps.Map(mapDiv, {
@@ -68,11 +75,27 @@
 				scrollwheel: false,
 				mapTypeControl: false,
 			});
-			var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-			var marker = new google.maps.Marker({
-				position: map.center,
-				map: map,
+			var infowindow = new google.maps.InfoWindow({
+				content: '<img width="250" src="<?php echo get_template_directory_uri(); ?>/images/logo.png">'
 			});
+			var iconBase = '<?php echo get_template_directory_uri(); ?>/images/mapa-pin.png';
+			marker = new google.maps.Marker({
+				position: map.center,
+				animation: google.maps.Animation.DROP,
+				map: map,
+				icon: iconBase
+			});
+			marker.addListener('click', toggleBounce);
+			marker.addListener('click', function() {
+				infowindow.open(map, marker);
+			});
+		}
+		function toggleBounce() {
+			if (marker.getAnimation() !== null) {
+				marker.setAnimation(null);
+			} else {
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+			}
 		}
 	</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOdjfdmluXaFzlClwUTXMEvWOhWmMSxlI&callback=initMap" async defer></script>
