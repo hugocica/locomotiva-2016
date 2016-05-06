@@ -55,7 +55,7 @@
 			<div class="contato-form col-md-6">
 				<?php if ( $contato_config['show_form'] == 'Sim' ) {
 					echo '<h2 class="section-title"><span>Solicite um</span>Orçamento</h2>';
-					echo do_shortcode('[formidable id=2]');
+					echo do_shortcode('[formidable id='.$contato_config['contato_form'].']');
 				} ?>
 			</div>
 		</div>
@@ -71,7 +71,7 @@
 					lat: <?php echo $location[0]; ?>,
 					lng: <?php echo $location[1]; ?>
 				},
-				zoom: 16,
+				zoom: 17,
 				scrollwheel: false,
 				mapTypeControl: false,
 			});

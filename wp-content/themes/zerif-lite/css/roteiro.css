@@ -1,5 +1,38 @@
+/********************************* FONTES *********************************/
+
+@font-face {
+	font-family: Amaranth;
+	src: url(fonts/Amaranth-Regular.otf);
+	font-style: normal;
+	font-weight: 500;
+}
+@font-face {
+	font-family: Amaranth;
+	src: url(fonts/Amaranth-Italic.otf);
+	font-style: italic;
+	font-weight: 500;
+}
+@font-face {
+	font-family: Amaranth;
+	src: url(fonts/Amaranth-Bold.otf);
+	font-style: normal;
+	font-weight: 700;
+}
+@font-face {
+	font-family: Amaranth;
+	src: url(fonts/Amaranth-BoldItalic.otf);
+	font-style: italic;
+	font-weight: 700;
+}
+
 /********************************* GERAL *********************************/
 
+	h1, h2, h3, h4, h5, h6 {
+		font-family: Amaranth, Verdana, Arial;
+	}
+	p {
+		font-family: Aller, Arial;
+	}
 	::selection {
 		background-color: #FF3333;
 	}
@@ -7,7 +40,6 @@
 		display: none;
 	}
 	h2.section-title {
-		font-family: 'Amaranth';
 		font-size: 24px;
 		font-weight: 700;
 		line-height: 24px;
