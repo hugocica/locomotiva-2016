@@ -10,11 +10,15 @@
 
 			<main id="main" class="site-main" role="main">
 
-				<section id="home-section-slider"></section>
+				<section id="home-section-slider">
+					<?php
+						echo do_shortcode("[metaslider id=105]"); 
+					?>
+				</section>
 
 				<section id="home-section-blog" class="page-section container">
 					<h2 class="section-title margin-bottom-30"><span>Acompanhe nossas</span>Últimas notícias</h2>
-					<?php 
+					<?php
 						$args = array(
 								'post_type'			=> 'post',
 								'posts_per_page'	=>	3
@@ -24,7 +28,7 @@
 						$home_posts = new WP_Query($args);
 						$count_posts = 0;
 						if ($home_posts->have_posts()) :
-							while($home_posts->have_posts()) : $home_posts->the_post(); 
+							while($home_posts->have_posts()) : $home_posts->the_post();
 								if ($count_posts == 0)
 									$class = "col-lg-8 col-md-8 col-sm-12 big";
 								else
@@ -40,7 +44,7 @@
 						wp_reset_postdata();
 						endif;
 					?>
-					<a href="#" class="btn btn-primary red-btn">Veja mais notícias</a>
+					<a href="<?php echo get_permalink( get_page_by_path('blog') ); ?>" class="btn btn-primary red-btn">Veja mais notícias</a>
 				</section>
 
                 <section id="home-content">

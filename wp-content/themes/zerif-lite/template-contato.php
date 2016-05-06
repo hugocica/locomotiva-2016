@@ -30,7 +30,7 @@
 
 		<div class="contato-container clearfix">
 			<div class="contato-info col-md-6">
-				<h2 class="section-title"><span>Dados de</span>Contato</h2>
+				<h2 class="section-title"><span>Entre em</span>Contato</h2>
 				<?php if ( !empty($contato_config['contato_endereco']) ) ?>
 					<div class="contato-info-endereco contato-info-meta">
 						<i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -54,7 +54,7 @@
 			</div>
 			<div class="contato-form col-md-6">
 				<?php if ( $contato_config['show_form'] == 'Sim' ) {
-					echo '<h2 class="section-title"><span>Formulário de</span>Contato</h2>';
+					echo '<h2 class="section-title"><span>Solicite um</span>Orçamento</h2>';
 					echo do_shortcode('[formidable id=2]');
 				} ?>
 			</div>

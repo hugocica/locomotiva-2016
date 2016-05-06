@@ -77,6 +77,13 @@
 		vertical-align: middle;
 	}
 
+/********************************* NAVBAR *********************************/
+
+	.navbar-brand:focus, .navbar-brand:active {
+		outline: none;
+		border: none;
+	}
+
 /********************************* FOOTER *********************************/
 
 	footer#footer {
