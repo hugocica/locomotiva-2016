@@ -398,3 +398,53 @@
 		font-size: 16px;
 		max-width: 92%;
 	}
+
+/********************************* FORMULÁRIO *********************************/
+
+	#form_contato_form {
+		margin-top: -15px;
+	}
+	#form_contato_form .loco-input {
+		position: relative;
+		margin-bottom: 5px;
+	}
+	#form_contato_form .loco-input label {
+		position: absolute;
+		left: 0;
+		top: 20px;
+		cursor: text;
+		transition: all ease 0.4s;
+		font-family: Aller, Verdana, Arial;
+	}
+	#form_contato_form .loco-input.has-content label {
+		top: 0;
+		font-size: 12px;
+		cursor: default;
+	}
+	#form_contato_form .loco-input input, #form_contato_form .loco-input textarea {
+		border: none;
+		border-radius: 0;
+		border-bottom: 2px solid #545455;
+		outline: none;
+		box-shadow: none;
+		background-color: transparent;
+		padding-left: 0;
+		padding-right: 0;
+		transition: all ease 0.4s;
+		font-family: Aller, Verdana, Arial;
+	}
+	#form_contato_form .loco-input.has-content input, #form_contato_form .loco-input.has-content textarea {
+		border-color: #FF3333;
+	}
+	#form_contato_form .loco-input input {
+		height: 50px;
+		padding-top: 15px;
+	}
+	#form_contato_form .loco-input textarea {
+		height: 135px;
+		padding-top: 20px;
+		resize: none;
+	}
+	#form_contato_form .frm_submit {
+		text-align: right;
+	}

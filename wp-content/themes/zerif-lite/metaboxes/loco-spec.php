@@ -55,5 +55,16 @@
 								'template' => get_stylesheet_directory() . '/metaboxes/contato-meta.php'
 							)
 						);
+	} elseif ( $template_file == 'template-home.php' ) {
+		$slider_config = new WPAlchemy_MetaBox(
+							array(
+								'id' => '_slider_config_metabox',
+								'title' => 'Configurações do Slider',
+								'types' => array('page'),
+								'context' => 'side',
+								'priority' => 'high',
+								'template' => get_stylesheet_directory() . '/metaboxes/slider-meta.php'
+							)
+						);
 	}
 ?>

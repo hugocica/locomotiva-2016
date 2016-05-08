@@ -4,6 +4,10 @@
 
 	</header> <!-- / END HOME SECTION  -->
 
+	<?php
+		$page_config = get_post_meta( get_the_ID(), '_slider_config_metabox', true );
+	?>
+
 	<div id="content" class="site-content clearfix">
 
 		<div id="primary" class="content-area">
@@ -12,7 +16,7 @@
 
 				<section id="home-section-slider">
 					<?php
-						echo do_shortcode("[metaslider id=105]"); 
+						echo do_shortcode("[metaslider id=".$page_config['slider']."]");
 					?>
 				</section>
 

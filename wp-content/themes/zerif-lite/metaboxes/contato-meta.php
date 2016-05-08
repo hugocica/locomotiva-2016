@@ -20,7 +20,21 @@
     <p>
         <?php $mb->the_field('contato_form'); ?>
         <label for="<?php $mb->the_name(); ?>" style="display: inline-block;vertical-align: middle;margin-bottom: 12px;">Selecione o formulário</label>
-    	<input type="checkbox" id="<?php $mb->the_name(); ?>" name="<?php $mb->the_name(); ?>"  style="display: inline-block;vertical-align: middle;" value="Sim" <?php echo ($mb->get_the_value() == 'Sim')?'checked="checked"':''; ?>>
+        <select name="<?php $mb->the_name(); ?>">
+            <?php
+                global $wpdb;
+
+                $results = $wpdb->get_results( "SELECT id, name FROM wp_frm_forms" );
+                
+                if ( count($results) > 0 ) {
+                    echo '<option value="">Selecione um formulário</option>';
+                    foreach ($results as $form) { ?>
+                        <option value="<?php echo $form->id; ?>" <?php echo ( $mb->get_the_value() == $form->id )?'selected="selected"':''; ?>><?php echo $form->name; ?></option>
+                    <?php
+                    }
+                }
+            ?>
+        </select>
     </p>
 
     <hr>
