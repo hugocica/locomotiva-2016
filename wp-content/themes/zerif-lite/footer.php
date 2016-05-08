@@ -10,9 +10,15 @@
 
 <footer id="footer" role="contentinfo">
 
+	<?php
+		$contato_page_obj = get_page_by_path('contato');
+		$contato_config = get_post_meta( $contato_page_obj->ID, '_contato_config_metabox', true );
+	?>
+
 	<div class="container">
 
 		<div class="about-text col-md-4">
+			<img src="<?php echo get_template_directory_uri(); ?>/images/logo-footer.png" alt="locomotiva logo branco" />
 			<p>Locomotiva - Empresa Júnior de Rádio e TV</p>
 			<p>Unesp Bauru</p>
 		</div>
@@ -26,6 +32,25 @@
 
 		<div class="contato-box col-md-4">
 			<h2 class="section-title inverse">Contato</h2>
+			<?php
+			if ( !empty($contato_config['contato_email']) ) { ?>
+				<div class="contato-info-email contato-info-meta">
+					<i class="fa fa-envelope" aria-hidden="true"></i>
+					<p><strong>E-mail:</strong> <?php echo $contato_config['contato_email']; ?></p>
+				</div>
+			<?php }
+			if ( !empty($contato_config['contato_telefone']) ) { ?>
+				<div class="contato-info-telefone contato-info-meta">
+					<i class="fa fa-phone" aria-hidden="true"></i>
+					<p><strong>Telefone:</strong> <?php echo $contato_config['contato_telefone']; ?></p>
+				</div>
+			<?php } ?>
+
+			<a class="inverse-link" href="<?php echo get_permalink( get_page_by_path('contato') ); ?>">
+				<span>
+					<i class="fa fa-pencil" aria-hidden="true"></i> Solicite um orçamento
+				</span>
+			</a>
 		</div>
 
 	</div> <!-- / END CONTAINER -->

@@ -31,26 +31,31 @@
 		<div class="contato-container clearfix">
 			<div class="contato-info col-md-6">
 				<h2 class="section-title"><span>Entre em</span>Contato</h2>
-				<?php if ( !empty($contato_config['contato_endereco']) ) ?>
+				<?php
+				if ( !empty($contato_config['contato_endereco']) ) { ?>
 					<div class="contato-info-endereco contato-info-meta">
 						<i class="fa fa-map-marker" aria-hidden="true"></i>
 						<p><strong>Endereço:</strong> <?php echo $contato_config['contato_endereco']; ?></p>
 					</div>
-				<?php if ( !empty($contato_config['contato_email']) ) ?>
+				<?php }
+				if ( !empty($contato_config['contato_email']) ) { ?>
 					<div class="contato-info-email contato-info-meta">
 						<i class="fa fa-envelope" aria-hidden="true"></i>
 						<p><strong>E-mail:</strong> <?php echo $contato_config['contato_email']; ?></p>
 					</div>
-				<?php if ( !empty($contato_config['contato_telefone']) ) ?>
+				<?php }
+				if ( !empty($contato_config['contato_telefone']) ) { ?>
 					<div class="contato-info-telefone contato-info-meta">
 						<i class="fa fa-phone" aria-hidden="true"></i>
 						<p><strong>Telefone:</strong> <?php echo $contato_config['contato_telefone']; ?></p>
 					</div>
-				<?php if ( !empty($contato_config['contato_horario']) ) ?>
+				<?php }
+				if ( !empty($contato_config['contato_horario']) ) { ?>
 					<div class="contato-info-horario contato-info-meta">
 						<i class="fa fa-clock-o" aria-hidden="true"></i>
 						<p><strong>Horário de Funcionamento:</strong> <?php echo $contato_config['contato_horario']; ?></p>
 					</div>
+				<?php } ?>
 			</div>
 			<div class="contato-form col-md-6">
 				<?php if ( $contato_config['show_form'] == 'Sim' ) {
