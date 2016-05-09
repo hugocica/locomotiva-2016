@@ -23,7 +23,7 @@
 			<p>Unesp Bauru</p>
 		</div>
 
-		<div class="col-md-4">
+		<div class="parceiros-box col-md-4">
 			<h2 class="section-title inverse">Parceiros</h2>
 			<div>
 				<img src="<?php echo get_template_directory_uri(); ?>/images/jrcom.png" alt="Jr.COM Empresa Júnior de Computação">

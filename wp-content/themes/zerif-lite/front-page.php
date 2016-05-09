@@ -5,7 +5,7 @@
 	</header> <!-- / END HOME SECTION  -->
 
 	<?php
-		$page_config = get_post_meta( get_the_ID(), '_slider_config_metabox', true );
+		$page_config = get_post_meta( get_the_ID(), '_home_config_metabox', true );
 	?>
 
 	<div id="content" class="site-content clearfix">
@@ -48,7 +48,9 @@
 						wp_reset_postdata();
 						endif;
 					?>
-					<a href="<?php echo get_permalink( get_page_by_path('blog') ); ?>" class="btn btn-primary red-btn">Veja mais notícias</a>
+					<a href="<?php echo get_permalink( get_page_by_path('blog') ); ?>" class="btn btn-primary red-btn">
+						Veja mais notícias
+					</a>
 				</section>
 
                 <section id="home-content">
@@ -61,6 +63,28 @@
 
 					<?php endwhile;  ?>
                 </section>
+
+				<section id="" class="page-section container">
+					<div class="youtube-container col-md-6 padding-left-0">
+						<h2 class="section-title"><span>Assista nossos</span>vídeos</h2>
+							<iframe id="ytplayer" class="youtube-player" type="text/html" width="100%" src="http://www.youtube.com/embed?listType=user_uploads&list=LocomotivaJr" frameborder="0" style="margin-bottom: 15px;" /></iframe>
+							<script src="https://apis.google.com/js/platform.js"></script>
+							<div class="g-ytsubscribe" style="margin-top: 15px; padding-top: 15px;" data-channel="LocomotivaJr" data-layout="full" data-count="hidden"></div>
+					</div>
+					<div class="podcast-container col-md-6 padding-right-0">
+						<h2 class="section-title"><span>Ouça nosso</span>podcast</h2>
+					</div>
+				</section>
+
+				<section id="social-home-section" class="page-section container">
+					<h2 class="section-title"><span>Nos siga em nossas</span>redes sociais</h2>
+					<div class="facebook-wrapper col-md-6">
+						<div class="fb-page" data-href="https://www.facebook.com/locomotivajr" data-tabs="timeline" data-width="100%" data-height="450" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/locomotivajr"><a href="https://www.facebook.com/locomotivajr">Locomotiva - Empresa Jr. RTV</a></blockquote></div></div>
+					</div>
+					<div class="insta-wrapper col-md-6">
+
+					</div>
+				</section>
 
 			</main><!-- #main -->
 

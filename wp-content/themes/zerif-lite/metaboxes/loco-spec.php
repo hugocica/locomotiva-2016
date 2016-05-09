@@ -56,14 +56,14 @@
 							)
 						);
 	} elseif ( $template_file == 'template-home.php' ) {
-		$slider_config = new WPAlchemy_MetaBox(
+		$home_config = new WPAlchemy_MetaBox(
 							array(
-								'id' => '_slider_config_metabox',
+								'id' => '_home_config_metabox',
 								'title' => 'Configurações do Slider',
 								'types' => array('page'),
-								'context' => 'side',
+								'context' => 'normal',
 								'priority' => 'high',
-								'template' => get_stylesheet_directory() . '/metaboxes/slider-meta.php'
+								'template' => get_stylesheet_directory() . '/metaboxes/homepage-meta.php'
 							)
 						);
 	}

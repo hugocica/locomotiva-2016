@@ -221,11 +221,12 @@
 		outline: none;
 		border: none;
 	}
-	ul.nav > li:hover > a {
+	ul.nav > li:hover > a, ul.nav > li:active > a {
 		display: inline-block;
 		overflow: hidden;
+		outline: none;
 	}
-	ul.nav > li:hover > a:before {
+	ul.nav > li:hover > a:before, ul.nav > li:active > a:before {
 		width: 75%;
 		transform: translateX(0%);
 		background: #e96656;
@@ -355,6 +356,12 @@
 	.left-box {
 		float: left;
 		padding-right: 15px;
+	}
+	.youtube-container {
+		text-align: left;
+	}
+	.youtube-player {
+		height: 310px;
 	}
 
 /********************************* A EMPRESA *********************************/
