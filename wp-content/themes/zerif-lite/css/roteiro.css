@@ -362,6 +362,8 @@
 	}
 	.youtube-player {
 		height: 310px;
+		display: block;
+		max-width: 555px;
 	}
 
 /********************************* A EMPRESA *********************************/

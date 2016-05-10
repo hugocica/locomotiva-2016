@@ -4,6 +4,16 @@
 
 	</header> <!-- / END HOME SECTION  -->
 
+	<script>
+		(function(d, s, id) {
+		  	var js, fjs = d.getElementsByTagName(s)[0];
+		  	if (d.getElementById(id)) return;
+		  	js = d.createElement(s); js.id = id;
+		  	js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+	</script>
+
 	<?php
 		$page_config = get_post_meta( get_the_ID(), '_home_config_metabox', true );
 	?>
@@ -64,17 +74,32 @@
 					<?php endwhile;  ?>
                 </section>
 
-				<section id="" class="page-section container">
-					<div class="youtube-container col-md-6 padding-left-0">
-						<h2 class="section-title"><span>Assista nossos</span>vídeos</h2>
-							<iframe id="ytplayer" class="youtube-player" type="text/html" width="100%" src="http://www.youtube.com/embed?listType=user_uploads&list=LocomotivaJr" frameborder="0" style="margin-bottom: 15px;" /></iframe>
-							<script src="https://apis.google.com/js/platform.js"></script>
-							<div class="g-ytsubscribe" style="margin-top: 15px; padding-top: 15px;" data-channel="LocomotivaJr" data-layout="full" data-count="hidden"></div>
-					</div>
-					<div class="podcast-container col-md-6 padding-right-0">
-						<h2 class="section-title"><span>Ouça nosso</span>podcast</h2>
-					</div>
+				<?php if ( !empty($page_config['show_youtube']) || !empty($page_config['show_podcast']) ) { ?>
+				<?php
+					if ( $page_config['show_youtube'] == 'Sim' && $page_config['show_podcast'] == 'Sim' ) {
+						$youtube_class = 'col-md-6 padding-left-0';
+						$podcast_class = "col-md-6 padding-right-0";
+					} else {
+						$youtube_class = 'col-md-12';
+						$podcast_class = 'col-md-12';
+					}
+				?>
+				<section id="midia-home-section" class="page-section container">
+					<?php if ( $page_config['show_youtube'] == 'Sim' ) { ?>
+						<div class="youtube-container <?php echo $youtube_class; ?>">
+							<h2 class="section-title"><span>Assista nossos</span>vídeos</h2>
+								<iframe id="ytplayer" class="youtube-player" type="text/html" width="100%" src="http://www.youtube.com/embed?listType=user_uploads&list=LocomotivaJr" frameborder="0" style="margin-bottom: 15px;" /></iframe>
+								<script src="https://apis.google.com/js/platform.js"></script>
+								<div class="g-ytsubscribe" style="margin-top: 15px; padding-top: 15px;" data-channel="LocomotivaJr" data-layout="full" data-count="hidden"></div>
+						</div>
+					<?php } ?>
+					<?php if ( $page_config['show_podcast'] == 'Sim' ) { ?>
+						<div class="podcast-container <?php echo $podcast_class; ?>">
+							<h2 class="section-title"><span>Ouça nosso</span>podcast</h2>
+						</div>
+					<?php } ?>
 				</section>
+				<?php } ?>
 
 				<section id="social-home-section" class="page-section container">
 					<h2 class="section-title"><span>Nos siga em nossas</span>redes sociais</h2>
@@ -91,14 +116,5 @@
 		</div><!-- #primary -->
 
 <div id="fb-root"></div>
-<script>
-	(function(d, s, id) {
-	  	var js, fjs = d.getElementsByTagName(s)[0];
-	  	if (d.getElementById(id)) return;
-	  	js = d.createElement(s); js.id = id;
-	  	js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
-		fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
-</script>
 
 <?php get_footer(); ?>
