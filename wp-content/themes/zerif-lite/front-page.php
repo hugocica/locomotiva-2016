@@ -102,12 +102,14 @@
 				<?php } ?>
 
 				<section id="social-home-section" class="page-section container">
-					<h2 class="section-title"><span>Nos siga em nossas</span>redes sociais</h2>
-					<div class="facebook-wrapper col-md-6">
-						<div class="fb-page" data-href="https://www.facebook.com/locomotivajr" data-tabs="timeline" data-width="100%" data-height="450" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/locomotivajr"><a href="https://www.facebook.com/locomotivajr">Locomotiva - Empresa Jr. RTV</a></blockquote></div></div>
-					</div>
-					<div class="insta-wrapper col-md-6">
+					<div class="col-md-12">
+						<h2 class="section-title"><span>Nos siga em nossas</span>redes sociais</h2>
+						<div class="facebook-wrapper col-md-4 padding-left-0">
+							<div class="fb-page" data-href="https://www.facebook.com/locomotivajr" data-tabs="timeline" data-width="320" data-height="380" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/locomotivajr"><a href="https://www.facebook.com/locomotivajr">Locomotiva - Empresa Jr. RTV</a></blockquote></div></div>
+						</div>
+						<div class="insta-wrapper col-md-6">
 
+						</div>
 					</div>
 				</section>
 

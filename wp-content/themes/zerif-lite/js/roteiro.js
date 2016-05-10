@@ -13,8 +13,16 @@ jQuery(document).ready(function($) {
             $(this).parent().addClass('has-content');
         },
         blur: function() {
-            if ( !$(this).val() )
+            if ( !$(this).val() ) {
                 $(this).parent().removeClass('has-content');
+            }
+        },
+        change: function() {
+            if ( !$(this).val() ) {
+                $(this).parent().removeClass('has-content');
+            } else {
+                $(this).parent().addClass('has-content');
+            }
         }
     });
 

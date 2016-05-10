@@ -64,7 +64,7 @@
 		font-family: Aller, Arial;
 	}
 	::selection {
-		background-color: #FF3333;
+		background-color: #F03F3D;
 	}
 	object {
 		display: none;
@@ -77,7 +77,7 @@
 		text-transform: uppercase;
 		text-align: left;
 		padding-bottom: 4px;
-		border-bottom: 3px solid #FF3333;
+		border-bottom: 3px solid #F03F3D;
 		position: relative;
 		margin-bottom: 30px;
 	}
@@ -97,7 +97,7 @@
 		display: block;
 		top: 100%;
 		left: 10px;
-		border-top: 10px solid #FF3333;
+		border-top: 10px solid #F03F3D;
 		border-left: 12px solid transparent;
 		border-right: 12px solid transparent;
 	}
@@ -106,7 +106,7 @@
 	}
 	.red-btn {
 		display: inline-block;
-		background-color: #FF3333;
+		background-color: #F03F3D;
 		text-transform: uppercase;
 		width: 100%;
 		border-radius: 0;
@@ -248,7 +248,7 @@
 /********************************* FOOTER *********************************/
 
 	footer#footer {
-		background-color: #FF3333;
+		background-color: #F03F3D;
 		color: #fff;
 		padding: 25px 0;
 	}
@@ -347,7 +347,7 @@
 		background-color:#404041;
 	}
 	.newsletter-red-box {
-		background-color: #FF3333;
+		background-color: #F03F3D;
 	}
 	.right-box {
 		float: right;
@@ -365,6 +365,9 @@
 		display: block;
 		max-width: 555px;
 	}
+	.facebook-wrapper {
+		text-align: left;
+	}
 
 /********************************* A EMPRESA *********************************/
 
@@ -381,7 +384,7 @@
 		vertical-align: middle;
 	}
 	.destaque-image .destaque-texto blockquote {
-		background-color: #FF3333;
+		background-color: #F03F3D;
 		color: #fff;
 		font-weight: 300;
 		font-size: 22px;
@@ -389,7 +392,7 @@
 		padding: 7px 0 5px;
 		max-width: 100%;
 		display: inline;
-		box-shadow: 10px 0px 0px #FF3333, -10px 0 0 #FF3333;
+		box-shadow: 10px 0px 0px #F03F3D, -10px 0 0 #F03F3D;
 		text-transform: uppercase;
 		letter-spacing: 1px;
 		margin: 0;
@@ -456,7 +459,7 @@
 	.projeto-meta h3:after {
 		content: '';
 		display: block;
-		background-color: #FF3333;
+		background-color: #F03F3D;
 		width: 70px;
 		height: 4px;
 		position: absolute;
@@ -471,7 +474,7 @@
 	}
 	.projeto-meta a {
 		color: #fff;
-		background-color: #FF3333;
+		background-color: #F03F3D;
 		border-radius: 4px;
 		padding: 8px 12px;
 		text-transform: uppercase;
@@ -543,7 +546,7 @@
 		font-family: Aller, Verdana, Arial;
 	}
 	#form_contato_form .loco-input.has-content input, #form_contato_form .loco-input.has-content textarea {
-		border-color: #FF3333;
+		border-color: #F03F3D;
 	}
 	#form_contato_form .loco-input input {
 		height: 50px;
