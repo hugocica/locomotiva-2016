@@ -26,7 +26,8 @@
 
 				<section id="home-section-slider">
 					<?php
-						echo do_shortcode("[metaslider id=".$page_config['slider']."]");
+						// echo do_shortcode("[metaslider id=".$page_config['slider']."]");
+						echo do_shortcode("[rev_slider alias=".$page_config['slider']."]")
 					?>
 				</section>
 

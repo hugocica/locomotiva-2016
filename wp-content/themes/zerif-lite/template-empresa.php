@@ -9,6 +9,8 @@
 <?php
 	$locomodivos_config = get_post_meta( get_the_ID(), '_locomodivos_metabox', true );
 	$destaque_config = get_post_meta( get_the_ID(), '_empresa_metabox', true );
+
+	$extensao_arr = explode( '.', '')
 ?>
 
 <div class="clear"></div>
@@ -28,9 +30,18 @@
 			</div>
 			<div class="destaque-logo col-md-5 padding-right-0">
 				<?php if ( !empty($destaque_config['foto_destaque']) ) { ?>
-				<figure>
-					<img src="<?php echo $destaque_config['foto_destaque']; ?>" alt="logo transparente">
-				</figure>
+					<?php if ( strpos($destaque_config['foto_destaque'], 'youtube') ) { ?>
+						<?php
+							$url = $destaque_config['foto_destaque'];
+						    preg_match('/[\\?\\&]v=([^\\?\\&]+)/', $url, $matches);
+						    $id = $matches[1];
+						?>
+						<iframe id="ytplayer" type="text/html" width="100%" height="250" src="https://www.youtube.com/embed/<?php echo $id; ?>" frameborder="0" style="margin-bottom: 15px;" /></iframe>
+					<?php } else { ?>
+						<figure>
+							<img src="<?php echo $destaque_config['foto_destaque']; ?>" alt="logo transparente">
+						</figure>
+					<?php } ?>
 				<?php } ?>
 			</div>
 		</div>

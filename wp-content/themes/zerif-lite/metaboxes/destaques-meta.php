@@ -9,7 +9,7 @@
     <p><input type="text" id="<?php $mb->the_name(); ?>" name="<?php $mb->the_name(); ?>" value="<?php $mb->the_value(); ?>"/></p>
 
     <?php $mb->the_field('foto_destaque'); ?>
-    <label for="<?php $mb->the_name(); ?>">Logo Transparente <span style="font-size: 12px;">(Opcional)</span></label>
+    <label for="<?php $mb->the_name(); ?>">Imagem/Vídeo Destaque <span style="font-size: 12px;">(Opcional)</span></label>
     <?php $wpalchemy_media_access->setGroupName('img-n'. $mb->get_the_index())->setInsertButtonLabel('Inserir'); ?>
     <p>
     <?php echo $wpalchemy_media_access->getField(array('name' => $mb->get_the_name(), 'value' => $mb->get_the_value())); ?>

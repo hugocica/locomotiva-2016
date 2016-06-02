@@ -11,12 +11,12 @@
             <?php
                 global $wpdb;
 
-                $results = $wpdb->get_results( "SELECT id, post_title FROM wp_posts WHERE post_type='ml-slider'" );
+                $results = $wpdb->get_results( "SELECT alias, title FROM wp_revslider_sliders" );
 
                 if ( count($results) > 0 ) {
                     echo '<option value="">Selecione um slider</option>';
                     foreach ($results as $slider) { ?>
-                        <option value="<?php echo $slider->id; ?>" <?php echo ( $mb->get_the_value() == $slider->id )?'selected="selected"':''; ?>><?php echo $slider->post_title; ?></option>
+                        <option value="<?php echo $slider->alias; ?>" <?php echo ( $mb->get_the_value() == $slider->id )?'selected="selected"':''; ?>><?php echo $slider->title; ?></option>
                     <?php
                     }
                 }
