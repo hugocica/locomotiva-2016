@@ -52,7 +52,7 @@ if ( ! function_exists( 'zerif_post_nav' ) ) :
 
 function zerif_post_nav() {
 
-	// Don't print empty markup if there's nowhere to navigate.
+	/* Don't print empty markup if there's nowhere to navigate. */
 
 	$previous = ( is_attachment() ) ? get_post( get_post()->post_parent ) : get_adjacent_post( false, '', true );
 
@@ -158,7 +158,7 @@ function zerif_categorized_blog() {
 
 	if ( false === ( $all_the_cool_cats = get_transient( 'zerif_categories' ) ) ) {
 
-		// Create an array of all the categories that are attached to posts.
+		/* Create an array of all the categories that are attached to posts. */
 
 		$all_the_cool_cats = get_categories( array(
 
@@ -168,7 +168,7 @@ function zerif_categorized_blog() {
 
 
 
-			// We only need to know if there is more than one category.
+			/* We only need to know if there is more than one category. */
 
 			'number'     => 2,
 
@@ -176,7 +176,7 @@ function zerif_categorized_blog() {
 
 
 
-		// Count the number of categories that are attached to the posts.
+		/* Count the number of categories that are attached to the posts. */
 
 		$all_the_cool_cats = count( $all_the_cool_cats );
 
@@ -190,13 +190,13 @@ function zerif_categorized_blog() {
 
 	if ( $all_the_cool_cats > 1 ) {
 
-		// This blog has more than 1 category so zerif_categorized_blog should return true.
+		/* This blog has more than 1 category so zerif_categorized_blog should return true. */
 
 		return true;
 
 	} else {
 
-		// This blog has only 1 category so zerif_categorized_blog should return false.
+		/* This blog has only 1 category so zerif_categorized_blog should return false. */
 
 		return false;
 

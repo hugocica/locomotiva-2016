@@ -16,7 +16,7 @@
                 if ( count($results) > 0 ) {
                     echo '<option value="">Selecione um slider</option>';
                     foreach ($results as $slider) { ?>
-                        <option value="<?php echo $slider->alias; ?>" <?php echo ( $mb->get_the_value() == $slider->id )?'selected="selected"':''; ?>><?php echo $slider->title; ?></option>
+                        <option value="<?php echo $slider->alias; ?>" <?php echo ( $mb->get_the_value() == $slider->alias )?'selected="selected"':''; ?>><?php echo $slider->title; ?></option>
                     <?php
                     }
                 }
