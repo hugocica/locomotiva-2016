@@ -314,9 +314,12 @@ footer#footer {
   color: #fff;
   padding: 65px 55px 40px;
   height: 300px; }
-  .newsletter-gray-box p strong, .newsletter-red-box p strong {
+  .newsletter-gray-box p, .newsletter-red-box p {
     font-size: 22px;
     line-height: 28px; }
+    .newsletter-gray-box p strong, .newsletter-red-box p strong {
+      font-size: 22px;
+      line-height: 28px; }
 
 .newsletter-gray-box {
   background-color: #404041; }
@@ -529,9 +532,32 @@ footer#footer {
       float: right;
       margin-top: 20px; }
 
-.grid-sizer, .grid-item {
-  width: 33.3%; }
+.grid {
+  margin-left: -10px;
+  margin-right: -10px; }
+  .grid .grid-sizer, .grid .grid-item {
+    width: 33.3%;
+    padding: 0 10px; }
 
 .post-img-wrap {
   float: none;
-  width: 100%; }
+  width: 100%;
+  border: 1px solid #404040;
+  border-bottom: none; }
+  .post-img-wrap a img {
+    width: 100%; }
+
+.listpost-content-wrap {
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  margin-top: -7px;
+  border: 1px solid #404040;
+  border-top: none; }
+  .listpost-content-wrap h1 {
+    line-height: 22px; }
+    .listpost-content-wrap h1.entry-title a {
+      font-size: 22px;
+      position: unset; }
+      .listpost-content-wrap h1.entry-title a::after {
+        left: 50%;
+        margin-left: -25px; }

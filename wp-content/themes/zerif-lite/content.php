@@ -8,7 +8,7 @@
 
 			 	<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>" >
 
-				<?php the_post_thumbnail("post-thumbnail"); ?>
+				<?php the_post_thumbnail("full"); ?>
 
 				</a>
 
@@ -34,7 +34,7 @@
 
 		<h1 class="entry-title"><a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></h1>
 
-		<?php if ( 'post' == get_post_type() ) : ?>
+		<?php /* if ( 'post' == get_post_type() ) : ?>
 
 		<div class="entry-meta">
 
@@ -42,7 +42,7 @@
 
 		</div><!-- .entry-meta -->
 
-		<?php endif; ?>
+		<?php endif; */  ?>
 
 	</header><!-- .entry-header -->
 
@@ -72,11 +72,10 @@
 
 	<footer class="entry-footer">
 
-		<?php if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search ?>
+		<?php /* if ( 'post' == get_post_type() ) : // Hide category and tag text for pages on Search ?>
 
 			<?php
 
-				/* translators: used between list items, there is a space after the comma */
 				$categories_list = get_the_category_list( __( ', ', 'zerif-lite' ) );
 
 				if ( $categories_list && zerif_categorized_blog() ) :
@@ -93,7 +92,6 @@
 
 			<?php
 
-				/* translators: used between list items, there is a space after the comma */
 
 				$tags_list = get_the_tag_list( '', __( ', ', 'zerif-lite' ) );
 
@@ -109,15 +107,15 @@
 
 			<?php endif; // End if $tags_list ?>
 
-		<?php endif; // End if 'post' == get_post_type() ?>
+		<?php endif; // End if 'post' == get_post_type() */ ?>
 
-		<?php if ( ! post_password_required() && ( comments_open() || '0' != get_comments_number() ) ) : ?>
+		<?php /* if ( ! post_password_required() && ( comments_open() || '0' != get_comments_number() ) ) : ?>
 
 		<span class="comments-link"><?php comments_popup_link( __( 'Leave a comment', 'zerif-lite' ), __( '1 Comment', 'zerif-lite' ), __( '% Comments', 'zerif-lite' ) ); ?></span>
 
-		<?php endif; ?>
+		<?php endif; */ ?>
 
-		<?php edit_post_link( __( 'Edit', 'zerif-lite' ), '<span class="edit-link">', '</span>' ); ?>
+		<?php // edit_post_link( __( 'Edit', 'zerif-lite' ), '<span class="edit-link">', '</span>' ); ?>
 
 	</footer><!-- .entry-footer -->
 
