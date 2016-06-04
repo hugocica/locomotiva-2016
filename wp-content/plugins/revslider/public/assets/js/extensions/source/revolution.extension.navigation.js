@@ -1,11 +1,9 @@
-
 /********************************************
- * REVOLUTION 5.0 EXTENSION - NAVIGATION
- * @version: 1.0.2 (18.08.2015)
+ * REVOLUTION 5.2 EXTENSION - NAVIGATION
+ * @version: 1.2.4 (10.03.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
 *********************************************/
-
 (function($) {
 
 var _R = jQuery.fn.revolution,
@@ -34,26 +32,66 @@ jQuery.extend(true,_R, {
 		
 	},
 
-	resizeThumbsTabs : function(opt) {	
+	resizeThumbsTabs : function(opt,force) {	
 		
 		
 		if ((opt.navigation && opt.navigation.tabs.enable) || (opt.navigation && opt.navigation.thumbnails.enable)) {
 			var f = (jQuery(window).width()-480) / 500,
 				tws = new punchgs.TimelineLite(),
 				otab = opt.navigation.tabs,
-				othu = opt.navigation.thumbnails;
+				othu = opt.navigation.thumbnails,
+				otbu = opt.navigation.bullets;
 
 			tws.pause();
 			f = f>1 ? 1 : f<0 ? 0 : f;
 			
-			if (ckNO(otab) && otab.width>otab.min_width) rtt(f,tws,opt.c,otab,opt.slideamount,'tab');	
-			if (ckNO(othu) && othu.width>othu.min_width) rtt(f,tws,opt.c,othu,opt.slideamount,'thumb');
+			if (ckNO(otab) && (force || otab.width>otab.min_width)) rtt(f,tws,opt.c,otab,opt.slideamount,'tab');	
+			if (ckNO(othu) && (force || othu.width>othu.min_width)) rtt(f,tws,opt.c,othu,opt.slideamount,'thumb');
+			if (ckNO(otbu) && force) {
+				// SET BULLET SPACES AND POSITION
+				var bw = opt.c.find('.tp-bullets');
+
+				bw.find('.tp-bullet').each(function(i){
+					var b = jQuery(this),			
+						am = i+1,
+						w = b.outerWidth()+parseInt((otbu.space===undefined? 0:otbu.space),0),
+						h = b.outerHeight()+parseInt((otbu.space===undefined? 0:otbu.space),0);					
+					
+				if (otbu.direction==="vertical") {
+					b.css({top:((am-1)*h)+"px", left:"0px"});
+					bw.css({height:(((am-1)*h) + b.outerHeight()),width:b.outerWidth()});
+				}
+				else {
+					b.css({left:((am-1)*w)+"px", top:"0px"});
+					bw.css({width:(((am-1)*w) + b.outerWidth()),height:b.outerHeight()});			
+				}
+				});
+				
+			}
 
 			tws.play();	
 			
 			setONHeights(opt);
 		}
 		return true;
+	},
+
+	updateNavIndexes : function(opt) {
+		var _ = opt.c;
+		
+		function setNavIndex(a) {
+			if (_.find(a).lenght>0) {
+				_.find(a).each(function(i) {				
+					jQuery(this).data('liindex',i);
+				})
+			}
+		}
+		
+		setNavIndex('.tp-tab');
+		setNavIndex('.tp-bullet');
+		setNavIndex('.tp-thumb');		
+		_R.resizeThumbsTabs(opt,true);
+		_R.manageNavigation(opt);
 	},
 
 
@@ -70,14 +108,14 @@ jQuery.extend(true,_R, {
 				opt.navigation.bullets.h_offset_old = opt.navigation.bullets.h_offset_old === undefined ? opt.navigation.bullets.h_offset : opt.navigation.bullets.h_offset_old;
 				opt.navigation.bullets.h_offset = opt.navigation.bullets.h_align==="center" ? opt.navigation.bullets.h_offset_old+lof/2 -rof/2: opt.navigation.bullets.h_offset_old+lof-rof;
 			}
-			setNavElPositions(opt.c.find('.tp-bullets'),opt.navigation.bullets);		
+			setNavElPositions(opt.c.find('.tp-bullets'),opt.navigation.bullets,opt);		
 		}
 		
 		if (ckNO(opt.navigation.thumbnails)) 
-			setNavElPositions(opt.c.parent().find('.tp-thumbs'),opt.navigation.thumbnails);		
+			setNavElPositions(opt.c.parent().find('.tp-thumbs'),opt.navigation.thumbnails,opt);		
 
 		if (ckNO(opt.navigation.tabs))
-			setNavElPositions(opt.c.parent().find('.tp-tabs'),opt.navigation.tabs);		
+			setNavElPositions(opt.c.parent().find('.tp-tabs'),opt.navigation.tabs,opt);		
 		
 		if (ckNO(opt.navigation.arrows)) {
 			
@@ -89,8 +127,8 @@ jQuery.extend(true,_R, {
 				opt.navigation.arrows.right.h_offset_old = opt.navigation.arrows.right.h_offset_old === undefined ? opt.navigation.arrows.right.h_offset : opt.navigation.arrows.right.h_offset_old;
 				opt.navigation.arrows.right.h_offset = opt.navigation.arrows.right.h_align==="right" ? opt.navigation.arrows.right.h_offset_old+rof : opt.navigation.arrows.right.h_offset_old+lof;
 			}
-			setNavElPositions(opt.c.find('.tp-leftarrow.tparrows'),opt.navigation.arrows.left);
-			setNavElPositions(opt.c.find('.tp-rightarrow.tparrows'),opt.navigation.arrows.right);
+			setNavElPositions(opt.c.find('.tp-leftarrow.tparrows'),opt.navigation.arrows.left,opt);
+			setNavElPositions(opt.c.find('.tp-rightarrow.tparrows'),opt.navigation.arrows.right,opt);
 		}
 
 
@@ -121,10 +159,26 @@ jQuery.extend(true,_R, {
 
 		// BUILD BULLETS, THUMBS and TABS		
 		opt.li.each(function(index) {
+			
+			var li_rtl = jQuery(opt.li[opt.li.length-1-index]);
 			var li = jQuery(this);				
-			if (b) addBullet(container,_b,li,opt);		
-			if (c) addThumb(container,_c,li,'tp-thumb',opt);		
-			if (d) addThumb(container,_d,li,'tp-tab',opt);
+
+			if (b) 
+				if (opt.navigation.bullets.rtl)
+					addBullet(container,_b,li_rtl,opt);		
+				else
+					addBullet(container,_b,li,opt);	
+			
+			if (c) 
+				if (opt.navigation.thumbnails.rtl)
+					addThumb(container,_c,li_rtl,'tp-thumb',opt);		
+				else
+					addThumb(container,_c,li,'tp-thumb',opt);
+			if (d) 
+				if (opt.navigation.tabs.rtl)
+					addThumb(container,_d,li_rtl,'tp-tab',opt);
+				else
+					addThumb(container,_d,li,'tp-tab',opt);
 		});
 		
 		// LISTEN TO SLIDE CHANGE - SET ACTIVE SLIDE BULLET				
@@ -167,14 +221,16 @@ jQuery.extend(true,_R, {
 			var pi = ai>0 ? ai-1 : opt.slideamount-1,
 				ni = (ai+1)==opt.slideamount ? 0 : ai+1;
 				
-		
+			
 			if (_a.enable === true) {
 				var inst = _a.tmp;
+
 				jQuery.each(opt.thumbs[pi].params,function(i,obj) {
 					inst = inst.replace(obj.from,obj.to);
 				});	
 				_a.left.j.html(inst);
 				inst = _a.tmp;
+				if (ni>opt.slideamount) return;
 				jQuery.each(opt.thumbs[ni].params,function(i,obj) {
 					inst = inst.replace(obj.from,obj.to);
 				});	
@@ -371,50 +427,107 @@ var initKeyboard = function(container,opt) {
 	jQuery(document).keydown(function(e){
 		if ((opt.navigation.keyboard_direction=="horizontal" && e.keyCode == 39) || (opt.navigation.keyboard_direction=="vertical" && e.keyCode==40)) {
 			opt.sc_indicator="arrow";
+			opt.sc_indicator_dir = 0;
 			_R.callingNewSlide(opt,container,1);					
 		}
 		if ((opt.navigation.keyboard_direction=="horizontal" && e.keyCode == 37) || (opt.navigation.keyboard_direction=="vertical" && e.keyCode==38)) {
 			opt.sc_indicator="arrow";
+			opt.sc_indicator_dir = 1;
 			_R.callingNewSlide(opt,container,-1);									
 		}
 	});		
 };
 
-var initMouseScroll = function(container,opt) {				
-	if (opt.navigation.mouseScrollNavigation!=="on") return;
-	var bl = navigator.userAgent.match(/mozilla/i) ?  -29 : -49,
-		tl = navigator.userAgent.match(/mozilla/i) ? 29 : 49;
 
+
+var initMouseScroll = function(container,opt) {			
+
+	if (opt.navigation.mouseScrollNavigation!=="on" && opt.navigation.mouseScrollNavigation!=="carousel") return;
+	opt.isIEEleven = !!navigator.userAgent.match(/Trident.*rv\:11\./);
+	opt.isSafari = !!navigator.userAgent.match(/safari/i);
+	opt.ischrome = !!navigator.userAgent.match(/chrome/i);
+
+	
+	var bl = opt.ischrome ? -49 : opt.isIEEleven || opt.isSafari ? -9 : navigator.userAgent.match(/mozilla/i) ?  -29 :  -49,
+		tl = opt.ischrome ? 49 : opt.isIEEleven || opt.isSafari ? 9 : navigator.userAgent.match(/mozilla/i) ? 29 :  49;
+	
+	
 	container.on('mousewheel DOMMouseScroll', function(e) {							
+						
 			var res = normalizeWheel(e.originalEvent),		
 				asi = container.find('.tp-revslider-slidesli.active-revslide').index(),
 				psi = container.find('.tp-revslider-slidesli.processing-revslide').index(),
 				fs = asi!=-1 && asi==0 || psi!=-1 && psi==0 ? true : false,
-				ls = asi!=-1 && asi==opt.slideamount-1 || psi!=1 && psi==opt.slideamount-1 ? true:false;
-					
-		if (psi==-1) {			
-			if(res.pixelY<bl) {			 
-				if (!fs) {
+				ls = asi!=-1 && asi==opt.slideamount-1 || psi!=1 && psi==opt.slideamount-1 ? true:false,				
+				ret = true;
+			if (opt.navigation.mouseScrollNavigation=="carousel") 
+				fs = ls = false;								
+		if (psi==-1) {				
+
+			if(res.pixelY<bl) {
+				
+				if (!fs) {					
 					opt.sc_indicator="arrow";
-					_R.callingNewSlide(opt,container,-1);																		
-					return false;			 
+					if (opt.navigation.mouseScrollReverse!=="reverse") {
+						opt.sc_indicator_dir = 0;
+						_R.callingNewSlide(opt,container,-1);	
+					} 
+					ret = false;
+				}
+				if (!ls) {
+					opt.sc_indicator="arrow";
+					if (opt.navigation.mouseScrollReverse==="reverse") {
+						opt.sc_indicator_dir = 1;
+						_R.callingNewSlide(opt,container,1);	
+					}					
+					ret = false;			 
 				}
 			 }
 			 else 
-			 if(res.pixelY>tl) {				 
-			 	if (!ls) {
+			 if(res.pixelY>tl) {				
+			 	if (!ls) {			 					 		
 				 	opt.sc_indicator="arrow";
-					_R.callingNewSlide(opt,container,1);								 
-					return false;
+				 	if (opt.navigation.mouseScrollReverse!=="reverse") {
+						opt.sc_indicator_dir = 1;
+						_R.callingNewSlide(opt,container,1);	
+					} 				
+					ret = false;
+				}
+				if (!fs) {
+					opt.sc_indicator="arrow";
+					if (opt.navigation.mouseScrollReverse==="reverse") {
+						opt.sc_indicator_dir = 0;
+						_R.callingNewSlide(opt,container,-1);	
+					}		
+					ret = false;
 				}
 			 }
 			 
 			
-		} else {
-			if (!ls)
-				return false;
+		} else {										
+			ret = false;		
 		}	
-		e.preventDefault();	
+
+		var tc = opt.c.offset().top-jQuery('body').scrollTop(),
+			bc = tc+opt.c.height();
+		if (opt.navigation.mouseScrollNavigation!="carousel") {
+			if (opt.navigation.mouseScrollReverse!=="reverse")
+				if ((tc>0 && res.pixelY>0) || (bc<jQuery(window).height() && res.pixelY<0))
+					ret = true;
+			if (opt.navigation.mouseScrollReverse==="reverse")
+				if ((tc<0 && res.pixelY<0) || (bc>jQuery(window).height() && res.pixelY>0))
+					ret = true;
+		} else {
+			ret=false;
+		}
+
+		
+		if (ret==false) {
+			e.preventDefault(e);    		
+			return false;
+		} else {			
+			return;
+		}
 	});
 };
 
@@ -441,185 +554,191 @@ var swipeAction = function(container,opt,vertical) {
 	pagescroll = vertical == "swipebased" && swipe_wait_dir=="vertical" ? "none" : vertical ? "vertical" : pagescroll;
 	
 	if (!jQuery.fn.swipetp) jQuery.fn.swipetp = jQuery.fn.swipe;
-	if (!jQuery.fn.swipetp.defaults || !jQuery.fn.swipetp.defaults.excludedElements) {
+	if (!jQuery.fn.swipetp.defaults || !jQuery.fn.swipetp.defaults.excludedElements) 
 		if (!jQuery.fn.swipetp.defaults) 
 			jQuery.fn.swipetp.defaults = new Object();
-		jQuery.fn.swipetp.defaults.excludedElements = "label, button, input, select, textarea, a, .noSwipe"
-	}
+
+	jQuery.fn.swipetp.defaults.excludedElements = "label, button, input, select, textarea, .noSwipe"
+
 
 	SwipeOn.swipetp({			
 		allowPageScroll:pagescroll,			
-		triggerOnTouchLeave:true,					
+		triggerOnTouchLeave:true,
+		treshold:opt.navigation.touch.swipe_treshold,
+		fingers:opt.navigation.touch.swipe_min_touches,
+						
 		excludeElements:jQuery.fn.swipetp.defaults.excludedElements,	
-
+			
 		swipeStatus:function(event,phase,direction,distance,duration,fingerCount,fingerData) {			
 					
 
-		var withinslider = isme('rev_slider_wrapper',container,event),
-			withinthumbs =  isme('tp-thumbs',container,event),
-			withintabs =  isme('tp-tabs',container,event),
-			starget = jQuery(this).attr('class'),
-			istt = starget.match(/tp-tabs|tp-thumb/gi) ? true : false;
-							
-
-			
-		// SWIPE OVER SLIDER, TO SWIPE SLIDES IN CAROUSEL MODE
-		if (opt.sliderType==="carousel" && 
-			(((phase==="move" || phase==="end" || phase=="cancel") &&  (opt.dragStartedOverSlider && !opt.dragStartedOverThumbs && !opt.dragStartedOverTabs))
-			 || (phase==="start" && withinslider>0 && withinthumbs===0 && withintabs===0))) {				
+			var withinslider = isme('rev_slider_wrapper',container,event),
+				withinthumbs =  isme('tp-thumbs',container,event),
+				withintabs =  isme('tp-tabs',container,event),
+				starget = jQuery(this).attr('class'),
+				istt = starget.match(/tp-tabs|tp-thumb/gi) ? true : false;
 								
-			opt.dragStartedOverSlider = true;
-			distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);
-			
-			switch (phase) {
-				case "start":								
-					if (_.positionanim!==undefined) {											
-							_.positionanim.kill();																		
-							_.slide_globaloffset = _.infinity==="off" ? _.slide_offset : _R.simp(_.slide_offset, _.maxwidth);																		
-					}
-					_.overpull = "none";																						
-					_.wrap.addClass("dragged");		
-				break;
-				case "move":	
+
+				
+			// SWIPE OVER SLIDER, TO SWIPE SLIDES IN CAROUSEL MODE
+			if (opt.sliderType==="carousel" && 
+				(((phase==="move" || phase==="end" || phase=="cancel") &&  (opt.dragStartedOverSlider && !opt.dragStartedOverThumbs && !opt.dragStartedOverTabs))
+				 || (phase==="start" && withinslider>0 && withinthumbs===0 && withintabs===0))) {				
 									
+				opt.dragStartedOverSlider = true;
+				distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);
+				
+				switch (phase) {
+					case "start":								
+						if (_.positionanim!==undefined) {											
+								_.positionanim.kill();																		
+								_.slide_globaloffset = _.infinity==="off" ? _.slide_offset : _R.simp(_.slide_offset, _.maxwidth);																		
+						}
+						_.overpull = "none";																						
+						_.wrap.addClass("dragged");		
+					break;
+					case "move":	
+										
 
-						_.slide_offset = _.infinity==="off" ? _.slide_globaloffset + distance : _R.simp(_.slide_globaloffset + distance, _.maxwidth);
-						
-						if (_.infinity==="off") {
-							var bb = _.horizontal_align==="center" ? ((_.wrapwidth/2-_.slide_width/2) - _.slide_offset) / _.slide_width : (0 - _.slide_offset) / _.slide_width;
+							_.slide_offset = _.infinity==="off" ? _.slide_globaloffset + distance : _R.simp(_.slide_globaloffset + distance, _.maxwidth);
 							
-							if ((_.overpull ==="none" || _.overpull===0)  && (bb<0 || bb>opt.slideamount-1)) 
-								_.overpull =  distance;
-							else
-							if (bb>=0 && bb<=opt.slideamount-1 && ((bb>=0 && distance>_.overpull) || (bb<=opt.slideamount-1 && distance<_.overpull)))
-								_.overpull = 0;
-																																		
-							_.slide_offset = bb<0 ? _.slide_offset+ (_.overpull-distance)/1.1 + Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : 
-							 bb>opt.slideamount-1 ? _.slide_offset+ (_.overpull-distance)/1.1 - Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : _.slide_offset ;
-						 }
-						_R.organiseCarousel(opt,direction,true,true);									
-				break;
+							if (_.infinity==="off") {
+								var bb = _.horizontal_align==="center" ? ((_.wrapwidth/2-_.slide_width/2) - _.slide_offset) / _.slide_width : (0 - _.slide_offset) / _.slide_width;
+								
+								if ((_.overpull ==="none" || _.overpull===0)  && (bb<0 || bb>opt.slideamount-1)) 
+									_.overpull =  distance;
+								else
+								if (bb>=0 && bb<=opt.slideamount-1 && ((bb>=0 && distance>_.overpull) || (bb<=opt.slideamount-1 && distance<_.overpull)))
+									_.overpull = 0;
+																																			
+								_.slide_offset = bb<0 ? _.slide_offset+ (_.overpull-distance)/1.1 + Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : 
+								 bb>opt.slideamount-1 ? _.slide_offset+ (_.overpull-distance)/1.1 - Math.sqrt(Math.abs((_.overpull-distance)/1.1)) : _.slide_offset ;
+							 }
+							_R.organiseCarousel(opt,direction,true,true);									
+					break;
 
-				case "end":
-				case "cancel":		
-						//duration !!
-						_.slide_globaloffset = _.slide_offset;	
-						_.wrap.removeClass("dragged");
-						_R.carouselToEvalPosition(opt,direction);							
-						opt.dragStartedOverSlider = false;
-						opt.dragStartedOverThumbs = false;
-						opt.dragStartedOverTabs = false;																									
-				break;
-			}
-		}  else
-
-		// SWIPE OVER THUMBS OR TABS
-		if ((
-			((phase==="move" || phase==="end" || phase=="cancel") &&  (!opt.dragStartedOverSlider && (opt.dragStartedOverThumbs || opt.dragStartedOverTabs)))
-			 || 
-			(phase==="start" && (withinslider>0 && (withinthumbs>0 || withintabs>0))))) {				
-							
-			
-			if (withinthumbs>0) opt.dragStartedOverThumbs = true;
-			if (withintabs>0) opt.dragStartedOverTabs = true;
-			
-			var thumbs = opt.dragStartedOverThumbs ? ".tp-thumbs" : ".tp-tabs",
-				thumbmask = opt.dragStartedOverThumbs ? ".tp-thumb-mask" : ".tp-tab-mask",
-				thumbsiw = opt.dragStartedOverThumbs ? ".tp-thumbs-inner-wrapper" : ".tp-tabs-inner-wrapper",
-				thumb = opt.dragStartedOverThumbs ? ".tp-thumb" : ".tp-tab",
-				_o = opt.dragStartedOverThumbs ? opt.navigation.thumbnails : opt.navigation.tabs;
-
-
-			distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);						
-			var t= container.parent().find(thumbmask),
-				el = t.find(thumbsiw),
-				tdir = _o.direction,
-				els = tdir==="vertical" ? el.height() : el.width(),
-				ts =  tdir==="vertical" ? t.height() : t.width(),
-				tw = tdir==="vertical" ? t.find(thumb).first().outerHeight(true)+_o.space : t.find(thumb).first().outerWidth(true)+_o.space,	
-				newpos =  (el.data('offset') === undefined ? 0 : parseInt(el.data('offset'),0)),
-				curpos = 0;
-			
-			switch (phase) {
-				case "start":							
-					container.parent().find(thumbs).addClass("dragged");
-					newpos = tdir === "vertical" ? el.position().top : el.position().left;
-					el.data('offset',newpos);
-					if (el.data('tmmove')) el.data('tmmove').pause();
-					
-				break;
-				case "move":	
-						if (els<=ts) return false;
-														
-						curpos = newpos + distance;																					
-						curpos = curpos>0 ? tdir==="horizontal" ? curpos - (el.width() * (curpos/el.width() * curpos/el.width())) : curpos - (el.height() * (curpos/el.height() * curpos/el.height())) : curpos;
-						var dif = tdir==="vertical" ? 0-(el.height()-t.height()) : 0-(el.width()-t.width());
-						curpos = curpos < dif ? tdir==="horizontal" ? curpos + (el.width() * (curpos-dif)/el.width() * (curpos-dif)/el.width()) : curpos + (el.height() * (curpos-dif)/el.height() * (curpos-dif)/el.height()) : curpos;									
-						if (tdir==="vertical") 									
-							punchgs.TweenLite.set(el,{top:curpos+"px"});									
-						else
-							punchgs.TweenLite.set(el,{left:curpos+"px"});	
-						
-
-				break;
-
-				case "end":
-				case "cancel":		
-					
-					if (istt) {
-						curpos = newpos + distance;								
-														
-						curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
-						curpos = curpos > 0 ? 0 : curpos;
-
-						curpos = Math.abs(distance)>tw/10 ? distance<=0 ? Math.floor(curpos/tw)*tw : Math.ceil(curpos/tw)*tw : distance<0 ? Math.ceil(curpos/tw)*tw : Math.floor(curpos/tw)*tw;
-
-						curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
-						curpos = curpos > 0 ? 0 : curpos;
-						
-						if (tdir==="vertical")
-							punchgs.TweenLite.to(el,0.5,{top:curpos+"px",ease:punchgs.Power3.easeOut});
-						else
-							punchgs.TweenLite.to(el,0.5,{left:curpos+"px",ease:punchgs.Power3.easeOut});
-
-						curpos = !curpos ?  tdir==="vertical" ? el.position().top : el.position().left : curpos;	
-						
-						el.data('offset',curpos);								
-						el.data('distance',distance);
-
-						setTimeout(function() {
+					case "end":
+					case "cancel":		
+							//duration !!
+							_.slide_globaloffset = _.slide_offset;	
+							_.wrap.removeClass("dragged");
+							_R.carouselToEvalPosition(opt,direction);							
 							opt.dragStartedOverSlider = false;
 							opt.dragStartedOverThumbs = false;
-							opt.dragStartedOverTabs = false;
-						},100);
-						container.parent().find(thumbs).removeClass("dragged");
+							opt.dragStartedOverTabs = false;																									
+					break;
+				}
+			}  else
+
+			// SWIPE OVER THUMBS OR TABS
+			if ((
+				((phase==="move" || phase==="end" || phase=="cancel") &&  (!opt.dragStartedOverSlider && (opt.dragStartedOverThumbs || opt.dragStartedOverTabs)))
+				 || 
+				(phase==="start" && (withinslider>0 && (withinthumbs>0 || withintabs>0))))) {				
+								
+				
+				if (withinthumbs>0) opt.dragStartedOverThumbs = true;
+				if (withintabs>0) opt.dragStartedOverTabs = true;
+				
+				var thumbs = opt.dragStartedOverThumbs ? ".tp-thumbs" : ".tp-tabs",
+					thumbmask = opt.dragStartedOverThumbs ? ".tp-thumb-mask" : ".tp-tab-mask",
+					thumbsiw = opt.dragStartedOverThumbs ? ".tp-thumbs-inner-wrapper" : ".tp-tabs-inner-wrapper",
+					thumb = opt.dragStartedOverThumbs ? ".tp-thumb" : ".tp-tab",
+					_o = opt.dragStartedOverThumbs ? opt.navigation.thumbnails : opt.navigation.tabs;
+
+
+				distance = (direction && direction.match(/left|up/g)) ?  Math.round(distance * -1) : distance = Math.round(distance * 1);						
+				var t= container.parent().find(thumbmask),
+					el = t.find(thumbsiw),
+					tdir = _o.direction,
+					els = tdir==="vertical" ? el.height() : el.width(),
+					ts =  tdir==="vertical" ? t.height() : t.width(),
+					tw = tdir==="vertical" ? t.find(thumb).first().outerHeight(true)+_o.space : t.find(thumb).first().outerWidth(true)+_o.space,	
+					newpos =  (el.data('offset') === undefined ? 0 : parseInt(el.data('offset'),0)),
+					curpos = 0;
+				
+				switch (phase) {
+					case "start":							
+						container.parent().find(thumbs).addClass("dragged");
+						newpos = tdir === "vertical" ? el.position().top : el.position().left;
+						el.data('offset',newpos);
+						if (el.data('tmmove')) el.data('tmmove').pause();
 						
+					break;
+					case "move":	
+							if (els<=ts) return false;
+															
+							curpos = newpos + distance;																					
+							curpos = curpos>0 ? tdir==="horizontal" ? curpos - (el.width() * (curpos/el.width() * curpos/el.width())) : curpos - (el.height() * (curpos/el.height() * curpos/el.height())) : curpos;
+							var dif = tdir==="vertical" ? 0-(el.height()-t.height()) : 0-(el.width()-t.width());
+							curpos = curpos < dif ? tdir==="horizontal" ? curpos + (el.width() * (curpos-dif)/el.width() * (curpos-dif)/el.width()) : curpos + (el.height() * (curpos-dif)/el.height() * (curpos-dif)/el.height()) : curpos;									
+							if (tdir==="vertical") 									
+								punchgs.TweenLite.set(el,{top:curpos+"px"});									
+							else
+								punchgs.TweenLite.set(el,{left:curpos+"px"});	
+							
+
+					break;
+
+					case "end":
+					case "cancel":		
+						
+						if (istt) {
+							curpos = newpos + distance;								
+															
+							curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
+							curpos = curpos > 0 ? 0 : curpos;
+
+							curpos = Math.abs(distance)>tw/10 ? distance<=0 ? Math.floor(curpos/tw)*tw : Math.ceil(curpos/tw)*tw : distance<0 ? Math.ceil(curpos/tw)*tw : Math.floor(curpos/tw)*tw;
+
+							curpos = tdir==="vertical" ? curpos < 0-(el.height()-t.height()) ? 0-(el.height()-t.height()) : curpos : curpos < 0-(el.width()-t.width()) ? 0-(el.width()-t.width()) : curpos;
+							curpos = curpos > 0 ? 0 : curpos;
+							
+							if (tdir==="vertical")
+								punchgs.TweenLite.to(el,0.5,{top:curpos+"px",ease:punchgs.Power3.easeOut});
+							else
+								punchgs.TweenLite.to(el,0.5,{left:curpos+"px",ease:punchgs.Power3.easeOut});
+
+							curpos = !curpos ?  tdir==="vertical" ? el.position().top : el.position().left : curpos;	
+							
+							el.data('offset',curpos);								
+							el.data('distance',distance);
+
+							setTimeout(function() {
+								opt.dragStartedOverSlider = false;
+								opt.dragStartedOverThumbs = false;
+								opt.dragStartedOverTabs = false;
+							},100);
+							container.parent().find(thumbs).removeClass("dragged");
+							
+							return false;
+						}
+					break;							
+				}
+			}									
+			else  {								
+				if (phase=="end" && !istt) {		
+					
+					opt.sc_indicator="arrow";	
+					
+					if ((swipe_wait_dir=="horizontal" && direction == "left") || (swipe_wait_dir=="vertical" && direction == "up")) {
+						opt.sc_indicator_dir = 0;
+						_R.callingNewSlide(opt,opt.c,1);
 						return false;
 					}
-				break;							
-			}
-		}									
-		else  {								
-			if (phase=="end" && !istt) {		
-				
-				opt.sc_indicator="arrow";	
-				
-				if ((swipe_wait_dir=="horizontal" && direction == "left") || (swipe_wait_dir=="vertical" && direction == "up")) {
-					_R.callingNewSlide(opt,opt.c,1);
-					return false;
-				}
-				if ((swipe_wait_dir=="horizontal" && direction == "right") || (swipe_wait_dir=="vertical" && direction == "down")) {
-					_R.callingNewSlide(opt,opt.c,-1);	
-					return false;
-				}
+					if ((swipe_wait_dir=="horizontal" && direction == "right") || (swipe_wait_dir=="vertical" && direction == "down")) {
+						opt.sc_indicator_dir = 1;
+						_R.callingNewSlide(opt,opt.c,-1);	
+						return false;
+					}
 
-			}
-			opt.dragStartedOverSlider = false;
-			opt.dragStartedOverThumbs = false;
-			opt.dragStartedOverTabs = false;
-			return true;				
-		}												
-	}
+				}
+				opt.dragStartedOverSlider = false;
+				opt.dragStartedOverThumbs = false;
+				opt.dragStartedOverTabs = false;
+				return true;				
+			}												
+		}
 	});	
 };
 
@@ -670,6 +789,7 @@ var showHideNavElements = function(container,opt,dir,speed) {
 
 // ADD ARROWS
 var initArrows = function(container,o,opt) {
+
 	// SET oIONAL CLASSES
 	o.style = o.style === undefined ? "" : o.style;
 	o.left.style = o.left.style === undefined ? "" : o.left.style;
@@ -683,10 +803,15 @@ var initArrows = function(container,o,opt) {
 		container.append('<div class="tp-rightarrow tparrows '+o.style+' '+o.right.style+'">'+o.tmp+'</div>');	
 	var la = container.find('.tp-leftarrow.tparrows'),
 		ra = container.find('.tp-rightarrow.tparrows');
-	// CLICK HANDLINGS ON LEFT AND RIGHT ARROWS
-	ra.click(function() { opt.sc_indicator="arrow"; container.revnext();});
-	la.click(function() { opt.sc_indicator="arrow"; container.revprev();});
-	
+	if (o.rtl) {
+		// CLICK HANDLINGS ON LEFT AND RIGHT ARROWS
+		la.click(function() { opt.sc_indicator="arrow"; opt.sc_indicator_dir = 0;container.revnext();});
+		ra.click(function() { opt.sc_indicator="arrow"; opt.sc_indicator_dir = 1;container.revprev();});
+	} else {
+		// CLICK HANDLINGS ON LEFT AND RIGHT ARROWS
+		ra.click(function() { opt.sc_indicator="arrow"; opt.sc_indicator_dir = 0;container.revnext();});
+		la.click(function() { opt.sc_indicator="arrow"; opt.sc_indicator_dir = 1;container.revprev();});
+	}
 	// SHORTCUTS
 	o.right.j = container.find('.tp-rightarrow.tparrows');
 	o.left.j = container.find('.tp-leftarrow.tparrows')
@@ -696,31 +821,40 @@ var initArrows = function(container,o,opt) {
 	o.padding_bottom = parseInt((opt.carousel.padding_bottom||0),0);
 	
 	// POSITION OF ARROWS
-	setNavElPositions(la,o.left);
-	setNavElPositions(ra,o.right);
+	setNavElPositions(la,o.left,opt);
+	setNavElPositions(ra,o.right,opt);
 
-	if (o.position=="outer-left" || o.position=="outer-right") opt.outernav = true;
+	o.left.opt = opt;
+	o.right.opt = opt;
+	
+
+	if (o.position=="outer-left" || o.position=="outer-right") opt.outernav = true;	
 };
 
 
 // PUT ELEMENTS VERTICAL / HORIZONTAL IN THE RIGHT POSITION
-var putVinPosition = function(el,o) {
+var putVinPosition = function(el,o,opt) {
+	
 	var elh = el.outerHeight(true),
 		elw = el.outerWidth(true),
-		a = o.v_align === "top" ? {top:"0px",y:Math.round(o.v_offset)+"px"} : o.v_align === "center" ? {top:"50%",y:Math.round(((0-elh/2)+o.v_offset))+"px"} : {top:"100%",y:Math.round((0-(elh+o.v_offset)))+"px"};				
+		oh = o.opt== undefined ? 0 : opt.conh == 0 ? opt.height : opt.conh,
+		by = o.container=="layergrid" ? opt.sliderLayout=="fullscreen" ? opt.height/2 - (opt.gridheight[opt.curWinRange]*opt.bh)/2 : (opt.autoHeight=="on" || (opt.minHeight!=undefined && opt.minHeight>0)) ? oh/2 - (opt.gridheight[opt.curWinRange]*opt.bh)/2  : 0 : 0,		
+		a = o.v_align === "top" ? {top:"0px",y:Math.round(o.v_offset+by)+"px"} : o.v_align === "center" ? {top:"50%",y:Math.round(((0-elh/2)+o.v_offset))+"px"} : {top:"100%",y:Math.round((0-(elh+o.v_offset+by)))+"px"};					
 	if (!el.hasClass("outer-bottom")) punchgs.TweenLite.set(el,a);	
+	
 };
 
-var putHinPosition = function(el,o) {
-
+var putHinPosition = function(el,o,opt) {
+	
 	var elh = el.outerHeight(true),
-		elw = el.outerWidth(true),		
-		a = o.h_align === "left" ? {left:"0px",x:Math.round(o.h_offset)+"px"} : o.h_align === "center" ? {left:"50%",x:Math.round(((0-elw/2)+o.h_offset))+"px"} : {left:"100%",x:Math.round((0-(elw+o.h_offset)))+"px"};	
+		elw = el.outerWidth(true),
+		bx = o.container=="layergrid" ? opt.sliderType==="carousel" ? 0 : opt.width/2 - (opt.gridwidth[opt.curWinRange]*opt.bw)/2 : 0,
+		a = o.h_align === "left" ? {left:"0px",x:Math.round(o.h_offset+bx)+"px"} : o.h_align === "center" ? {left:"50%",x:Math.round(((0-elw/2)+o.h_offset))+"px"} : {left:"100%",x:Math.round((0-(elw+o.h_offset+bx)))+"px"};	
 	punchgs.TweenLite.set(el,a);
 };
 
 // SET POSITION OF ELEMENTS
-var setNavElPositions = function(el,o) {
+var setNavElPositions = function(el,o,opt) {
 
 	var wrapper =  
 		el.closest('.tp-simpleresponsive').length>0 ? 
@@ -733,8 +867,8 @@ var setNavElPositions = function(el,o) {
 		ww = wrapper.width(),
 		wh = wrapper.height();	
 
-	putVinPosition(el,o);
-	putHinPosition(el,o);
+	putVinPosition(el,o,opt);
+	putHinPosition(el,o,opt);
 
 	if (o.position==="outer-left" && (o.sliderLayout=="fullwidth" || o.sliderLayout=="fullscreen")) 
 		punchgs.TweenLite.set(el,{left:(0-el.outerWidth())+"px",x:o.h_offset+"px"});
@@ -779,12 +913,12 @@ var setNavElPositions = function(el,o) {
 		// SPAN IS ENABLED
 		if (o.span===true && o.direction==="vertical") {
 			punchgs.TweenLite.set(el,{maxHeight:(cpt+cpb+(wh-2*wpad))+"px",height:(cpt+cpb+(wh-2*wpad))+"px",top:(0-cpt),y:0});					
-			putVinPosition(mask,o);
+			putVinPosition(mask,o,opt);
 		} else 
 
 		if (o.span===true && o.direction==="horizontal") {
 			punchgs.TweenLite.set(el,{maxWidth:"100%",width:(ww-2*wpad)+"px",left:0,x:0});					
-			putHinPosition(mask,o);
+			putHinPosition(mask,o,opt);
 		}
 	}
 };
@@ -795,7 +929,7 @@ var addBullet = function(container,o,li,opt) {
 	
 	// Check if Bullet exists already ?		
 	if (container.find('.tp-bullets').length===0) {
-		o.style = o.style === undefined ? "" : o.style;
+		o.style = o.style === undefined ? "" : o.style;		
 		container.append('<div class="tp-bullets '+o.style+' '+o.direction+'"></div>');
 	}
 	
@@ -818,10 +952,12 @@ var addBullet = function(container,o,li,opt) {
 		//bgimage = li.data('thumb') !==undefined ? li.data('thumb') : li.find('.defaultimg').data('lazyload') !==undefined && li.find('.defaultimg').data('lazyload') !== 'undefined' ? li.find('.defaultimg').data('lazyload') : li.find('.defaultimg').data('src');
 
 	if (o.direction==="vertical") {
+		
 		b.css({top:((am-1)*h)+"px", left:"0px"});
 		bw.css({height:(((am-1)*h) + b.outerHeight()),width:b.outerWidth()});
 	}
 	else {
+		
 		b.css({left:((am-1)*w)+"px", top:"0px"});
 		bw.css({width:(((am-1)*w) + b.outerWidth()),height:b.outerHeight()});			
 	}
@@ -842,11 +978,15 @@ var addBullet = function(container,o,li,opt) {
 	// OUTTUER PADDING DEFAULTS
 	o.padding_top = parseInt((opt.carousel.padding_top||0),0),
 	o.padding_bottom = parseInt((opt.carousel.padding_bottom||0),0);
-
+	o.opt = opt;	
 	if (o.position=="outer-left" || o.position=="outer-right") opt.outernav = true;
 
+	bw.addClass("nav-pos-hor-"+o.h_align);
+	bw.addClass("nav-pos-ver-"+o.v_align);
+	bw.addClass("nav-dir-"+o.direction);
+
 	// PUT ALL CONTAINER IN POSITION
-	setNavElPositions(bw,o);		
+	setNavElPositions(bw,o,opt);		
 };
 
 
@@ -907,7 +1047,8 @@ var addThumb = function(container,o,li,what,opt) {
 			inst = inst.replace(obj.from,obj.to);
 		})	
 	
-	tw.append('<div data-liindex="'+li.index()+'" data-liref="'+linkto+'" class="justaddedthumb '+what+'" style="width:'+o.width+'px;height:'+o.height+'px;">'+inst+'</div>');
+
+		tw.append('<div data-liindex="'+li.index()+'" data-liref="'+linkto+'" class="justaddedthumb '+what+'" style="width:'+o.width+'px;height:'+o.height+'px;">'+inst+'</div>');
 
 
 	// SET BULLET SPACES AND POSITION
@@ -920,11 +1061,11 @@ var addThumb = function(container,o,li,what,opt) {
 	b.find(timg).css({backgroundImage:"url("+opt.thumbs[li.index()].src+")"});
 	
 
-	if (o.direction==="vertical") {
+	if (o.direction==="vertical") {		
 		b.css({top:((am-1)*h)+"px", left:"0px"});
 		tw.css({height:(((am-1)*h) + b.outerHeight()),width:b.outerWidth()});
 	}
-	else {
+	else {		
 		b.css({left:((am-1)*w)+"px", top:"0px"});
 		tw.css({width:(((am-1)*w) + b.outerWidth()),height:b.outerHeight()});			
 	}
@@ -937,7 +1078,7 @@ var addThumb = function(container,o,li,what,opt) {
 	
 
 	tm.css({maxWidth:maxw+"px",maxHeight:maxh+"px",overflow:"hidden",position:"relative"});		
-	t.css({maxWidth:(maxw)+"px",margin:_margin, maxHeight:maxh+"px",overflow:"visible",position:position,background:cHex(o.wrapper_color,o.wrapper_opacity),padding:o.wrapper_padding+"px",boxSizing:"contet-box"});
+	t.css({maxWidth:(maxw)+"px",/*margin:_margin, */maxHeight:maxh+"px",overflow:"visible",position:position,background:cHex(o.wrapper_color,o.wrapper_opacity),padding:o.wrapper_padding+"px",boxSizing:"contet-box"});
 
 	
 	
@@ -956,8 +1097,14 @@ var addThumb = function(container,o,li,what,opt) {
 	// REMOVE HELP CLASS
 	b.removeClass("justaddedthumb");
 
+	o.opt = opt;
+
+	t.addClass("nav-pos-hor-"+o.h_align);
+	t.addClass("nav-pos-ver-"+o.v_align);
+	t.addClass("nav-dir-"+o.direction);
+	
 	// PUT ALL CONTAINER IN POSITION		
-	setNavElPositions(t,o);	
+	setNavElPositions(t,o,opt);	
 };
 
 var setONHeights = function(o) {

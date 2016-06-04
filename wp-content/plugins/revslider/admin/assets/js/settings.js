@@ -132,7 +132,12 @@ var RevSliderSettings = new function(){
 				//update preview image:
 				var urlShowImage = UniteAdminRev.getUrlShowImage(imageID,100,70,true);
 				jQuery("#" + settingID + "_button_preview").html('<div style="width:100px;height:70px;background:url(\''+urlShowImage+'\'); background-position:center center; background-size:cover;"></div>');
-				
+				jQuery('.show_on_thumbnail_exist').show();
+				// Use Admin Thumbnail if Selected
+				if (jQuery('#thumb_for_admin').attr('checked')=="checked") {
+					var tbgimg = jQuery('#slide_thumb_button_preview div').css("background-image");			
+					jQuery('#slide_selector .list_slide_links li.selected .slide-media-container').css({"background-image":tbgimg, backgroundSize:"cover",backgroundPosition:"center center"});
+				}
 			});
 		});
 		
@@ -141,6 +146,7 @@ var RevSliderSettings = new function(){
 			jQuery("#"+settingID).val('');
 			
 			jQuery("#" + settingID + "_button_preview").html('');
+			jQuery('.show_on_thumbnail_exist').hide();
 		});
 		
 		jQuery(".button-image-select-video").click(function(){

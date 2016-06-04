@@ -1,0 +1,23 @@
+{
+  "name": "locomotiva-2016",
+  "version": "1.0.0",
+  "description": "Projeto do site http://locomotivajr.com.br",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hugocica/locomotiva-2016.git"
+  },
+  "author": "Hugo Cicarelli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hugocica/locomotiva-2016/issues"
+  },
+  "homepage": "https://github.com/hugocica/locomotiva-2016#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.3.1"
+  }
+}

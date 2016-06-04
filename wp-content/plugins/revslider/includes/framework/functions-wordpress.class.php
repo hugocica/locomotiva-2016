@@ -7,7 +7,7 @@
 
 if( !defined( 'ABSPATH') ) exit();
 
-class RevSliderFunctionsWP{
+class RevSliderFunctionsWP {
 
 	public static $urlSite;
 	public static $urlAdmin;
@@ -174,6 +174,13 @@ class RevSliderFunctionsWP{
 	}
 	
 	
+	/**
+	 * Check if current user is administrator
+	 **/
+	public static function isAdminUser(){
+		return current_user_can('administrator');
+	}
+	
 	
 	/* Import media from url
 	 *
@@ -278,7 +285,7 @@ class RevSliderFunctionsWP{
 	public static function getImageUrlFromPath($pathImage){
 		//protect from absolute url
 		$pathLower = strtolower($pathImage);
-		if(strpos($pathLower, "http://") !== false || strpos($pathLower, "www.") === 0)
+		if(strpos($pathLower, "http://") !== false || strpos($pathLower, "https://") !== false || strpos($pathLower, "www.") === 0)
 			return($pathImage);
 		
 		$urlImage = self::getUrlUploads().$pathImage;
@@ -423,25 +430,33 @@ class RevSliderFunctionsWP{
 	 * 
 	 * get posts by coma saparated posts
 	 */
-	public static function getPostsByIDs($strIDs, $slider_id){
+	public static function getPostsByIDs($strIDs, $slider_id, $is_gal, $additional = array()){
 		
 		if(is_string($strIDs)){
 			$arr = explode(",",$strIDs);
-		}			
-		
+		}else{
+			$arr = $strIDs;
+		}
+
 		$query = array(
 			'post_type'=>"any",
+			'ignore_sticky_posts' => 1,
 			'post__in' => $arr
 		);
 		
+		if($is_gal){
+			$query['post_status'] = 'inherit';
+			$query['orderby'] = 'post__in';
+		}
+		
+		$query = array_merge($query, $additional);
 		$query = apply_filters('revslider_get_posts', $query, $slider_id);
 		
 		$objQuery = new WP_Query($query);
 		
-		$arrPosts = $objQuery->posts;						
-		
+		$arrPosts = $objQuery->posts;		
+
 		//dmp($query);dmp("num posts: ".count($arrPosts));exit();
-		
 		foreach($arrPosts as $key=>$post){
 				
 			if(method_exists($post, "to_array"))
@@ -450,6 +465,8 @@ class RevSliderFunctionsWP{
 				$arrPosts[$key] = (array)$post;
 		}
 		
+
+
 		return($arrPosts);
 	}
 	
@@ -486,6 +503,7 @@ class RevSliderFunctionsWP{
 		
 		$query = array(
 			'order'=>$direction,
+			'ignore_sticky_posts' => 1,
 			'posts_per_page'=>$numPosts,
 			'showposts'=>$numPosts,
 			'post_type'=>$postTypes
@@ -884,7 +902,7 @@ class RevSliderFunctionsWP{
 			$catName = $category["name"];
 			
 			if(!empty($link))
-				$thelist .= '<a href="' . esc_url( $link ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s", REVSLIDER_TEXTDOMAIN), $category["name"] ) ) . '" ' . $rel . '>' . $catName.'</a>';
+				$thelist .= '<a href="' . esc_url( $link ) . '" title="' . esc_attr( sprintf( __( "View all posts in %s", 'revslider'), $category["name"] ) ) . '" ' . $rel . '>' . $catName.'</a>';
 			else
 				$thelist .= $catName;
 			
@@ -1190,6 +1208,15 @@ class RevSliderFunctionsWP{
 		return $attachment_id;
 	}
 	
+	
+	public static function update_option($handle, $value, $autoload = 'on'){ //on is on, false is 'off'
+		
+		if(!add_option($handle, $value, '', $autoload)){ //returns false if option is not existing
+			delete_option($handle);
+		}
+		
+		add_option($handle, $value, '', $autoload);
+	}
 	
 }	//end of the class
 

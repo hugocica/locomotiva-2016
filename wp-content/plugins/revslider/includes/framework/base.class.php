@@ -216,55 +216,50 @@ class RevSliderBase {
 		switch($type){
 			case 'flickr':
 				$custom_sizes = array(
-					'original' => __('Original', REVSLIDER_TEXTDOMAIN),
-					'large' => __('Large', REVSLIDER_TEXTDOMAIN),
-					'large-square' => __('Large Square', REVSLIDER_TEXTDOMAIN),
-					'medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'medium-800' => __('Medium 800', REVSLIDER_TEXTDOMAIN),
-					'medium-640' => __('Medium 640', REVSLIDER_TEXTDOMAIN),
-					'small' => __('Small', REVSLIDER_TEXTDOMAIN),
-					'small-320' => __('Small 320', REVSLIDER_TEXTDOMAIN),
-					'thumbnail'=> __('Thumbnail', REVSLIDER_TEXTDOMAIN),
-					'square' => __('Square', REVSLIDER_TEXTDOMAIN)
+					'original' => __('Original', 'revslider'),
+					'large' => __('Large', 'revslider'),
+					'large-square' => __('Large Square', 'revslider'),
+					'medium' => __('Medium', 'revslider'),
+					'medium-800' => __('Medium 800', 'revslider'),
+					'medium-640' => __('Medium 640', 'revslider'),
+					'small' => __('Small', 'revslider'),
+					'small-320' => __('Small 320', 'revslider'),
+					'thumbnail'=> __('Thumbnail', 'revslider'),
+					'square' => __('Square', 'revslider')
 				);
 			break;
 			case 'instagram':
 				$custom_sizes = array(
-					'standard_resolution' => __('Standard Resolution', REVSLIDER_TEXTDOMAIN),
-					'thumbnail' => __('Thumbnail', REVSLIDER_TEXTDOMAIN),
-					'low_resolution' => __('Low Resolution', REVSLIDER_TEXTDOMAIN)
+					'standard_resolution' => __('Standard Resolution', 'revslider'),
+					'thumbnail' => __('Thumbnail', 'revslider'),
+					'low_resolution' => __('Low Resolution', 'revslider')
 				);
 			break;
 			case 'twitter':
 				$custom_sizes = array(
-					'large' => __('Standard Resolution', REVSLIDER_TEXTDOMAIN)
+					'large' => __('Standard Resolution', 'revslider')
 				);
 			break;
 			case 'facebook':
 				$custom_sizes = array(
-					'size-0' => __('Size 0', REVSLIDER_TEXTDOMAIN),
-					'size-1' => __('Size 1', REVSLIDER_TEXTDOMAIN),
-					'size-2' => __('Size 2', REVSLIDER_TEXTDOMAIN),
-					'size-3' => __('Size 3', REVSLIDER_TEXTDOMAIN),
-					'size-4' => __('Size 4', REVSLIDER_TEXTDOMAIN),
-					'size-5' => __('Size 5', REVSLIDER_TEXTDOMAIN),
-					'size-6' => __('Size 6', REVSLIDER_TEXTDOMAIN)
+					'full' => __('Original Size', 'revslider'),
+					'thumbnail' => __('Thumbnail', 'revslider')
 				);
 			break;
 			case 'youtube':
 				$custom_sizes = array(
-					'default' => __('Default', REVSLIDER_TEXTDOMAIN),
-					'medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'high' => __('High', REVSLIDER_TEXTDOMAIN),
-					'standard' => __('Standard', REVSLIDER_TEXTDOMAIN),
-					'maxres' => __('Max. Res.', REVSLIDER_TEXTDOMAIN)
+					'default' => __('Default', 'revslider'),
+					'medium' => __('Medium', 'revslider'),
+					'high' => __('High', 'revslider'),
+					'standard' => __('Standard', 'revslider'),
+					'maxres' => __('Max. Res.', 'revslider')
 				);
 			break;
 			case 'vimeo':
 				$custom_sizes = array(
-					'thumbnail_small' => __('Small', REVSLIDER_TEXTDOMAIN),
-					'thumbnail_medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'thumbnail_large' => __('Large', REVSLIDER_TEXTDOMAIN),
+					'thumbnail_small' => __('Small', 'revslider'),
+					'thumbnail_medium' => __('Medium', 'revslider'),
+					'thumbnail_large' => __('Large', 'revslider'),
 				);
 			break;
 			case 'gallery':
@@ -276,10 +271,10 @@ class RevSliderBase {
 					}
 				}
 				$img_orig_sources = array(
-					'full' => __('Original Size', REVSLIDER_TEXTDOMAIN),
-					'thumbnail' => __('Thumbnail', REVSLIDER_TEXTDOMAIN),
-					'medium' => __('Medium', REVSLIDER_TEXTDOMAIN),
-					'large' => __('Large', REVSLIDER_TEXTDOMAIN)
+					'full' => __('Original Size', 'revslider'),
+					'thumbnail' => __('Thumbnail', 'revslider'),
+					'medium' => __('Medium', 'revslider'),
+					'large' => __('Large', 'revslider')
 				);
 				$custom_sizes = array_merge($img_orig_sources, $custom_sizes);
 			break;
@@ -327,6 +322,68 @@ class RevSliderBase {
 		}
 		
 		return $attachment_id;
+	}
+	
+	/**
+	 * get all the svg url sets used in Slider Revolution
+	 * @since: 5.1.7
+	 **/
+	public static function get_svg_sets_url(){
+		$svg_sets = array();
+		
+		$svg_sets['Actions'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/action/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/action/');
+		$svg_sets['Alerts'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/alert/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/alert/');
+		$svg_sets['AV'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/av/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/av/');
+		$svg_sets['Communication'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/communication/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/communication/');
+		$svg_sets['Content'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/content/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/content/');
+		$svg_sets['Device'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/device/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/device/');
+		$svg_sets['Editor'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/editor/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/editor/');
+		$svg_sets['File'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/file/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/file/');
+		$svg_sets['Hardware'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/hardware/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/hardware/');
+		$svg_sets['Images'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/image/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/image/');
+		$svg_sets['Maps'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/maps/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/maps/');
+		$svg_sets['Navigation'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/navigation/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/navigation/');
+		$svg_sets['Notifications'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/notification/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/notification/');
+		$svg_sets['Places'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/places/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/places/');
+		$svg_sets['Social'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/social/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/social/');
+		$svg_sets['Toggle'] = array('path' => RS_PLUGIN_PATH . 'public/assets/assets/svg/toggle/', 'url' => RS_PLUGIN_URL . 'public/assets/assets/svg/toggle/');
+		
+		$svg_sets = apply_filters('revslider_get_svg_sets', $svg_sets);
+		
+		return $svg_sets;
+	}
+	
+	/**
+	 * get all the svg files for given sets used in Slider Revolution
+	 * @since: 5.1.7
+	 **/
+	public static function get_svg_sets_full(){
+		
+		$svg_sets = self::get_svg_sets_url();
+		
+		$svg = array();
+		
+		if(!empty($svg_sets)){
+			foreach($svg_sets as $handle => $values){
+				$svg[$handle] = array();
+				
+				if($dir = opendir($values['path'])) {
+					while(false !== ($file = readdir($dir))){
+						if ($file != "." && $file != "..") {
+							$filetype = pathinfo($file);
+							
+							if(isset($filetype['extension']) && $filetype['extension'] == 'svg'){
+								$svg[$handle][$file] = $values['url'].$file;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		$svg = apply_filters('revslider_get_svg_sets_full', $svg);
+		
+		return $svg;
 	}
 	
 	
@@ -487,23 +544,35 @@ class RevSliderBase {
 	 * check if file is in zip
 	 * @since: 5.0
 	 */
-	public static function check_file_in_zip($zip, $image, $filepath, $alias, &$alreadyImported, $add_path = false){
+	public static function check_file_in_zip($d_path, $image, $alias, &$alreadyImported, $add_path = false){
+		global $wp_filesystem;
+		
 		if(trim($image) !== ''){
 			if(strpos($image, 'http') !== false){
 			}else{
-				$zimage = $zip->getStream('images/'.$image);
+				$strip = false;
+				$zimage = $wp_filesystem->exists( $d_path.'images/'.$image );
 				if(!$zimage){
-					echo $image.__(' not found!<br>', REVSLIDER_TEXTDOMAIN);
+					$zimage = $wp_filesystem->exists( str_replace('//', '/', $d_path.'images/'.$image) );
+					$strip = true;
+				}
+				
+				if(!$zimage){
+					echo $image.__(' not found!<br>', 'revslider');
 				}else{
-					if(!isset($alreadyImported['zip://'.$filepath."#".'images/'.$image])){
-						$importImage = RevSliderFunctionsWP::import_media('zip://'.$filepath."#".'images/'.$image, $alias.'/');
+					if(!isset($alreadyImported['images/'.$image])){
+						if($strip == true){ //pclzip
+							$importImage = RevSliderFunctionsWP::import_media($d_path.str_replace('//', '/', 'images/'.$image), $alias.'/');
+						}else{
+							$importImage = RevSliderFunctionsWP::import_media($d_path.'images/'.$image, $alias.'/');
+						}
 						if($importImage !== false){
-							$alreadyImported['zip://'.$filepath."#".'images/'.$image] = $importImage['path'];
+							$alreadyImported['images/'.$image] = $importImage['path'];
 							
 							$image = $importImage['path'];
 						}
 					}else{
-						$image = $alreadyImported['zip://'.$filepath."#".'images/'.$image];
+						$image = $alreadyImported['images/'.$image];
 					}
 				}
 				if($add_path){
@@ -534,6 +603,32 @@ class RevSliderBase {
 		}
 	}
 	
+	/**
+	 * prints out debug text if constant TP_DEBUG is defined and true
+ 	 * @since: 5.2.4
+	 */
+	public static function debug($value , $message, $where = "console"){
+		if( defined('TP_DEBUG') && TP_DEBUG ){
+			if($where=="console"){
+				echo '<script>
+					jQuery(document).ready(function(){
+						if(window.console) {
+							console.log("'.$message.'");
+							console.log('.json_encode($value).');
+						}
+					});
+				</script>
+				';
+			}
+			else{
+				var_dump($value);
+			}
+		}
+		else {
+			return false;
+		}
+	}
+
 }
 
 /**

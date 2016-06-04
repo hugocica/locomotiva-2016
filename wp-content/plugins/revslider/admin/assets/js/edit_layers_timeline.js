@@ -1,8 +1,15 @@
 
-/*! perfect-scrollbar - v0.5.7
-* http://noraesae.github.com/perfect-scrollbar/
-* Copyright (c) 2014 Hyunje Alex Jun; Licensed MIT */
-(function(e){"use strict";"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?e(require("jquery")):e(jQuery)})(function(e){"use strict";function t(e){return"string"==typeof e?parseInt(e,10):~~e}var o={wheelSpeed:1,wheelPropagation:!1,minScrollbarLength:null,maxScrollbarLength:null,useBothWheelAxes:!1,useKeyboard:!0,suppressScrollX:!1,suppressScrollY:!1,scrollXMarginOffset:0,scrollYMarginOffset:0,includePadding:!1},n=0,r=function(){var e=n++;return function(t){var o=".perfect-scrollbar-"+e;return t===void 0?o:t+o}};e.fn.perfectScrollbar=function(n,l){return this.each(function(){function i(e,o){var n=e+o,r=E-W;I=0>n?0:n>r?r:n;var l=t(I*(D-E)/(E-W));S.scrollTop(l)}function a(e,o){var n=e+o,r=x-Y;X=0>n?0:n>r?r:n;var l=t(X*(M-x)/(x-Y));S.scrollLeft(l)}function c(e){return L.minScrollbarLength&&(e=Math.max(e,L.minScrollbarLength)),L.maxScrollbarLength&&(e=Math.min(e,L.maxScrollbarLength)),e}function s(){var e={width:x};e.left=O?S.scrollLeft()+x-M:S.scrollLeft(),B?e.bottom=q-S.scrollTop():e.top=H+S.scrollTop(),A.css(e);var t={top:S.scrollTop(),height:E};z?t.right=O?M-S.scrollLeft()-Q-N.outerWidth():Q-S.scrollLeft():t.left=O?S.scrollLeft()+2*x-M-F-N.outerWidth():F+S.scrollLeft(),_.css(t),K.css({left:X,width:Y-U}),N.css({top:I,height:W-G})}function d(){S.removeClass("ps-active-x"),S.removeClass("ps-active-y"),x=L.includePadding?S.innerWidth():S.width(),E=L.includePadding?S.innerHeight():S.height(),M=S.prop("scrollWidth"),D=S.prop("scrollHeight"),!L.suppressScrollX&&M>x+L.scrollXMarginOffset?(C=!0,Y=c(t(x*x/M)),X=t(S.scrollLeft()*(x-Y)/(M-x))):(C=!1,Y=0,X=0,S.scrollLeft(0)),!L.suppressScrollY&&D>E+L.scrollYMarginOffset?(k=!0,W=c(t(E*E/D)),I=t(S.scrollTop()*(E-W)/(D-E))):(k=!1,W=0,I=0,S.scrollTop(0)),X>=x-Y&&(X=x-Y),I>=E-W&&(I=E-W),s(),C&&S.addClass("ps-active-x"),k&&S.addClass("ps-active-y")}function u(){var t,o,n=!1;K.bind(j("mousedown"),function(e){o=e.pageX,t=K.position().left,A.addClass("in-scrolling"),n=!0,e.stopPropagation(),e.preventDefault()}),e(R).bind(j("mousemove"),function(e){n&&(a(t,e.pageX-o),d(),e.stopPropagation(),e.preventDefault())}),e(R).bind(j("mouseup"),function(){n&&(n=!1,A.removeClass("in-scrolling"))}),t=o=null}function p(){var t,o,n=!1;N.bind(j("mousedown"),function(e){o=e.pageY,t=N.position().top,n=!0,_.addClass("in-scrolling"),e.stopPropagation(),e.preventDefault()}),e(R).bind(j("mousemove"),function(e){n&&(i(t,e.pageY-o),d(),e.stopPropagation(),e.preventDefault())}),e(R).bind(j("mouseup"),function(){n&&(n=!1,_.removeClass("in-scrolling"))}),t=o=null}function f(e,t){var o=S.scrollTop();if(0===e){if(!k)return!1;if(0===o&&t>0||o>=D-E&&0>t)return!L.wheelPropagation}var n=S.scrollLeft();if(0===t){if(!C)return!1;if(0===n&&0>e||n>=M-x&&e>0)return!L.wheelPropagation}return!0}function v(){function e(e){var t=e.originalEvent.deltaX,o=-1*e.originalEvent.deltaY;return(t===void 0||o===void 0)&&(t=-1*e.originalEvent.wheelDeltaX/6,o=e.originalEvent.wheelDeltaY/6),e.originalEvent.deltaMode&&1===e.originalEvent.deltaMode&&(t*=10,o*=10),t!==t&&o!==o&&(t=0,o=e.originalEvent.wheelDelta),[t,o]}function t(t){var n=e(t),r=n[0],l=n[1];o=!1,L.useBothWheelAxes?k&&!C?(l?S.scrollTop(S.scrollTop()-l*L.wheelSpeed):S.scrollTop(S.scrollTop()+r*L.wheelSpeed),o=!0):C&&!k&&(r?S.scrollLeft(S.scrollLeft()+r*L.wheelSpeed):S.scrollLeft(S.scrollLeft()-l*L.wheelSpeed),o=!0):(S.scrollTop(S.scrollTop()-l*L.wheelSpeed),S.scrollLeft(S.scrollLeft()+r*L.wheelSpeed)),d(),o=o||f(r,l),o&&(t.stopPropagation(),t.preventDefault())}var o=!1;window.onwheel!==void 0?S.bind(j("wheel"),t):window.onmousewheel!==void 0&&S.bind(j("mousewheel"),t)}function g(){var t=!1;S.bind(j("mouseenter"),function(){t=!0}),S.bind(j("mouseleave"),function(){t=!1});var o=!1;e(R).bind(j("keydown"),function(n){if((!n.isDefaultPrevented||!n.isDefaultPrevented())&&t){for(var r=document.activeElement?document.activeElement:R.activeElement;r.shadowRoot;)r=r.shadowRoot.activeElement;if(!e(r).is(":input,[contenteditable]")){var l=0,i=0;switch(n.which){case 37:l=-30;break;case 38:i=30;break;case 39:l=30;break;case 40:i=-30;break;case 33:i=90;break;case 32:case 34:i=-90;break;case 35:i=n.ctrlKey?-D:-E;break;case 36:i=n.ctrlKey?S.scrollTop():E;break;default:return}S.scrollTop(S.scrollTop()-i),S.scrollLeft(S.scrollLeft()+l),o=f(l,i),o&&n.preventDefault()}}})}function b(){function e(e){e.stopPropagation()}N.bind(j("click"),e),_.bind(j("click"),function(e){var o=t(W/2),n=e.pageY-_.offset().top-o,r=E-W,l=n/r;0>l?l=0:l>1&&(l=1),S.scrollTop((D-E)*l)}),K.bind(j("click"),e),A.bind(j("click"),function(e){var o=t(Y/2),n=e.pageX-A.offset().left-o,r=x-Y,l=n/r;0>l?l=0:l>1&&(l=1),S.scrollLeft((M-x)*l)})}function h(){function t(){var e=window.getSelection?window.getSelection():document.getSlection?document.getSlection():{rangeCount:0};return 0===e.rangeCount?null:e.getRangeAt(0).commonAncestorContainer}function o(){r||(r=setInterval(function(){return P()?(S.scrollTop(S.scrollTop()+l.top),S.scrollLeft(S.scrollLeft()+l.left),d(),void 0):(clearInterval(r),void 0)},50))}function n(){r&&(clearInterval(r),r=null),A.removeClass("in-scrolling"),_.removeClass("in-scrolling")}var r=null,l={top:0,left:0},i=!1;e(R).bind(j("selectionchange"),function(){e.contains(S[0],t())?i=!0:(i=!1,n())}),e(window).bind(j("mouseup"),function(){i&&(i=!1,n())}),e(window).bind(j("mousemove"),function(e){if(i){var t={x:e.pageX,y:e.pageY},r=S.offset(),a={left:r.left,right:r.left+S.outerWidth(),top:r.top,bottom:r.top+S.outerHeight()};t.x<a.left+3?(l.left=-5,A.addClass("in-scrolling")):t.x>a.right-3?(l.left=5,A.addClass("in-scrolling")):l.left=0,t.y<a.top+3?(l.top=5>a.top+3-t.y?-5:-20,_.addClass("in-scrolling")):t.y>a.bottom-3?(l.top=5>t.y-a.bottom+3?5:20,_.addClass("in-scrolling")):l.top=0,0===l.top&&0===l.left?n():o()}})}function w(t,o){function n(e,t){S.scrollTop(S.scrollTop()-t),S.scrollLeft(S.scrollLeft()-e),d()}function r(){b=!0}function l(){b=!1}function i(e){return e.originalEvent.targetTouches?e.originalEvent.targetTouches[0]:e.originalEvent}function a(e){var t=e.originalEvent;return t.targetTouches&&1===t.targetTouches.length?!0:t.pointerType&&"mouse"!==t.pointerType&&t.pointerType!==t.MSPOINTER_TYPE_MOUSE?!0:!1}function c(e){if(a(e)){h=!0;var t=i(e);p.pageX=t.pageX,p.pageY=t.pageY,f=(new Date).getTime(),null!==g&&clearInterval(g),e.stopPropagation()}}function s(e){if(!b&&h&&a(e)){var t=i(e),o={pageX:t.pageX,pageY:t.pageY},r=o.pageX-p.pageX,l=o.pageY-p.pageY;n(r,l),p=o;var c=(new Date).getTime(),s=c-f;s>0&&(v.x=r/s,v.y=l/s,f=c),e.stopPropagation(),e.preventDefault()}}function u(){!b&&h&&(h=!1,clearInterval(g),g=setInterval(function(){return P()?.01>Math.abs(v.x)&&.01>Math.abs(v.y)?(clearInterval(g),void 0):(n(30*v.x,30*v.y),v.x*=.8,v.y*=.8,void 0):(clearInterval(g),void 0)},10))}var p={},f=0,v={},g=null,b=!1,h=!1;t&&(e(window).bind(j("touchstart"),r),e(window).bind(j("touchend"),l),S.bind(j("touchstart"),c),S.bind(j("touchmove"),s),S.bind(j("touchend"),u)),o&&(window.PointerEvent?(e(window).bind(j("pointerdown"),r),e(window).bind(j("pointerup"),l),S.bind(j("pointerdown"),c),S.bind(j("pointermove"),s),S.bind(j("pointerup"),u)):window.MSPointerEvent&&(e(window).bind(j("MSPointerDown"),r),e(window).bind(j("MSPointerUp"),l),S.bind(j("MSPointerDown"),c),S.bind(j("MSPointerMove"),s),S.bind(j("MSPointerUp"),u)))}function m(){S.bind(j("scroll"),function(){d()})}function T(){S.unbind(j()),e(window).unbind(j()),e(R).unbind(j()),S.data("perfect-scrollbar",null),S.data("perfect-scrollbar-update",null),S.data("perfect-scrollbar-destroy",null),K.remove(),N.remove(),A.remove(),_.remove(),S=A=_=K=N=C=k=x=E=M=D=Y=X=q=B=H=W=I=Q=z=F=O=j=null}function y(){d(),m(),u(),p(),b(),h(),v(),(J||V)&&w(J,V),L.useKeyboard&&g(),S.data("perfect-scrollbar",S),S.data("perfect-scrollbar-update",d),S.data("perfect-scrollbar-destroy",T)}var L=e.extend(!0,{},o),S=e(this),P=function(){return!!S};if("object"==typeof n?e.extend(!0,L,n):l=n,"update"===l)return S.data("perfect-scrollbar-update")&&S.data("perfect-scrollbar-update")(),S;if("destroy"===l)return S.data("perfect-scrollbar-destroy")&&S.data("perfect-scrollbar-destroy")(),S;if(S.data("perfect-scrollbar"))return S.data("perfect-scrollbar");S.addClass("ps-container");var x,E,M,D,C,Y,X,k,W,I,O="rtl"===S.css("direction"),j=r(),R=this.ownerDocument||document,A=e("<div class='ps-scrollbar-x-rail'>").appendTo(S),K=e("<div class='ps-scrollbar-x'>").appendTo(A),q=t(A.css("bottom")),B=q===q,H=B?null:t(A.css("top")),U=t(A.css("borderLeftWidth"))+t(A.css("borderRightWidth")),_=e("<div class='ps-scrollbar-y-rail'>").appendTo(S),N=e("<div class='ps-scrollbar-y'>").appendTo(_),Q=t(_.css("right")),z=Q===Q,F=z?null:t(_.css("left")),G=t(_.css("borderTopWidth"))+t(_.css("borderBottomWidth")),J="ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch,V=null!==window.navigator.msMaxTouchPoints;return y(),S})}});
+/* perfect-scrollbar v0.6.10 */
+!function t(e,n,r){function o(l,s){if(!n[l]){if(!e[l]){var a="function"==typeof require&&require;if(!s&&a)return a(l,!0);if(i)return i(l,!0);var c=new Error("Cannot find module '"+l+"'");throw c.code="MODULE_NOT_FOUND",c}var u=n[l]={exports:{}};e[l][0].call(u.exports,function(t){var n=e[l][1][t];return o(n?n:t)},u,u.exports,t,e,n,r)}return n[l].exports}for(var i="function"==typeof require&&require,l=0;l<r.length;l++)o(r[l]);return o}({1:[function(t,e,n){"use strict";function r(t){t.fn.perfectScrollbar=function(e){return this.each(function(){if("object"==typeof e||"undefined"==typeof e){var n=e;i.get(this)||o.initialize(this,n)}else{var r=e;"update"===r?o.update(this):"destroy"===r&&o.destroy(this)}return t(this)})}}var o=t("../main"),i=t("../plugin/instances");if("function"==typeof define&&define.amd)define(["jquery"],r);else{var l=window.jQuery?window.jQuery:window.$;"undefined"!=typeof l&&r(l)}e.exports=r},{"../main":7,"../plugin/instances":18}],2:[function(t,e,n){"use strict";function r(t,e){var n=t.className.split(" ");n.indexOf(e)<0&&n.push(e),t.className=n.join(" ")}function o(t,e){var n=t.className.split(" "),r=n.indexOf(e);r>=0&&n.splice(r,1),t.className=n.join(" ")}n.add=function(t,e){t.classList?t.classList.add(e):r(t,e)},n.remove=function(t,e){t.classList?t.classList.remove(e):o(t,e)},n.list=function(t){return t.classList?Array.prototype.slice.apply(t.classList):t.className.split(" ")}},{}],3:[function(t,e,n){"use strict";function r(t,e){return window.getComputedStyle(t)[e]}function o(t,e,n){return"number"==typeof n&&(n=n.toString()+"px"),t.style[e]=n,t}function i(t,e){for(var n in e){var r=e[n];"number"==typeof r&&(r=r.toString()+"px"),t.style[n]=r}return t}var l={};l.e=function(t,e){var n=document.createElement(t);return n.className=e,n},l.appendTo=function(t,e){return e.appendChild(t),t},l.css=function(t,e,n){return"object"==typeof e?i(t,e):"undefined"==typeof n?r(t,e):o(t,e,n)},l.matches=function(t,e){return"undefined"!=typeof t.matches?t.matches(e):"undefined"!=typeof t.matchesSelector?t.matchesSelector(e):"undefined"!=typeof t.webkitMatchesSelector?t.webkitMatchesSelector(e):"undefined"!=typeof t.mozMatchesSelector?t.mozMatchesSelector(e):"undefined"!=typeof t.msMatchesSelector?t.msMatchesSelector(e):void 0},l.remove=function(t){"undefined"!=typeof t.remove?t.remove():t.parentNode&&t.parentNode.removeChild(t)},l.queryChildren=function(t,e){return Array.prototype.filter.call(t.childNodes,function(t){return l.matches(t,e)})},e.exports=l},{}],4:[function(t,e,n){"use strict";var r=function(t){this.element=t,this.events={}};r.prototype.bind=function(t,e){"undefined"==typeof this.events[t]&&(this.events[t]=[]),this.events[t].push(e),this.element.addEventListener(t,e,!1)},r.prototype.unbind=function(t,e){var n="undefined"!=typeof e;this.events[t]=this.events[t].filter(function(r){return n&&r!==e?!0:(this.element.removeEventListener(t,r,!1),!1)},this)},r.prototype.unbindAll=function(){for(var t in this.events)this.unbind(t)};var o=function(){this.eventElements=[]};o.prototype.eventElement=function(t){var e=this.eventElements.filter(function(e){return e.element===t})[0];return"undefined"==typeof e&&(e=new r(t),this.eventElements.push(e)),e},o.prototype.bind=function(t,e,n){this.eventElement(t).bind(e,n)},o.prototype.unbind=function(t,e,n){this.eventElement(t).unbind(e,n)},o.prototype.unbindAll=function(){for(var t=0;t<this.eventElements.length;t++)this.eventElements[t].unbindAll()},o.prototype.once=function(t,e,n){var r=this.eventElement(t),o=function(t){r.unbind(e,o),n(t)};r.bind(e,o)},e.exports=o},{}],5:[function(t,e,n){"use strict";e.exports=function(){function t(){return Math.floor(65536*(1+Math.random())).toString(16).substring(1)}return function(){return t()+t()+"-"+t()+"-"+t()+"-"+t()+"-"+t()+t()+t()}}()},{}],6:[function(t,e,n){"use strict";var r=t("./class"),o=t("./dom");n.toInt=function(t){return parseInt(t,10)||0},n.clone=function(t){if(null===t)return null;if("object"==typeof t){var e={};for(var n in t)e[n]=this.clone(t[n]);return e}return t},n.extend=function(t,e){var n=this.clone(t);for(var r in e)n[r]=this.clone(e[r]);return n},n.isEditable=function(t){return o.matches(t,"input,[contenteditable]")||o.matches(t,"select,[contenteditable]")||o.matches(t,"textarea,[contenteditable]")||o.matches(t,"button,[contenteditable]")},n.removePsClasses=function(t){for(var e=r.list(t),n=0;n<e.length;n++){var o=e[n];0===o.indexOf("ps-")&&r.remove(t,o)}},n.outerWidth=function(t){return this.toInt(o.css(t,"width"))+this.toInt(o.css(t,"paddingLeft"))+this.toInt(o.css(t,"paddingRight"))+this.toInt(o.css(t,"borderLeftWidth"))+this.toInt(o.css(t,"borderRightWidth"))},n.startScrolling=function(t,e){r.add(t,"ps-in-scrolling"),"undefined"!=typeof e?r.add(t,"ps-"+e):(r.add(t,"ps-x"),r.add(t,"ps-y"))},n.stopScrolling=function(t,e){r.remove(t,"ps-in-scrolling"),"undefined"!=typeof e?r.remove(t,"ps-"+e):(r.remove(t,"ps-x"),r.remove(t,"ps-y"))},n.env={isWebKit:"WebkitAppearance"in document.documentElement.style,supportsTouch:"ontouchstart"in window||window.DocumentTouch&&document instanceof window.DocumentTouch,supportsIePointer:null!==window.navigator.msMaxTouchPoints}},{"./class":2,"./dom":3}],7:[function(t,e,n){"use strict";var r=t("./plugin/destroy"),o=t("./plugin/initialize"),i=t("./plugin/update");e.exports={initialize:o,update:i,destroy:r}},{"./plugin/destroy":9,"./plugin/initialize":17,"./plugin/update":21}],8:[function(t,e,n){"use strict";e.exports={maxScrollbarLength:null,minScrollbarLength:null,scrollXMarginOffset:0,scrollYMarginOffset:0,stopPropagationOnClick:!0,suppressScrollX:!1,suppressScrollY:!1,swipePropagation:!0,useBothWheelAxes:!1,useKeyboard:!0,useSelectionScroll:!1,wheelPropagation:!1,wheelSpeed:1,theme:"default"}},{}],9:[function(t,e,n){"use strict";var r=t("../lib/dom"),o=t("../lib/helper"),i=t("./instances");e.exports=function(t){var e=i.get(t);e&&(e.event.unbindAll(),r.remove(e.scrollbarX),r.remove(e.scrollbarY),r.remove(e.scrollbarXRail),r.remove(e.scrollbarYRail),o.removePsClasses(t),i.remove(t))}},{"../lib/dom":3,"../lib/helper":6,"./instances":18}],10:[function(t,e,n){"use strict";function r(t,e){function n(t){return t.getBoundingClientRect()}var r=window.Event.prototype.stopPropagation.bind;e.settings.stopPropagationOnClick&&e.event.bind(e.scrollbarY,"click",r),e.event.bind(e.scrollbarYRail,"click",function(r){var i=o.toInt(e.scrollbarYHeight/2),a=e.railYRatio*(r.pageY-window.pageYOffset-n(e.scrollbarYRail).top-i),c=e.railYRatio*(e.railYHeight-e.scrollbarYHeight),u=a/c;0>u?u=0:u>1&&(u=1),s(t,"top",(e.contentHeight-e.containerHeight)*u),l(t),r.stopPropagation()}),e.settings.stopPropagationOnClick&&e.event.bind(e.scrollbarX,"click",r),e.event.bind(e.scrollbarXRail,"click",function(r){var i=o.toInt(e.scrollbarXWidth/2),a=e.railXRatio*(r.pageX-window.pageXOffset-n(e.scrollbarXRail).left-i),c=e.railXRatio*(e.railXWidth-e.scrollbarXWidth),u=a/c;0>u?u=0:u>1&&(u=1),s(t,"left",(e.contentWidth-e.containerWidth)*u-e.negativeScrollAdjustment),l(t),r.stopPropagation()})}var o=t("../../lib/helper"),i=t("../instances"),l=t("../update-geometry"),s=t("../update-scroll");e.exports=function(t){var e=i.get(t);r(t,e)}},{"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],11:[function(t,e,n){"use strict";function r(t,e){function n(n){var o=r+n*e.railXRatio,i=Math.max(0,e.scrollbarXRail.getBoundingClientRect().left)+e.railXRatio*(e.railXWidth-e.scrollbarXWidth);0>o?e.scrollbarXLeft=0:o>i?e.scrollbarXLeft=i:e.scrollbarXLeft=o;var s=l.toInt(e.scrollbarXLeft*(e.contentWidth-e.containerWidth)/(e.containerWidth-e.railXRatio*e.scrollbarXWidth))-e.negativeScrollAdjustment;c(t,"left",s)}var r=null,o=null,s=function(e){n(e.pageX-o),a(t),e.stopPropagation(),e.preventDefault()},u=function(){l.stopScrolling(t,"x"),e.event.unbind(e.ownerDocument,"mousemove",s)};e.event.bind(e.scrollbarX,"mousedown",function(n){o=n.pageX,r=l.toInt(i.css(e.scrollbarX,"left"))*e.railXRatio,l.startScrolling(t,"x"),e.event.bind(e.ownerDocument,"mousemove",s),e.event.once(e.ownerDocument,"mouseup",u),n.stopPropagation(),n.preventDefault()})}function o(t,e){function n(n){var o=r+n*e.railYRatio,i=Math.max(0,e.scrollbarYRail.getBoundingClientRect().top)+e.railYRatio*(e.railYHeight-e.scrollbarYHeight);0>o?e.scrollbarYTop=0:o>i?e.scrollbarYTop=i:e.scrollbarYTop=o;var s=l.toInt(e.scrollbarYTop*(e.contentHeight-e.containerHeight)/(e.containerHeight-e.railYRatio*e.scrollbarYHeight));c(t,"top",s)}var r=null,o=null,s=function(e){n(e.pageY-o),a(t),e.stopPropagation(),e.preventDefault()},u=function(){l.stopScrolling(t,"y"),e.event.unbind(e.ownerDocument,"mousemove",s)};e.event.bind(e.scrollbarY,"mousedown",function(n){o=n.pageY,r=l.toInt(i.css(e.scrollbarY,"top"))*e.railYRatio,l.startScrolling(t,"y"),e.event.bind(e.ownerDocument,"mousemove",s),e.event.once(e.ownerDocument,"mouseup",u),n.stopPropagation(),n.preventDefault()})}var i=t("../../lib/dom"),l=t("../../lib/helper"),s=t("../instances"),a=t("../update-geometry"),c=t("../update-scroll");e.exports=function(t){var e=s.get(t);r(t,e),o(t,e)}},{"../../lib/dom":3,"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],12:[function(t,e,n){"use strict";function r(t,e){function n(n,r){var o=t.scrollTop;if(0===n){if(!e.scrollbarYActive)return!1;if(0===o&&r>0||o>=e.contentHeight-e.containerHeight&&0>r)return!e.settings.wheelPropagation}var i=t.scrollLeft;if(0===r){if(!e.scrollbarXActive)return!1;if(0===i&&0>n||i>=e.contentWidth-e.containerWidth&&n>0)return!e.settings.wheelPropagation}return!0}var r=!1;e.event.bind(t,"mouseenter",function(){r=!0}),e.event.bind(t,"mouseleave",function(){r=!1});var l=!1;e.event.bind(e.ownerDocument,"keydown",function(c){if(!c.isDefaultPrevented||!c.isDefaultPrevented()){var u=i.matches(e.scrollbarX,":focus")||i.matches(e.scrollbarY,":focus");if(r||u){var d=document.activeElement?document.activeElement:e.ownerDocument.activeElement;if(d){for(;d.shadowRoot;)d=d.shadowRoot.activeElement;if(o.isEditable(d))return}var p=0,f=0;switch(c.which){case 37:p=-30;break;case 38:f=30;break;case 39:p=30;break;case 40:f=-30;break;case 33:f=90;break;case 32:f=c.shiftKey?90:-90;break;case 34:f=-90;break;case 35:f=c.ctrlKey?-e.contentHeight:-e.containerHeight;break;case 36:f=c.ctrlKey?t.scrollTop:e.containerHeight;break;default:return}a(t,"top",t.scrollTop-f),a(t,"left",t.scrollLeft+p),s(t),l=n(p,f),l&&c.preventDefault()}}})}var o=t("../../lib/helper"),i=t("../../lib/dom"),l=t("../instances"),s=t("../update-geometry"),a=t("../update-scroll");e.exports=function(t){var e=l.get(t);r(t,e)}},{"../../lib/dom":3,"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],13:[function(t,e,n){"use strict";function r(t,e){function n(n,r){var o=t.scrollTop;if(0===n){if(!e.scrollbarYActive)return!1;if(0===o&&r>0||o>=e.contentHeight-e.containerHeight&&0>r)return!e.settings.wheelPropagation}var i=t.scrollLeft;if(0===r){if(!e.scrollbarXActive)return!1;if(0===i&&0>n||i>=e.contentWidth-e.containerWidth&&n>0)return!e.settings.wheelPropagation}return!0}function r(t){var e=t.deltaX,n=-1*t.deltaY;return("undefined"==typeof e||"undefined"==typeof n)&&(e=-1*t.wheelDeltaX/6,n=t.wheelDeltaY/6),t.deltaMode&&1===t.deltaMode&&(e*=10,n*=10),e!==e&&n!==n&&(e=0,n=t.wheelDelta),[e,n]}function o(e,n){var r=t.querySelector("textarea:hover");if(r){var o=r.scrollHeight-r.clientHeight;if(o>0&&!(0===r.scrollTop&&n>0||r.scrollTop===o&&0>n))return!0;var i=r.scrollLeft-r.clientWidth;if(i>0&&!(0===r.scrollLeft&&0>e||r.scrollLeft===i&&e>0))return!0}return!1}function s(s){var c=r(s),u=c[0],d=c[1];o(u,d)||(a=!1,e.settings.useBothWheelAxes?e.scrollbarYActive&&!e.scrollbarXActive?(d?l(t,"top",t.scrollTop-d*e.settings.wheelSpeed):l(t,"top",t.scrollTop+u*e.settings.wheelSpeed),a=!0):e.scrollbarXActive&&!e.scrollbarYActive&&(u?l(t,"left",t.scrollLeft+u*e.settings.wheelSpeed):l(t,"left",t.scrollLeft-d*e.settings.wheelSpeed),a=!0):(l(t,"top",t.scrollTop-d*e.settings.wheelSpeed),l(t,"left",t.scrollLeft+u*e.settings.wheelSpeed)),i(t),a=a||n(u,d),a&&(s.stopPropagation(),s.preventDefault()))}var a=!1;"undefined"!=typeof window.onwheel?e.event.bind(t,"wheel",s):"undefined"!=typeof window.onmousewheel&&e.event.bind(t,"mousewheel",s)}var o=t("../instances"),i=t("../update-geometry"),l=t("../update-scroll");e.exports=function(t){var e=o.get(t);r(t,e)}},{"../instances":18,"../update-geometry":19,"../update-scroll":20}],14:[function(t,e,n){"use strict";function r(t,e){e.event.bind(t,"scroll",function(){i(t)})}var o=t("../instances"),i=t("../update-geometry");e.exports=function(t){var e=o.get(t);r(t,e)}},{"../instances":18,"../update-geometry":19}],15:[function(t,e,n){"use strict";function r(t,e){function n(){var t=window.getSelection?window.getSelection():document.getSelection?document.getSelection():"";return 0===t.toString().length?null:t.getRangeAt(0).commonAncestorContainer}function r(){c||(c=setInterval(function(){return i.get(t)?(s(t,"top",t.scrollTop+u.top),s(t,"left",t.scrollLeft+u.left),void l(t)):void clearInterval(c)},50))}function a(){c&&(clearInterval(c),c=null),o.stopScrolling(t)}var c=null,u={top:0,left:0},d=!1;e.event.bind(e.ownerDocument,"selectionchange",function(){t.contains(n())?d=!0:(d=!1,a())}),e.event.bind(window,"mouseup",function(){d&&(d=!1,a())}),e.event.bind(window,"mousemove",function(e){if(d){var n={x:e.pageX,y:e.pageY},i={left:t.offsetLeft,right:t.offsetLeft+t.offsetWidth,top:t.offsetTop,bottom:t.offsetTop+t.offsetHeight};n.x<i.left+3?(u.left=-5,o.startScrolling(t,"x")):n.x>i.right-3?(u.left=5,o.startScrolling(t,"x")):u.left=0,n.y<i.top+3?(i.top+3-n.y<5?u.top=-5:u.top=-20,o.startScrolling(t,"y")):n.y>i.bottom-3?(n.y-i.bottom+3<5?u.top=5:u.top=20,o.startScrolling(t,"y")):u.top=0,0===u.top&&0===u.left?a():r()}})}var o=t("../../lib/helper"),i=t("../instances"),l=t("../update-geometry"),s=t("../update-scroll");e.exports=function(t){var e=i.get(t);r(t,e)}},{"../../lib/helper":6,"../instances":18,"../update-geometry":19,"../update-scroll":20}],16:[function(t,e,n){"use strict";function r(t,e,n,r){function s(n,r){var o=t.scrollTop,i=t.scrollLeft,l=Math.abs(n),s=Math.abs(r);if(s>l){if(0>r&&o===e.contentHeight-e.containerHeight||r>0&&0===o)return!e.settings.swipePropagation}else if(l>s&&(0>n&&i===e.contentWidth-e.containerWidth||n>0&&0===i))return!e.settings.swipePropagation;return!0}function a(e,n){l(t,"top",t.scrollTop-n),l(t,"left",t.scrollLeft-e),i(t)}function c(){Y=!0}function u(){Y=!1}function d(t){return t.targetTouches?t.targetTouches[0]:t}function p(t){return t.targetTouches&&1===t.targetTouches.length?!0:t.pointerType&&"mouse"!==t.pointerType&&t.pointerType!==t.MSPOINTER_TYPE_MOUSE?!0:!1}function f(t){if(p(t)){w=!0;var e=d(t);v.pageX=e.pageX,v.pageY=e.pageY,g=(new Date).getTime(),null!==y&&clearInterval(y),t.stopPropagation()}}function h(t){if(!Y&&w&&p(t)){var e=d(t),n={pageX:e.pageX,pageY:e.pageY},r=n.pageX-v.pageX,o=n.pageY-v.pageY;a(r,o),v=n;var i=(new Date).getTime(),l=i-g;l>0&&(m.x=r/l,m.y=o/l,g=i),s(r,o)&&(t.stopPropagation(),t.preventDefault())}}function b(){!Y&&w&&(w=!1,clearInterval(y),y=setInterval(function(){return o.get(t)?Math.abs(m.x)<.01&&Math.abs(m.y)<.01?void clearInterval(y):(a(30*m.x,30*m.y),m.x*=.8,void(m.y*=.8)):void clearInterval(y)},10))}var v={},g=0,m={},y=null,Y=!1,w=!1;n&&(e.event.bind(window,"touchstart",c),e.event.bind(window,"touchend",u),e.event.bind(t,"touchstart",f),e.event.bind(t,"touchmove",h),e.event.bind(t,"touchend",b)),r&&(window.PointerEvent?(e.event.bind(window,"pointerdown",c),e.event.bind(window,"pointerup",u),e.event.bind(t,"pointerdown",f),e.event.bind(t,"pointermove",h),e.event.bind(t,"pointerup",b)):window.MSPointerEvent&&(e.event.bind(window,"MSPointerDown",c),e.event.bind(window,"MSPointerUp",u),e.event.bind(t,"MSPointerDown",f),e.event.bind(t,"MSPointerMove",h),e.event.bind(t,"MSPointerUp",b)))}var o=t("../instances"),i=t("../update-geometry"),l=t("../update-scroll");e.exports=function(t,e,n){var i=o.get(t);r(t,i,e,n)}},{"../instances":18,"../update-geometry":19,"../update-scroll":20}],17:[function(t,e,n){"use strict";var r=t("../lib/class"),o=t("../lib/helper"),i=t("./instances"),l=t("./update-geometry"),s=t("./handler/click-rail"),a=t("./handler/drag-scrollbar"),c=t("./handler/keyboard"),u=t("./handler/mouse-wheel"),d=t("./handler/native-scroll"),p=t("./handler/selection"),f=t("./handler/touch");e.exports=function(t,e){e="object"==typeof e?e:{},r.add(t,"ps-container");var n=i.add(t);n.settings=o.extend(n.settings,e),r.add(t,"ps-theme-"+n.settings.theme),s(t),a(t),u(t),d(t),n.settings.useSelectionScroll&&p(t),(o.env.supportsTouch||o.env.supportsIePointer)&&f(t,o.env.supportsTouch,o.env.supportsIePointer),n.settings.useKeyboard&&c(t),l(t)}},{"../lib/class":2,"../lib/helper":6,"./handler/click-rail":10,"./handler/drag-scrollbar":11,"./handler/keyboard":12,"./handler/mouse-wheel":13,"./handler/native-scroll":14,"./handler/selection":15,"./handler/touch":16,"./instances":18,"./update-geometry":19}],18:[function(t,e,n){"use strict";function r(t){function e(){s.add(t,"ps-focus")}function n(){s.remove(t,"ps-focus")}var r=this;r.settings=p.clone(c),r.containerWidth=null,r.containerHeight=null,r.contentWidth=null,r.contentHeight=null,r.isRtl="rtl"===a.css(t,"direction"),r.isNegativeScroll=function(){var e=t.scrollLeft,n=null;return t.scrollLeft=-1,n=t.scrollLeft<0,t.scrollLeft=e,n}(),r.negativeScrollAdjustment=r.isNegativeScroll?t.scrollWidth-t.clientWidth:0,r.event=new u,r.ownerDocument=t.ownerDocument||document,r.scrollbarXRail=a.appendTo(a.e("div","ps-scrollbar-x-rail"),t),r.scrollbarX=a.appendTo(a.e("div","ps-scrollbar-x"),r.scrollbarXRail),r.scrollbarX.setAttribute("tabindex",0),r.event.bind(r.scrollbarX,"focus",e),r.event.bind(r.scrollbarX,"blur",n),r.scrollbarXActive=null,r.scrollbarXWidth=null,r.scrollbarXLeft=null,r.scrollbarXBottom=p.toInt(a.css(r.scrollbarXRail,"bottom")),r.isScrollbarXUsingBottom=r.scrollbarXBottom===r.scrollbarXBottom,r.scrollbarXTop=r.isScrollbarXUsingBottom?null:p.toInt(a.css(r.scrollbarXRail,"top")),r.railBorderXWidth=p.toInt(a.css(r.scrollbarXRail,"borderLeftWidth"))+p.toInt(a.css(r.scrollbarXRail,"borderRightWidth")),a.css(r.scrollbarXRail,"display","block"),r.railXMarginWidth=p.toInt(a.css(r.scrollbarXRail,"marginLeft"))+p.toInt(a.css(r.scrollbarXRail,"marginRight")),a.css(r.scrollbarXRail,"display",""),r.railXWidth=null,r.railXRatio=null,r.scrollbarYRail=a.appendTo(a.e("div","ps-scrollbar-y-rail"),t),r.scrollbarY=a.appendTo(a.e("div","ps-scrollbar-y"),r.scrollbarYRail),r.scrollbarY.setAttribute("tabindex",0),r.event.bind(r.scrollbarY,"focus",e),r.event.bind(r.scrollbarY,"blur",n),r.scrollbarYActive=null,r.scrollbarYHeight=null,r.scrollbarYTop=null,r.scrollbarYRight=p.toInt(a.css(r.scrollbarYRail,"right")),r.isScrollbarYUsingRight=r.scrollbarYRight===r.scrollbarYRight,r.scrollbarYLeft=r.isScrollbarYUsingRight?null:p.toInt(a.css(r.scrollbarYRail,"left")),r.scrollbarYOuterWidth=r.isRtl?p.outerWidth(r.scrollbarY):null,r.railBorderYWidth=p.toInt(a.css(r.scrollbarYRail,"borderTopWidth"))+p.toInt(a.css(r.scrollbarYRail,"borderBottomWidth")),a.css(r.scrollbarYRail,"display","block"),r.railYMarginHeight=p.toInt(a.css(r.scrollbarYRail,"marginTop"))+p.toInt(a.css(r.scrollbarYRail,"marginBottom")),a.css(r.scrollbarYRail,"display",""),r.railYHeight=null,r.railYRatio=null}function o(t){return"undefined"==typeof t.dataset?t.getAttribute("data-ps-id"):t.dataset.psId}function i(t,e){"undefined"==typeof t.dataset?t.setAttribute("data-ps-id",e):t.dataset.psId=e}function l(t){"undefined"==typeof t.dataset?t.removeAttribute("data-ps-id"):delete t.dataset.psId}var s=t("../lib/class"),a=t("../lib/dom"),c=t("./default-setting"),u=t("../lib/event-manager"),d=t("../lib/guid"),p=t("../lib/helper"),f={};n.add=function(t){var e=d();return i(t,e),f[e]=new r(t),f[e]},n.remove=function(t){delete f[o(t)],l(t)},n.get=function(t){return f[o(t)]}},{"../lib/class":2,"../lib/dom":3,"../lib/event-manager":4,"../lib/guid":5,"../lib/helper":6,"./default-setting":8}],19:[function(t,e,n){"use strict";function r(t,e){return t.settings.minScrollbarLength&&(e=Math.max(e,t.settings.minScrollbarLength)),t.settings.maxScrollbarLength&&(e=Math.min(e,t.settings.maxScrollbarLength)),e}function o(t,e){var n={width:e.railXWidth};e.isRtl?n.left=e.negativeScrollAdjustment+t.scrollLeft+e.containerWidth-e.contentWidth:n.left=t.scrollLeft,e.isScrollbarXUsingBottom?n.bottom=e.scrollbarXBottom-t.scrollTop:n.top=e.scrollbarXTop+t.scrollTop,l.css(e.scrollbarXRail,n);var r={top:t.scrollTop,height:e.railYHeight};e.isScrollbarYUsingRight?e.isRtl?r.right=e.contentWidth-(e.negativeScrollAdjustment+t.scrollLeft)-e.scrollbarYRight-e.scrollbarYOuterWidth:r.right=e.scrollbarYRight-t.scrollLeft:e.isRtl?r.left=e.negativeScrollAdjustment+t.scrollLeft+2*e.containerWidth-e.contentWidth-e.scrollbarYLeft-e.scrollbarYOuterWidth:r.left=e.scrollbarYLeft+t.scrollLeft,l.css(e.scrollbarYRail,r),l.css(e.scrollbarX,{left:e.scrollbarXLeft,width:e.scrollbarXWidth-e.railBorderXWidth}),l.css(e.scrollbarY,{top:e.scrollbarYTop,height:e.scrollbarYHeight-e.railBorderYWidth})}var i=t("../lib/class"),l=t("../lib/dom"),s=t("../lib/helper"),a=t("./instances"),c=t("./update-scroll");e.exports=function(t){var e=a.get(t);e.containerWidth=t.clientWidth,e.containerHeight=t.clientHeight,e.contentWidth=t.scrollWidth,e.contentHeight=t.scrollHeight;var n;t.contains(e.scrollbarXRail)||(n=l.queryChildren(t,".ps-scrollbar-x-rail"),n.length>0&&n.forEach(function(t){l.remove(t)}),l.appendTo(e.scrollbarXRail,t)),t.contains(e.scrollbarYRail)||(n=l.queryChildren(t,".ps-scrollbar-y-rail"),n.length>0&&n.forEach(function(t){l.remove(t)}),l.appendTo(e.scrollbarYRail,t)),!e.settings.suppressScrollX&&e.containerWidth+e.settings.scrollXMarginOffset<e.contentWidth?(e.scrollbarXActive=!0,e.railXWidth=e.containerWidth-e.railXMarginWidth,e.railXRatio=e.containerWidth/e.railXWidth,e.scrollbarXWidth=r(e,s.toInt(e.railXWidth*e.containerWidth/e.contentWidth)),e.scrollbarXLeft=s.toInt((e.negativeScrollAdjustment+t.scrollLeft)*(e.railXWidth-e.scrollbarXWidth)/(e.contentWidth-e.containerWidth))):e.scrollbarXActive=!1,!e.settings.suppressScrollY&&e.containerHeight+e.settings.scrollYMarginOffset<e.contentHeight?(e.scrollbarYActive=!0,e.railYHeight=e.containerHeight-e.railYMarginHeight,e.railYRatio=e.containerHeight/e.railYHeight,e.scrollbarYHeight=r(e,s.toInt(e.railYHeight*e.containerHeight/e.contentHeight)),e.scrollbarYTop=s.toInt(t.scrollTop*(e.railYHeight-e.scrollbarYHeight)/(e.contentHeight-e.containerHeight))):e.scrollbarYActive=!1,e.scrollbarXLeft>=e.railXWidth-e.scrollbarXWidth&&(e.scrollbarXLeft=e.railXWidth-e.scrollbarXWidth),e.scrollbarYTop>=e.railYHeight-e.scrollbarYHeight&&(e.scrollbarYTop=e.railYHeight-e.scrollbarYHeight),o(t,e),e.scrollbarXActive?i.add(t,"ps-active-x"):(i.remove(t,"ps-active-x"),e.scrollbarXWidth=0,e.scrollbarXLeft=0,c(t,"left",0)),e.scrollbarYActive?i.add(t,"ps-active-y"):(i.remove(t,"ps-active-y"),e.scrollbarYHeight=0,e.scrollbarYTop=0,c(t,"top",0))}},{"../lib/class":2,"../lib/dom":3,"../lib/helper":6,"./instances":18,"./update-scroll":20}],20:[function(t,e,n){"use strict";var r,o,i=t("./instances"),l=document.createEvent("Event"),s=document.createEvent("Event"),a=document.createEvent("Event"),c=document.createEvent("Event"),u=document.createEvent("Event"),d=document.createEvent("Event"),p=document.createEvent("Event"),f=document.createEvent("Event"),h=document.createEvent("Event"),b=document.createEvent("Event");l.initEvent("ps-scroll-up",!0,!0),s.initEvent("ps-scroll-down",!0,!0),a.initEvent("ps-scroll-left",!0,!0),c.initEvent("ps-scroll-right",!0,!0),u.initEvent("ps-scroll-y",!0,!0),d.initEvent("ps-scroll-x",!0,!0),p.initEvent("ps-x-reach-start",!0,!0),f.initEvent("ps-x-reach-end",!0,!0),h.initEvent("ps-y-reach-start",!0,!0),b.initEvent("ps-y-reach-end",!0,!0),e.exports=function(t,e,n){if("undefined"==typeof t)throw"You must provide an element to the update-scroll function";if("undefined"==typeof e)throw"You must provide an axis to the update-scroll function";if("undefined"==typeof n)throw"You must provide a value to the update-scroll function";"top"===e&&0>=n&&(t.scrollTop=n=0,t.dispatchEvent(h)),"left"===e&&0>=n&&(t.scrollLeft=n=0,t.dispatchEvent(p));var v=i.get(t);"top"===e&&n>=v.contentHeight-v.containerHeight&&(t.scrollTop=n=v.contentHeight-v.containerHeight,t.dispatchEvent(b)),"left"===e&&n>=v.contentWidth-v.containerWidth&&(t.scrollLeft=n=v.contentWidth-v.containerWidth,t.dispatchEvent(f)),r||(r=t.scrollTop),o||(o=t.scrollLeft),"top"===e&&r>n&&t.dispatchEvent(l),"top"===e&&n>r&&t.dispatchEvent(s),"left"===e&&o>n&&t.dispatchEvent(a),"left"===e&&n>o&&t.dispatchEvent(c),"top"===e&&(t.scrollTop=r=n,t.dispatchEvent(u)),"left"===e&&(t.scrollLeft=o=n,t.dispatchEvent(d))}},{"./instances":18}],21:[function(t,e,n){"use strict";var r=t("../lib/dom"),o=t("../lib/helper"),i=t("./instances"),l=t("./update-geometry"),s=t("./update-scroll");e.exports=function(t){var e=i.get(t);e&&(e.negativeScrollAdjustment=e.isNegativeScroll?t.scrollWidth-t.clientWidth:0,r.css(e.scrollbarXRail,"display","block"),r.css(e.scrollbarYRail,"display","block"),e.railXMarginWidth=o.toInt(r.css(e.scrollbarXRail,"marginLeft"))+o.toInt(r.css(e.scrollbarXRail,"marginRight")),e.railYMarginHeight=o.toInt(r.css(e.scrollbarYRail,"marginTop"))+o.toInt(r.css(e.scrollbarYRail,"marginBottom")),r.css(e.scrollbarXRail,"display","none"),r.css(e.scrollbarYRail,"display","none"),l(t),s(t,"top",t.scrollTop),s(t,"left",t.scrollLeft),r.css(e.scrollbarXRail,"display",""),r.css(e.scrollbarYRail,"display",""))}},{"../lib/dom":3,"../lib/helper":6,"./instances":18,"./update-geometry":19,"./update-scroll":20}]},{},[1]);
+
+// AUDIO CONTEXT
+window.AudioContext = window.AudioContext || window.webkitAudioContext ;
+if (window.AudioContext) {
+	var audioContext = new AudioContext(),
+		audiosource = audioContext.createBufferSource(); 	// creates a sound source
+} else {
+	audiosource = null;
+}
 
 
 
@@ -12,9 +19,14 @@
 
 var tpLayerTimelinesRev = new function(){
 	var t = this,
-		u = new Object(),
-		sortMode = "time";				//can be "depth" or "time"
+		u = new Object(),		
+		sortMode = "time",
+		__ctime,
+		__ctimeb,
+		__ctimei ,
+		__coffset = 0; 
 
+	t.mainMaxTimeLeft = 0;
 
 	/***********************************************************
 		-	INITIALISE THE TIMELINE AND ANIMATION ELEMENTS	-
@@ -26,6 +38,8 @@ var tpLayerTimelinesRev = new function(){
 		g_slideTime = u.getMaintime();
 		g_keyTimer = 0;
 		
+		t.mainMaxTimeLeft = jQuery('#mastertimer-maxtime').position().left;
+		
 		initSlideDuration();
 		initSortbox();
 		initMasterTimer();
@@ -36,8 +50,10 @@ var tpLayerTimelinesRev = new function(){
 		addIconFunction();
 
 		t.addToSortbox();
+		//jQuery('.master-rightcell .layers-wrapper, .master-leftcell .layers-wrapper, #divLayers-wrapper').perfectScrollbar("update");
 		
 		jQuery('#slide_transition, #slot_amount, #transition_rotation').change(function() {
+			
 			setFakeAnim();
 		});
 		
@@ -90,6 +106,7 @@ var tpLayerTimelinesRev = new function(){
 				jQuery('.justaddedtrans').data('animval',choosen_slide_transition[key]);
 				jQuery('.justaddedtrans').removeClass("justaddedtrans");
 			}
+			
 			setFakeAnim();
 		};
 		
@@ -146,7 +163,7 @@ var tpLayerTimelinesRev = new function(){
 				punchgs.TweenLite.set(a.find('.defaultimg'),{clearProps:"transform",autoAlpha:1});
 				punchgs.TweenLite.set(b.find('.defaultimg'),{clearProps:"transform",autoAlpha:1});
 				
-				etl = slideAnimation(a, b,inp.val(),etl);
+				etl = slideAnimation(a, b,inp.val(),etl,true);
 				etl.pause(0.001);
 				punchgs.TweenLite.to(examp,0.2,{top:(e.pageY - sto.top),overwrite:"all",autoAlpha:1,ease:punchgs.Power3.easeInOut,onComplete:function() {
 					setTimeout(function() {
@@ -188,6 +205,7 @@ var tpLayerTimelinesRev = new function(){
 				}
 				
 			}
+			
 			setFakeAnim();
 		});
 		
@@ -215,6 +233,7 @@ var tpLayerTimelinesRev = new function(){
 		});
 		jQuery('input[name="transition_duration"]').change(function(){
 			jQuery('.slide-trans-cur-ul li.selected').data('duration', jQuery(this).val());
+			setSlideTransitionTimerBar();
 		});
 		jQuery('select[name="transition_ease_in"]').change(function(){
 			jQuery('.slide-trans-cur-ul li.selected').data('ease_in', jQuery(this).val());
@@ -226,7 +245,7 @@ var tpLayerTimelinesRev = new function(){
 		jQuery('.slide-trans-cur-ul').sortable({
 			containment: ".slide-trans-cur-selected",
 			stop:function() {
-				setTimeout(function() {
+				setTimeout(function() {					
 					setFakeAnim();
 				},200);
 			}
@@ -236,11 +255,45 @@ var tpLayerTimelinesRev = new function(){
 			
 
 		// END OF MAIN TRANSITION SELECTOR 
-		
+		jQuery(document).on('keydown', function(event) {	
+			 var noinputfocus = jQuery('input:focus').length>0;
+			 
+			 if (event.ctrlKey || event.metaKey || event.shiftKey) {
+		        switch (String.fromCharCode(event.which).toLowerCase()) {
+		        	case 's':
+		        		if (!event.shiftKey) {
+		           			event.preventDefault();
+		            		jQuery('#button_save_slide-tb').click();
+		            	}
+		            break;		      
+		            case 'z':
+						if ((event.metaKey || event.ctrlKey) && !noinputfocus) { 		            	
+			            	event.preventDefault();
+			            	if (event.shiftKey)
+			            		u.oneStepRedo();
+			            	else
+			            		u.oneStepUndo();
+			            }
+		            break;  
+		            case 'y':		            
+		            	if ((event.ctrlKey || event.metaKey) && !noinputfocus) {
+		            		event.preventDefault();
+		            		u.oneStepRedo();
+		            	}
+		            break;  
+
+		    	}
+		    }
+		    switch (event) {
+				
+			}
+		});
+
 		jQuery("body").on("keydown keyup",function(e) {
 			
 			
 			if (jQuery('#layer_text').is(":focus")) return true;
+			if (jQuery('#layer_text_toggle').is(":focus")) return true;
 			
 			var code = (e.keyCode ? e.keyCode : e.which),
 			dist = jQuery(document.activeElement).data('steps')!=undefined ? parseFloat(jQuery(document.activeElement).data('steps')):1,
@@ -248,7 +301,9 @@ var tpLayerTimelinesRev = new function(){
 			y = Number(parseInt(jQuery('#layer_top').val(),0));
 			
 			if (e.shiftKey) dist = dist*10; 
-			switch (jQuery(document.activeElement).get(0).tagName) {
+
+			
+			switch (jQuery(document.activeElement).get(0).tagName.toLowerCase()) {
 				case "INPUT":
 				case "input":				
 					var cv = parseFloat(jQuery(document.activeElement).val());
@@ -268,23 +323,38 @@ var tpLayerTimelinesRev = new function(){
 							}
 					}							
 				break;
-				case "textarea":
+				case "textarea":				
 					return true;
 				break;
 				default:
-					if (keyboardallowed && !jQuery('#layer_left').hasClass('setting-disabled')) 	
-						
+					
 					switch(code) {
+						case 8:
+						case 46:
+							e.preventDefault();
+							if (e.type=="keydown") {								
+								jQuery('#button_delete_layer').click();
+								window.deletecalled = true;
+							}
+						break;
+					}
+
+					if (keyboardallowed && !jQuery('#layer_left').hasClass('setting-disabled')) 	
+
+					switch(code) {						
+						
 					    case 40: 
 							if (e.type=="keyup") {
 								if (jQuery('#align_bottom').hasClass("selected"))
 									y = y -dist;
 								else
 									y = y +dist;
-								jQuery('#layer_left').val(x);	
-								jQuery('#layer_top').val(y).blur();
+								
+								jQuery('#layer_top').val(y+"px");
 								g_rebuildTimer = 0;
+								u.updateCurrentLayerPosition();
 							}
+
 							return false;
 					    break;
 					    case 38:
@@ -293,9 +363,10 @@ var tpLayerTimelinesRev = new function(){
 						    		y = y + dist;
 						    	else
 							 		y = y - dist;
-							 	jQuery('#layer_left').val(x);
-								jQuery('#layer_top').val(y).blur();
-								g_rebuildTimer = 0;																
+							 	
+								jQuery('#layer_top').val(y+"px");
+								g_rebuildTimer = 0;	
+								u.updateCurrentLayerPosition();															
 							}
 							return false;
 					    break;
@@ -305,9 +376,9 @@ var tpLayerTimelinesRev = new function(){
 						    		x = x + dist;
 						    	else
 						    		x = x - dist;
-						    	jQuery('#layer_left').val(x);
-								jQuery('#layer_top').val(y).blur();
-								g_rebuildTimer = 0;								
+						    	jQuery('#layer_left').val(x+"px");								
+								g_rebuildTimer = 0;			
+								u.updateCurrentLayerPosition();					
 							}
 							return false;
 					    break;
@@ -317,13 +388,14 @@ var tpLayerTimelinesRev = new function(){
 						    		x = x - dist;
 						    	else
 						    		x = x + dist;
-						    	jQuery('#layer_left').val(x);
-								jQuery('#layer_top').val(y).blur();
-								g_rebuildTimer = 0;								
+						    	jQuery('#layer_left').val(x+"px");								
+								g_rebuildTimer = 0;	
+								u.updateCurrentLayerPosition();							
 							}
 							return false;
 					    break;
 					}
+
 				break;
 			}
 		});
@@ -395,10 +467,286 @@ var tpLayerTimelinesRev = new function(){
 			 	jQuery('.mask-end-settings').show();
 			 else									
 			 	jQuery('.mask-end-settings').hide();
-		})	
+		});
 
 
+		// AUTO TIMING HELPER FUNCTIONS
+		jQuery('body').on('click',".autotiming-action", function() {
+			if (jQuery(this).hasClass("notclickable")) return;
 
+			jQuery('.autotiming-action.selected').removeClass("selected");
+			jQuery('#timing-helper-dialog').show();
+			jQuery('.master-rightcell, .master-leftcell').addClass("unfocused");
+			jQuery('#th-start-time-wrapper').hide();
+			jQuery('#th-end-time-wrapper').hide();
+			jQuery('#th-delay-time-wrapper').hide();
+			jQuery('#th-overlap-time-wrapper').hide();
+			jQuery('#th-shift-time-wrapper').hide();
+			
+			jQuery('#th-animend-start-time-wrapper').hide();
+			jQuery('#th-animend-end-time-wrapper').hide();
+			jQuery('#th-startpos-keep-wrpaper').hide();
+			jQuery('#th-endpos-keep-wrpaper').hide();
+
+			switch (jQuery(this).data("ref")) {
+				case 0:
+					jQuery('#th-shift-time-wrapper').show();
+					jQuery('#th-endpos-keep-wrpaper').show();
+				break;
+				case 7:
+					jQuery('#th-start-time-wrapper').show();
+					jQuery('#th-endpos-keep-wrpaper').show();
+				break;
+				case 1:
+					jQuery('#th-start-time-wrapper').show();
+					jQuery('#th-delay-time-wrapper').show();
+					jQuery('#th-endpos-keep-wrpaper').show();
+				break;
+
+				case 2:
+					jQuery('#th-start-time-wrapper').show();
+					jQuery('#th-overlap-time-wrapper').show();
+					jQuery('#th-endpos-keep-wrpaper').show();
+				break;
+
+				case 5:
+					jQuery('#th-start-time-wrapper').show();
+					jQuery('#th-endpos-keep-wrpaper').show();
+				break;
+
+				case 6:
+					jQuery('#th-end-time-wrapper').show();
+					jQuery('#th-startpos-keep-wrpaper').show();
+				break;
+
+				case 3:					
+					jQuery('#th-animend-start-time-wrapper').show();
+					jQuery('#th-endpos-keep-wrpaper').show();
+				break;
+
+				case 4:					
+					jQuery('#th-animend-end-time-wrapper').show();
+					jQuery('#th-startpos-keep-wrpaper').show();
+				break;
+			}
+
+			jQuery(this).addClass("selected")
+
+		});
+
+		// CLOSE AUTO TIMING DIALOG
+		jQuery('body').on('click','#timing-helper-closer',function() {
+			jQuery('#timing-helper-dialog').hide();
+			jQuery('.master-rightcell, .master-leftcell').removeClass("unfocused");
+			jQuery('.autotiming-action.selected').removeClass("selected");
+		});
+
+		// SELECT / DESELECT ALL LAYERS
+		jQuery('body').on('click','.timing-all-checker-wrapper',function() {
+			var b = jQuery(this);
+			if (b.hasClass("allselected") || jQuery('.mastertimer-timeline-selector-row.selected').length==jQuery('.layer-on-timeline-selector').length) {
+				b.removeClass("allselected");
+				jQuery('.mastertimer-timeline-selector-row.selected').removeClass("selected");
+				jQuery('.layer-on-timeline-selector').removeAttr('checked');
+			} else {
+				b.addClass("allselected");
+				jQuery('.layer-on-timeline-selector').attr('checked','checked');
+				jQuery('.sortablelayers .mastertimer-timeline-selector-row').addClass("selected");
+			}
+			checkAvailableAutoTimes();
+		});
+
+		// SELECT THE AUTO TIMING FUNCTION
+		jQuery('body').on('change','.layer-on-timeline-selector',function() {
+
+			var cbox = jQuery(this);
+			if (cbox.attr('checked')==="checked") 
+				cbox.closest('.mastertimer-timeline-selector-row').addClass("selected");
+			else
+				cbox.closest('.mastertimer-timeline-selector-row').removeClass("selected");
+			checkAvailableAutoTimes();
+		});
+
+
+		// SET LAYERS TIMES BASED ON SELECTED AUTO TIMING OPTION
+		jQuery('body').on('click','#adjust-timing-helper',function() {
+
+			var layers = [];
+
+			jQuery.each(jQuery('.mastertimer-timeline-selector-row.selected').closest('li'),function(i,li){								
+				layers.push(u.getLayer(jQuery(li).attr('id').split('layer_sort_')[1]));
+			});
+
+			var nexts = parseInt(jQuery('#atlayer_start_time').val(),0) || 0,
+				shift = parseInt(jQuery('#atlayer_shift_time').val(),0) || 0,
+				ends = parseInt(jQuery('#atlayer_end_time').val(),0) || 0,
+				startat = parseInt(jQuery('#atlayer_animend_start_time').val(),0) || 0,
+				endat = parseInt(jQuery('#atlayer_animend_end_time').val(),0) || 0,
+				delay = parseInt(jQuery('#atlayer_delays').val(),0) || 0,
+				overlaps = parseInt(jQuery('#atlayer_overlaps').val(),0) || 0,
+				ref = jQuery('.autotiming-action.selected').data('ref'),
+				keepend = jQuery('#th-endpos-keep').attr("checked")=="checked",
+				keepstart = jQuery('#th-startpos-keep').attr("checked")=="checked",				
+				maxtime = (t.mainMaxTimeLeft-15)*10,
+				earliest = maxtime,
+				dif = 0;
+
+
+			if (ref==7) {
+				jQuery.each(layers,function(i,objLayer) {					
+					if (objLayer.time<earliest) {
+						earliest = objLayer.time;
+						dif = nexts - objLayer.time;
+					}
+				});	
+				
+			}
+			jQuery.each(layers,function(i,objLayer) {
+							
+				
+				var startchange = nexts-objLayer.time,
+					split_in_extratime = objLayer.split_in_extratime!=undefined ? parseInt(objLayer.split_in_extratime,0)*10 : 0,
+					split_out_extratime = objLayer.split_out_extratime!=undefined ? parseInt(objLayer.split_out_extratime,0)*10 : 0,
+					
+				split_in_extratime = split_in_extratime<0 ? 0 : split_in_extratime;
+				split_out_extratime = split_out_extratime<0 ? 0 : split_out_extratime;
+
+				if (ref==0) {
+					var temptime = objLayer.time;
+					objLayer.time = parseInt(objLayer.time,0) + shift;
+					if (objLayer.time<0) objLayer.time = 0;
+					startchange =  objLayer.time - temptime;
+
+					if (!keepend)  
+						objLayer.endtime = parseInt(objLayer.endtime,0) + startchange;
+
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + startchange;
+
+				} else
+				if (ref==7) {
+					objLayer.time = objLayer.time+dif;
+					if (!keepend) 
+						objLayer.endtime = objLayer.endtime + dif;
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + dif;
+					
+					
+				} else
+				if (ref==1) {
+					if (!keepend) 
+						objLayer.endtime = objLayer.endtime + startchange;						
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + startchange;
+					objLayer.time = nexts;						
+					nexts = nexts + parseInt(objLayer.speed,0) + delay + split_in_extratime;						
+				} else
+				if (ref==2) {
+					if (!keepend) 
+						objLayer.endtime = objLayer.endtime + startchange;
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + startchange;
+					objLayer.time = nexts;					
+					nexts = nexts + parseInt(objLayer.speed,0) - overlaps + split_in_extratime;					
+				} else
+				if (ref==3) {
+					var temptime = startat -parseInt(objLayer.speed,0) - split_in_extratime;
+					startchange = temptime - objLayer.time;
+					objLayer.time = temptime;
+					if (!keepend) 
+						objLayer.endtime = objLayer.endtime + startchange;	
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + startchange;					
+				} else
+				if (ref==4) {
+					var temptime = endat + objLayer.endspeed;
+					startchange =  objLayer.endtime - temptime;					
+					objLayer.endtime = temptime;
+					if (!keepstart)
+						objLayer.time = objLayer.time - startchange;
+				} else
+				if (ref==5) {
+					if (!keepend) 
+						objLayer.endtime = objLayer.endtime + startchange;
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + startchange;				
+					objLayer.time = nexts;											
+				} else 
+				if (ref==6) {
+					
+					startchange = objLayer.endtime - ends;
+					objLayer.endtime = (ends);
+					objLayer.endWithSlide = false;
+					if (!keepstart)
+						objLayer.time = objLayer.time - startchange;
+				}
+
+				
+				if (objLayer.time<0) {
+					var adjustchange = 0 - objLayer.time;
+					objLayer.time = 0;
+					if ((objLayer.time+objLayer.speed+split_in_extratime)>=objLayer.endtime-objLayer.endspeed) 
+						objLayer.endtime = parseInt(objLayer.endtime,0) + adjustchange;
+				}
+
+				
+				if (nexts<0) nexts = 0;
+				
+				
+				if ((objLayer.endtime-objLayer.endspeed)>maxtime) {
+
+					var w = ((objLayer.endtime-objLayer.endspeed)/10)+15;
+					jQuery('#mastertimer-maxtime').css({left:w});						
+					jQuery('#mastertimer-maxcurtime').html(t.convToTime(w-15));
+					jQuery('.slide-idle-section').css({left:w});
+					jQuery('#delay').val((w-15)*10);
+					jQuery('.mastertimer-slide .tl-fullanim').css({width:(w-15)+"px"});
+					g_slideTime = (w-15)*10;
+					t.mainMaxTimeLeft = w;
+					u.setMaintime(g_slideTime);
+					objLayer.endtime = objLayer.endWithSlide ? 	(w-15)*10 : objLayer.endtime;
+				}
+				
+				t.updateLayerTimeline(jQuery('#layer_sort_time_'+objLayer.serial+" .timeline .tl-fullanim"));
+
+			});
+			
+				
+			jQuery('#timing-helper-dialog').hide();
+			jQuery('.master-rightcell, .master-leftcell').removeClass("unfocused");
+			jQuery('.autotiming-action.selected').removeClass("selected");
+			t.compareLayerEndsVSSlideEnd();
+			u.add_layer_change();
+		});
+		
+	}
+
+	// COMPARE SLIDE LENGTH TO LAYERS END, AND UPDATE THE END OF THE LAYERS AS NEEDED
+	t.compareLayerEndsVSSlideEnd = function() {				
+		var maxtime = (t.mainMaxTimeLeft-15)*10;		
+		jQuery.each(u.arrLayers,function(i,objLayer) {						
+			if (objLayer.endWithSlide || maxtime<objLayer.endtime - objLayer.endspeed) {				
+				objLayer.endtime = maxtime+objLayer.endspeed;
+				//t.updateLayerTimeline(jQuery('#layer_sort_time_'+objLayer.serial+" .timeline .tl-fullanim"));
+			}
+		});
+		t.updateAllLayerTimeline();
+	}
+
+	function checkAvailableAutoTimes() {
+		var sel = jQuery('.mastertimer-timeline-selector-row.selected').length;				
+			jQuery('.autotiming-action').addClass("notclickable");
+		
+		if (sel>1) {
+			jQuery('.autotiming-action').removeClass("notclickable");			
+		} else
+
+		if (sel==1) {
+			jQuery('.autotiming-action-3').removeClass("notclickable");
+			jQuery('.autotiming-action-4').removeClass("notclickable");
+			jQuery('.autotiming-action-5').removeClass("notclickable");
+			jQuery('.autotiming-action-6').removeClass("notclickable");
+		}
 	}
 	
 	function addIconFunction() {
@@ -408,7 +756,7 @@ var tpLayerTimelinesRev = new function(){
 			var buttons = {"Close":function(){jQuery("#dialog_insert_button").dialog("close")}}			
 			jQuery("#dialog_insert_icon").dialog({
 				//buttons:buttons,
-				width:500,
+				width:491,
 				height:500,
 				dialogClass:"tpdialogs",
 				resize:function() {
@@ -421,7 +769,8 @@ var tpLayerTimelinesRev = new function(){
 						sheets = document.styleSheets,
 						di = jQuery('#dialog_insert_icon');
 					di.parent().css({padding:"0px", border:"none", borderRadius:"0px"});
-					di.parent().find('.ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix.ui-draggable-handle').css({fontSize:"12px", fontWeight:"400",lineHeight:"30px"});
+					di.parent().find('.ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix.ui-draggable-handle').addClass("tp-slider-new-dialog-title");
+					//css({fontSize:"14px", fontWeight:"400",lineHeight:"35px"});
 					if (sheets)
 					jQuery.each(sheets,function(index,sheet) {
 						var found = false,
@@ -465,11 +814,17 @@ var tpLayerTimelinesRev = new function(){
 								jQuery("#dialog_insert_icon").dialog("close");
 								setExampleButtons();
 							} else {
-								jQuery('#layer_text').val(jQuery('#layer_text').val()+jQuery(this).html()).blur().focus();	
+								if (jQuery('.lasteditedlayertext').length>0)
+									jQuery('.lasteditedlayertext').val(jQuery('.lasteditedlayertext').val()+jQuery(this).html()).blur().focus();	
+								else
+									jQuery('#layer_text').val(jQuery('#layer_text').val()+jQuery(this).html()).blur().focus();										
 								jQuery("#dialog_insert_icon").dialog("close");
 							}																												
 						} else {
-							jQuery('#layer_text').val(jQuery('#layer_text').val()+jQuery(this).html()).blur().focus();
+							if (jQuery('.lasteditedlayertext').length>0)
+								jQuery('.lasteditedlayertext').val(jQuery('.lasteditedlayertext').val()+jQuery(this).html()).blur().focus();
+							else
+								jQuery('.layer_text').val(jQuery('#layer_text').val()+jQuery(this).html()).blur().focus();
 							jQuery("#dialog_insert_icon").dialog("close");
 						}
 						
@@ -488,7 +843,8 @@ var tpLayerTimelinesRev = new function(){
 			cv=Math.round(cv*100)/100;		
 			el.val(cv);	
 			/*  PUT THIS IN EDIT_LAYERS.js */
-			jQuery('#layer_top').focus();
+			jQuery(':focus').blur();
+			
 			el.focus();
 		}
 	}
@@ -503,6 +859,7 @@ var tpLayerTimelinesRev = new function(){
 		jQuery('.rs-staticcustomstylechange').change(function() {
 
 			//setTimeout(function() {
+					
 					t.rebuildLayerIdle(jQuery('.slide_layer.layer_selected'));
 			//	},20);
 		})
@@ -517,9 +874,8 @@ var tpLayerTimelinesRev = new function(){
 
 						t.stopAllLayerAnimation();
 						setTimeout(function() {
-							u.removeCurrentLayerRotatable();												
+							u.removeCurrentLayerRotatable();
 							u.makeCurrentLayerRotatable();
-							jQuery('#layer-short-toolbar').show();
 							jQuery('#hide_layer_content_editor').click();
 						},19);
 				} else
@@ -527,14 +883,12 @@ var tpLayerTimelinesRev = new function(){
 					t.stopAllLayerAnimation();
 					if (li.attr('id') == '#rs-animation-tab-button' || li.closest('#rs-animation-tab-button').length!=0) {
 						t.animateCurrentSelectedLayer(3);
-						u.removeCurrentLayerRotatable();						
-						jQuery('#layer-short-toolbar').hide();
-						jQuery('#hide_layer_content_editor').click();						
+						u.removeCurrentLayerRotatable();
+						jQuery('#hide_layer_content_editor').click();
 					} else {
 						t.callCaptionLoops();
-						u.removeCurrentLayerRotatable();						
-						jQuery('#layer-short-toolbar').hide();	
-						jQuery('#hide_layer_content_editor').click();					
+						u.removeCurrentLayerRotatable();
+						jQuery('#hide_layer_content_editor').click();
 					}
 				}
 		});
@@ -595,6 +949,7 @@ var tpLayerTimelinesRev = new function(){
 		jQuery('#rs-style-tab-button').click(function() {
 			setTimeout(function() {
 					jQuery('.slide_layer').each(function() {
+						
 						t.rebuildLayerIdle(jQuery(this));	
 						var inlayer = jQuery(this).find('.innerslide_layer');
 						if (inlayer.length>0 && inlayer.data('hoveranim')!=undefined) {
@@ -606,17 +961,24 @@ var tpLayerTimelinesRev = new function(){
 		});
 		
 		jQuery('#toggle-idle-hover').click(function() {
-			setTimeout(function() {
+			setTimeout(function() {					
 					t.rebuildLayerIdle(jQuery('.slide_layer.layer_selected'));
 			},19);
 		})
 		
+
 		
-		jQuery('#style_form_wrapper').on("colorchanged",function() {
-						t.rebuildLayerIdle(jQuery('.slide_layer.layer_selected'));				
+		jQuery('#style_form_wrapper').on("colorchanged",function() {			
+			t.rebuildLayerIdle(jQuery('.slide_layer.layer_selected'));				
 		})
 	}
 
+	t.resetIdleSelector = function() {
+		var bt = jQuery('#toggle-idle-hover');
+		bt.addClass("idleisselected").removeClass("hoverisselected");
+		jQuery('#tp-idle-state-advanced-style').show();
+		jQuery('#tp-hover-state-advanced-style').hide();
+	}
 
 	/************************************************************************************************************************
 				-	CHECK IF ANIMATION AND LOOP ANIMATION TABS ARE ACTIVATED AND IN IDLE OR PLAY MODE ARE	-
@@ -735,7 +1097,7 @@ var tpLayerTimelinesRev = new function(){
 			el.unwrap();
 		}
 
-		el.wrap('<div class="rs-preview-inside-looper" style="position:relative"></div>');
+		el.wrap('<div class="rs-preview-inside-looper" style="width:100%;height:100%;position:relative"></div>');
 
 		var loopobj =caption.find('.rs-preview-inside-looper'),
 			startdeg = params["loop_startdeg"],
@@ -827,11 +1189,9 @@ var tpLayerTimelinesRev = new function(){
 	
 	t.rebuildLayerIdle = function(caption,timer,isDemo) {
 		
-		
 		timer = timer == undefined ? 50 : timer;
 		isDemo = isDemo == undefined ? false : isDemo;
-		
-		
+				
 		if (g_rebuildTimer == 0) {
 			timer = 0;
 			g_rebuildTimer = 999;
@@ -840,23 +1200,24 @@ var tpLayerTimelinesRev = new function(){
 		
 		
 		if (caption==undefined || jQuery(caption).length==0) return false;
-		
-		
-
+				
 		var cp = jQuery(caption);
 		
 
 		clearTimeout(cp.data('idlerebuildtimer'));
 		
 		
+		
 		t.rebuildLayerIdleProgress(caption);
+		
 		
 		var id = u.getSerialFromID(caption.attr('id')),
 			objLayer = u.getLayer(id,isDemo);
 		
-
-		
 		var e_img = caption.find('.tp-caption img');
+
+
+		u.updateHtmlLayerPosition(false,caption,objLayer,u.getVal(objLayer, 'top'),u.getVal(objLayer, 'left'),u.getVal(objLayer, 'align_hor'),u.getVal(objLayer, 'align_vert'));
 		
 		if (e_img.length>0 && !jQuery(e_img).hasClass("loaded")) {
 			jQuery(e_img).addClass("loaded");
@@ -878,15 +1239,13 @@ var tpLayerTimelinesRev = new function(){
 
 			img.src = e_img[0].src;
 		} else {
-			u.updateHtmlLayerPosition(false,caption,objLayer,u.getVal(objLayer, 'top'),u.getVal(objLayer, 'left'),u.getVal(objLayer, 'align_hor'),u.getVal(objLayer, 'align_vert'));
+			//u.updateHtmlLayerPosition(false,caption,objLayer,u.getVal(objLayer, 'top'),u.getVal(objLayer, 'left'),u.getVal(objLayer, 'align_hor'),u.getVal(objLayer, 'align_vert'));
 			//update corners
 			u.updateHtmlLayerCorners(caption,objLayer);
 			//update cross position
 			u.updateCrossIconPosition(caption,objLayer);
 		}
-
-
-
+		
 		return true;
 	}
 	
@@ -896,13 +1255,18 @@ var tpLayerTimelinesRev = new function(){
 	// REBUILD LAYER CSS FOR IDLE //
 	////////////////////////////////
 	t.rebuildLayerIdleProgress = function(caption) {
+
+		
 		var is_demo = (caption.attr('id') !== caption.attr('id').replace('demo_layer_')) ? true : false;
 		
 		if (caption==undefined || jQuery(caption).length==0) return false;
 		
 		var id = u.getSerialFromID(caption.attr('id')),
-			params=u.getLayer(id, is_demo),
-			inlayer = caption.find('.innerslide_layer'),
+			params=u.getLayer(id, is_demo);
+		if (params==undefined || params==false) return false;
+
+		
+		var inlayer = caption.find('.innerslide_layer'),
 			deform = params.deformation,
 			deformidle = params.deformation,
 			ss = params["static_styles"],
@@ -913,13 +1277,31 @@ var tpLayerTimelinesRev = new function(){
 			bordercolor = deform["border-color"],
 			bordertrans = deform["border-transparency"];
 
+
+		if (params.type=="audio") {
+			if (params.video_data.video_show_visibility) {
+				caption.addClass("invisible-audio");
+			} else {
+				caption.removeClass("invisible-audio");
+			}
+			return false;
+		}
+
+
+
 		if(is_demo && params.alias == 'First'){
 			
 		}
-
+		
 		// REMOVE SPLITS
-		if (inlayer.data('mySplitText') != undefined)
+		if (inlayer.data('mySplitText') != undefined) {
 			try{inlayer.data('mySplitText').revert();} catch(e) {}
+			if (params.type=="text" || params.type=="button") {
+				inlayer.html(params.text);
+				u.makeCurrentLayerRotatable();
+			}
+			inlayer.removeData('mySplitText')
+		}
 
 		// BACKGROUND OPACITY
 		if (Number(bgtrans)<1) {
@@ -952,10 +1334,11 @@ var tpLayerTimelinesRev = new function(){
 				mheight = u.getVal(params,"scaleY"); 
 			break;
 			case 'video':
-				mwidth = u.getVal(params,"video_width");
-				mheight = u.getVal(params,"video_height"); 				
-				caption.find('.slide_layer_video').css({width:parseInt(mwidth,0)+"px",height:parseInt(mheight,0)+"px"});
-			break;			
+				mwidth = params.video_data.cover===true || params.video_data.fullwidth===true ? "100%" : u.getVal(params,"video_width");
+				mheight = params.video_data.cover===true || params.video_data.fullwidth===true ? "100%" :  u.getVal(params,"video_height"); 				
+				caption.find('.slide_layer_video').css({width:parseInt(mwidth,0)+"px",height:parseInt(mheight,0)+"px"});								
+			break;
+			
 		}
 		
 		if(mwidth == undefined) mwidth = '';
@@ -985,8 +1368,8 @@ var tpLayerTimelinesRev = new function(){
 		
 		var fw = parseInt(u.getVal(ss,"font-weight"),0) || 400;
 
-		
-		punchgs.TweenLite.set(inlayer, {	 clearProps:"all"});
+		punchgs.TweenLite.set(caption.find('.tp-mask-wrap'), {	 clearProps:"all", visibility:"visible",opacity:1})
+		punchgs.TweenLite.set(inlayer, {	 clearProps:"all", visibility:"visible",opacity:1});
 		punchgs.TweenLite.set(inlayer, {	
 											 z:deform.z,
 										//	 top:parseInt(deform["top"],0)+"px",
@@ -1018,13 +1401,14 @@ var tpLayerTimelinesRev = new function(){
 											 fontFamily:deformidle["font-family"],
 											 fontStyle:deformidle["font-style"],
 											 textDecoration:deform["text-decoration"],
+											 textTransform:deform["text-transform"],
 											 borderColor:bordercolor,
-											 borderRadius:parseInt(deform["border-radius"][0],0)+"px "+parseInt(deform["border-radius"][1],0)+"px "+parseInt(deform["border-radius"][2],0)+"px "+parseInt(deform["border-radius"][3],0)+"px",
+											 borderRadius:deform["border-radius"][0]+" "+deform["border-radius"][1]+" "+deform["border-radius"][2]+" "+deform["border-radius"][3],
 											 borderWidth:parseInt(deform["border-width"],0)+"px",
 											 borderStyle:deform["border-style"],
 											 whiteSpace:u.getVal(params,"whitespace"),
 											 maxWidth:mwidth,
-											 maxHeight:mheight								 
+											 maxHeight:mheight											 
 							});
 		
 		if (params.type==="image") {
@@ -1037,6 +1421,34 @@ var tpLayerTimelinesRev = new function(){
 				punchgs.TweenLite.set(inlayer,{width:mwidth,height:mheight})						
 			}		
 		}
+
+		if (params.type==="video") {			
+				punchgs.TweenLite.set(inlayer.find('.slide_layer_video'),{width:mwidth,height:mheight})
+				punchgs.TweenLite.set(inlayer,{width:mwidth,height:mheight})									
+		}
+		
+		if (params.type==="svg" && params.svg!=undefined) {			
+				var svgstrokecolor = params.svg["svgstroke-color"] || "transparent",
+					svgstroketrans = params.svg["svgstroke-transparency"] || 0,
+					svgstrokewidth = params.svg["svgstroke-width"] || 0,
+					svgstrokedasharray = params.svg["svgstroke-dasharray"] || 0,
+					svgstrokedashoffset = params.svg["svgstroke-dashoffset"] || 0;
+
+				// STROKE OPACITY
+				if (Number(svgstroketrans)<1) {
+					var rgb = UniteAdminRev.convertHexToRGB(svgstrokecolor);
+					svgstrokecolor="rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+svgstroketrans+")";
+				}
+				
+				punchgs.TweenLite.set(inlayer.find('svg'),{
+																fill:fontcolor,
+																stroke:svgstrokecolor,
+																strokeWidth:svgstrokewidth,
+																strokeDasharray:svgstrokedasharray,
+																strokeDashoffset:svgstrokedashoffset
+															});				
+		}
+
 		if (params.inline !=undefined && params.inline.idle!=undefined)					
 			jQuery.each(params.inline.idle, function(key,value) {
 
@@ -1109,6 +1521,30 @@ var tpLayerTimelinesRev = new function(){
 											 },
 											 ease:deform.easing
 							}));
+			if (params.type==="svg" && params.svg!=undefined) {					
+					var svgstrokecolor = params.svg["svgstroke-hover-color"] || "transparent",
+						svgstroketrans = params.svg["svgstroke-hover-transparency"] || 0,
+						svgstrokewidth = params.svg["svgstroke-hover-width"] || 0,
+						svgstrokedasharray = params.svg["svgstroke-hover-dasharray"] || 0,
+						svgstrokedashoffset = params.svg["svgstroke-hover-dashoffset"] || 0;
+
+					// STROKE OPACITY
+					if (Number(svgstroketrans)<1) {
+						var rgb = UniteAdminRev.convertHexToRGB(svgstrokecolor);
+						svgstrokecolor="rgba("+rgb[0]+","+rgb[1]+","+rgb[2]+","+svgstroketrans+")";
+					}
+					
+
+					tl.add(punchgs.TweenLite.to(inlayer.find('svg'),hoverspeed,{
+																	fill:fontcolor,
+																	stroke:svgstrokecolor,
+																	strokeWidth:svgstrokewidth,
+																	strokeDasharray:svgstrokedasharray,
+																	strokeDashoffset:svgstrokedashoffset,
+																	ease:deform.easing
+																}),0);				
+			}
+
 			inlayer.data('hoveranim',tl);
 			
 
@@ -1139,6 +1575,9 @@ var tpLayerTimelinesRev = new function(){
 				});
 				caption.data('hoverexist',true);
 			} 
+
+
+			
 			
 			
 			if (jQuery('#toggle-idle-hover').hasClass("hoverisselected")) {				
@@ -1661,7 +2100,7 @@ var tpLayerTimelinesRev = new function(){
 		-	EVENT LISTENER FOR MASTER TIME POSITION CHANGE, ALL ANIMATION MOVE IN POSTION 	-
 	********************************************************************************************/
 
-	var  masterTimerPositionChange = function(recreatetimers) {
+	t.masterTimerPositionChange = function(recreatetimers) {
 
 
 			var mp = jQuery('#mastertimer-position'),
@@ -1682,7 +2121,7 @@ var tpLayerTimelinesRev = new function(){
 					mst.seek(100000);
 				}
 					
-				allLayerToIdle();
+				t.allLayerToIdle();
 			}
 
 			if (tpos>0 && (mp.data('wasidle')=="wasidle" || mp.data('wasidle')==undefined)) {
@@ -1733,16 +2172,13 @@ var tpLayerTimelinesRev = new function(){
 
 	}
 	
-	function allLayerToIdle() {
-		jQuery('.slide_layer').each(function() {
-					t.rebuildLayerIdle(jQuery(this));
-		})
-	}
-
-	t.allLayerToIdle = function() {
-		jQuery('.slide_layer').each(function() {
-					t.rebuildLayerIdle(jQuery(this));
-		})
+	
+	t.allLayerToIdle = function(obj) {		
+		var search = obj!=undefined && obj.type!=undefined ? '.slide_layer_type_'+obj.type : '.slide_layer';				
+		jQuery(search).each(function() {	
+			t.rebuildLayerIdle(jQuery(this));
+		});
+		
 	}
 
 	/***********************************
@@ -1778,7 +2214,8 @@ var tpLayerTimelinesRev = new function(){
 				mst.seek(100000);
 			}
 
-			allLayerToIdle();
+
+			t.allLayerToIdle();
 
 			
 		})
@@ -1803,7 +2240,7 @@ var tpLayerTimelinesRev = new function(){
 			if (mp.hasClass("hovering")) {
 				mp.removeClass("hovering");
 				t.stopAllLayerAnimation();
-				allLayerToIdle();
+				t.allLayerToIdle();
 
 				// Click on LayerAnimation Button the current Selected Layer should be Animated
 				if (!jQuery('#layeranimation-playpause').hasClass("inpuase")) {
@@ -1823,7 +2260,7 @@ var tpLayerTimelinesRev = new function(){
 		jQuery('#mastertimer-wrapper').hover(function() {
 			if (!jQuery(this).hasClass("overme")) {
 				jQuery(this).addClass("overme");
-				masterTimerPositionChange(true);
+				t.masterTimerPositionChange(true);
 			}
 		}, function() {
 			jQuery(this).removeClass("overme");
@@ -1839,7 +2276,7 @@ var tpLayerTimelinesRev = new function(){
 				punchgs.TweenLite.set(jQuery('#mastertimer-poscurtime'),{autoAlpha:1,x:-1,y:0});
 			},
 			drag:function() {
-				masterTimerPositionChange(false)
+				t.masterTimerPositionChange(false)
 			},
 			containment:"#master-rightheader",
 			stop:function() {
@@ -1854,42 +2291,68 @@ var tpLayerTimelinesRev = new function(){
 				sl = jQuery('#master-rightheader').scrollLeft();
 
 			jQuery('#mastertimer-position').css({left:(e.pageX-lo + sl+15)+"px"});
-			masterTimerPositionChange();
+			t.masterTimerPositionChange();
 		})
 		
 		jQuery('#mastertimer-maxtime').draggable({
 			axis:"x",			
 			containment:"#master-rightheader",
 			create:function() {
-
-				jQuery('#mastertimer-maxcurtime').html(t.convToTime(jQuery('#mastertimer-maxtime').position().left-15));
-				jQuery('.slide-idle-section').css({left:jQuery('#mastertimer-maxtime').position().left});
+				t.mainMaxTimeLeft = jQuery('#mastertimer-maxtime').position().left;
+				jQuery('#mastertimer-maxcurtime').html(t.convToTime(t.mainMaxTimeLeft-15));
+				jQuery('.slide-idle-section').css({left:t.mainMaxTimeLeft});
 			},
 			start:function() {
-				jQuery('#mastertimer-maxcurtime').html(t.convToTime(jQuery('#mastertimer-maxtime').position().left-15));
-				jQuery('.slide-idle-section').css({left:jQuery('#mastertimer-maxtime').position().left});
+				jQuery('#mastertimer-maxcurtime').html(t.convToTime(t.mainMaxTimeLeft-15));
+				jQuery('.slide-idle-section').css({left:t.mainMaxTimeLeft});
 			},
 			drag:function() {
 				var w = jQuery('#mastertimer-maxtime').position().left;
-
+				t.mainMaxTimeLeft = w;
 				jQuery('#mastertimer-maxcurtime').html(t.convToTime(w-15));
 				jQuery('.slide-idle-section').css({left:w});
 				jQuery('#delay').val((w-15)*10);
 				jQuery('.mastertimer-slide .tl-fullanim').css({width:(w-15)+"px"});
-
+				t.compareLayerEndsVSSlideEnd();
 			},
 			stop:function() {
 				var w = jQuery('#mastertimer-maxtime').position().left;
-
+				t.mainMaxTimeLeft = w;
 				jQuery('#mastertimer-maxcurtime').html(t.convToTime(w-15));
 				jQuery('.slide-idle-section').css({left:w});
 				jQuery('#delay').val((w-15)*10);
 				jQuery('.mastertimer-slide .tl-fullanim').css({width:(w-15)+"px"});
 				g_slideTime = (w-15)*10;
 				u.setMaintime(g_slideTime);
-
+				t.compareLayerEndsVSSlideEnd();
+				t.rerenderAllAudioMap();
 			}
 
+		});
+
+		
+		__ctime = jQuery('#mastertimer-curtime');
+		__ctimeb = jQuery('#mastertimer-curtime-b');
+		__ctimei = jQuery('#mastertimer-curtimeinner');
+
+		function checklroffset() {
+			__coffset = parseInt(jQuery('#layers-right').offset().left,0);
+		}
+
+		jQuery(window).resize(function() {
+				checklroffset();		
+		});
+
+		checklroffset();
+		__ctime.data('offset',0);
+		
+		jQuery('.master-rightcell').on('mousemove',function(e) {
+			var x = (e.pageX-__coffset)-jQuery('#master-rightheader').data('left');
+			if (__ctime.data('offset') ==0) {				
+				punchgs.TweenLite.set(__ctime,{left:x});
+				punchgs.TweenLite.set(__ctimeb,{left:x});
+				__ctimei.html(t.convToTime(x-15));
+			}
 		});
 
 		
@@ -1938,6 +2401,7 @@ var tpLayerTimelinesRev = new function(){
 		if (firsttime) t.stopAllLayerAnimation();
 		var mp = jQuery('#mastertimer-position');
 
+
 		if (mp.data('tl')!=undefined) {
 			mp.data('tl').kill();
 		}
@@ -1964,6 +2428,7 @@ var tpLayerTimelinesRev = new function(){
 	}
 	
 	var setFakeAnim = function() {
+		
 		var found=false,
 			li = jQuery('.slide-trans-cur-ul li').first();
 		
@@ -1978,8 +2443,9 @@ var tpLayerTimelinesRev = new function(){
 		
 		jQuery('#fake-select-label').html(comingtext);					
 		jQuery('#fake-select-label').data('valu',comingtransition);
-
+		
 		removeAllSlots();
+		
 		slideAnimation();
 		found=true;
 		
@@ -1988,20 +2454,37 @@ var tpLayerTimelinesRev = new function(){
 	/**************************************
 		-	ADD SLIDE MAIN TO SORTBOX	-
 	**************************************/
+
+	var setSlideTransitionTimerBar = function() {
+		var cur = jQuery('#slide_in_sort_time'),
+			dragspeedin = cur.find('.tl-startanim'),
+			dur = jQuery('#transition_duration').val(),
+			maxtime = (t.mainMaxTimeLeft)-15;			
+		cur.find('.tl-fullanim').css({left:"15px",width:maxtime});
+		cur.find('.tl-startanim').css({width:dur/10});
+		cur.find('.sortbox_speedin').html(msToSec(dur));
+	}
+
+
 	var addSlideToSortbox = function() {
 
+		
 		var htmlSortbox = "";
 			
 		var cur = jQuery('#slide_in_sort_time'),
 			dragspeedin = cur.find('.tl-startanim'),
 			dur = jQuery('#transition_duration').val(),
-			maxtime = (jQuery('#mastertimer-maxtime').position().left)-15;			
-		cur.find(' .tl-fullanim').css({left:"15px",width:maxtime});
+			maxtime = (t.mainMaxTimeLeft)-15;			
+		cur.find('.tl-fullanim').css({left:"15px",width:maxtime});
 		cur.find('.tl-startanim').css({width:dur/10});
 		cur.find('.sortbox_speedin').html(msToSec(dur));
 		
-		setFakeAnim();
-				
+
+		
+		
+		//setFakeAnim();
+		
+		
 		cur.on('click',function() {
 			jQuery('#timline-manual-dialog').hide();
 		})
@@ -2031,12 +2514,160 @@ var tpLayerTimelinesRev = new function(){
 			}
 			//snap:".tl-fullanim"
 		});
-
+		
 		
 		
 	}
 
 	
+	t.resetTimeLineHeight = function() {
+		// SET HEIGHT OF MASTERTIMER
+		var maxh = jQuery('#layers-right>ul').height();				
+		punchgs.TweenLite.set(jQuery('#mastertimer-position'),{height:maxh+40});						
+	}
+
+
+	//////////////////////////////////
+	// 		SET AUDIO MAP 			//
+	//////////////////////////////////
+
+	t.rerenderAllAudioMap = function() {
+		jQuery.each(u.arrLayers,function(i,objLayer) {			
+			if (objLayer.type == "audio") {				
+				t.drawAudioMap(objLayer);
+			}
+		});
+	};
+
+
+	t.drawAudioMap = function(objLayer) {
+	 	
+	 	try {
+		 	var li = jQuery('#layer_sort_time_'+objLayer.serial);	 	
+		 	if (li.data('lastaudio') == objLayer.video_data.urlAudio && li.data('audiobuffer')!=undefined) {	 		
+		 		displayAudioBuffer(li,li.data('audiobuffer'));
+		 	} else {
+		 		loadMusicTimeLine(li,objLayer.video_data.urlAudio);
+		 	}
+
+		 	li.data('lastaudio',objLayer.video_data.urlAudio);
+			
+
+			if (!AudioContext) {
+				console.log('Audio Map cannot be drawn  in your Browser. Try a recent Chrome or Firefox. ');
+				return false;
+			}
+		} catch(e) { console.log("Drwaring of Audio Map Failer at Initialisation");}
+		
+	}
+	
+	
+
+	// MUSIC LOADER + DECODE
+	function loadMusicTimeLine(li,url) {   
+		if (audioContext === null || !AudioContext) return false;
+	    var req = new XMLHttpRequest(),	    	
+	    	currentBuffer  = null;
+	    
+	    req.open( "GET", url, true );
+	    req.responseType = "arraybuffer";    
+	    
+	    req.onreadystatechange = function (e) {
+	          if (req.readyState == 4) {
+	             if(req.status == 200)
+	                  audioContext.decodeAudioData(req.response, 
+	                    function(buffer) {
+	                             currentBuffer = buffer;
+	                             li.data('audiobuffer',buffer);
+	                             displayAudioBuffer(li,buffer);
+	                    }, onDecodeError);
+	             else
+	                  console.log('error during the load.Wrong url or cross origin issue');
+	          }
+	    } ;
+	    req.send();
+	}	
+
+	function onDecodeError() {  alert('error while decoding your Audio file.');  }
+
+	function getStartSec(st) {						
+		return st == undefined ? -1 : st=="" ? -1 : st==" " ? -1 : jQuery.isNumeric(st) ? st : st.split(":").length>1 ? parseInt(st.split(":")[0],0)*60 + parseInt(st.split(":")[1],0) : st;
+	};
+
+	function displayAudioBuffer(li,buff) {
+		try {
+			var leftChannel = buff.getChannelData(0), // Float32Array describing left channel     
+				wr = li.find('.tl-fullanim'),
+				objLayer = li.data('objref'),
+				canvasWidth =buff.duration*100,
+			   	canvasHeight = 25,
+			   	shift = objLayer.video_data.start_at,		   	
+			   	s = getStartSec(objLayer.video_data.start_at),
+			   	e = getStartSec(objLayer.video_data.end_at)
+			
+			s= s==-1 ? 0 : s;
+			e= e==-1 ? 999999999 : e;		
+			s= s * buff.sampleRate;
+			e= e * buff.sampleRate;
+			e = e>leftChannel.length ? leftChannel.length : e;
+			canvasWidth = ((e-s)/buff.sampleRate)*100;
+			
+			li.find('canvas').remove();
+			
+			// CANVAS		
+			var newCanvas   = document.createElement('canvas');
+			newCanvas.width = ((t.mainMaxTimeLeft)-15);
+			newCanvas.height = canvasHeight;			
+			li.append(newCanvas);
+			
+			var jc = li.find('canvas');
+			//punchgs.TweenLite.set(wr,{opacity:0.4});
+			punchgs.TweenLite.set(jc,{zIndex:2,top:3,left:wr.position().left,position:"absolute"});
+
+			var context = newCanvas.getContext('2d'),
+				lineOpacity = canvasWidth / leftChannel.length;
+
+			   
+		   context.save();
+		   context.fillStyle = 'transparent' ;
+		   context.fillRect(0,0,canvasWidth,canvasHeight );
+		   context.strokeStyle = '#333';	   
+		   context.translate(0,canvasHeight / 2);
+		   context.globalAlpha = 0.5 ; // lineOpacity ;
+		   
+		   var pl = 0,
+		   	   seglength = e-s;
+		   	   	  
+			for (var i=s; i<e; i=i+200) {
+			       // on which line do we get ?
+			       var x = Math.floor (canvasWidth * i / seglength ) ;
+			       
+			       var y = leftChannel[i] * canvasHeight  ;
+			       context.beginPath();
+			       context.moveTo( x  , 0 );
+			       context.lineTo( x+1, y );
+			       context.stroke();
+			       pl++;
+			}
+
+			if (objLayer.video_data.videoloop!="none") {
+				var imgdata = context.getImageData(0, 0, canvasWidth, canvasHeight),
+					lmult = (((t.mainMaxTimeLeft)-15) / canvasWidth);			
+
+				for (var i=0;i<lmult;i++) {
+					context.putImageData(imgdata,i*canvasWidth,0);
+				}
+
+			}
+
+			//playSound(buff);
+			
+		   context.restore();	   
+		 } catch(e) { console.log("Drawing of Audio Map failed !")}
+	}
+
+	
+
 
 
 	/******************************
@@ -2045,62 +2676,79 @@ var tpLayerTimelinesRev = new function(){
 	t.addToSortbox = function(serial,objLayer){
 
 		
-	
-		if (jQuery('#layers-right ul li').length==1) {
+		if (jQuery('#layers-right ul li').length==1) 				
 				addSlideToSortbox();
-		}
-
+		
 
 		if (serial===undefined) return false;
 
 		
 		var endslideclass = "",
-			isVisible = isLayerVisible(serial),
+			isVisible = t.isLayerVisible(serial),
 			classLI = "",
 			sortboxText = t.getSortboxText(objLayer.alias),
-			depth = Number(objLayer.order)+1,
+			depth = Number(objLayer.order)+5,
 			htmlSortbox = "",
-			quicksb  = "";
+			quicksb  = ""
+			visibleclass = "in-on";
 			
+		
 			
 		//if(isVisible == false)
 		//	classLI = " sortitem-hidden";
 
+		
 
 		htmlSortbox += '<li id="layer_sort_'+serial+'" class="sortablelayers mastertimer-layer ui-state-default'+classLI+'">';
 		htmlSortbox += '	<div style="width:5000px;position:absolute;left:0px;top:0px;">';
-		htmlSortbox += '		<span style="margin-right:5px;width:18px;padding-right:10px;border-right:1px solid #f1f1f1">';
-		htmlSortbox += '			<i style="margin-left:5px;margin-right:0px;" class="layersortclass eg-icon-sort"></i>';
-		htmlSortbox += '				<input type="text" class="sortbox_depth" readonly title="Edit Depth" value="'+depth+'">';
+		htmlSortbox += '		<span class="mastertimer-timeline-selector-row tipsy_enabled_top" title="Select Layer in Timeline">';
+		htmlSortbox += '			<input class="layer-on-timeline-selector" style="margin:0px" type="checkbox"/>';		
+		htmlSortbox += '		</span>';
+		htmlSortbox += '		<span  class="mastertimer-timeline-zindex-row tipsy_enabled_top" title="z-Index">';
+		htmlSortbox += '			<i style="margin-left:15px;margin-right:0px;" class="layersortclass eg-icon-sort"></i>';
+		htmlSortbox += '			<span class="sortbox_depth" title="z-Index">'+depth+'</span>';
 		htmlSortbox += '		</span>';
 		htmlSortbox += '		<span style="width:25px;border-right:1px solid #f1f1f1">';
-		htmlSortbox += '			<span class="till_slideend '+endslideclass+'" title="Snap to Slide End / Custom End" class="tipsy_enabled_top"><i class="eg-icon-back-in-time"></i><i class="eg-icon-download-2"></i></span>';
+		htmlSortbox += '			<span class="till_slideend tipsy_enabled_top '+endslideclass+'" title="Wait till Slides End / Custom End"><i class="eg-icon-back-in-time"></i><i class="eg-icon-download-2"></i></span>';
 		htmlSortbox += '		</span>';
-		htmlSortbox += '		<span class="text-selectable sort-hover-part layer_sort_layer_text_field">';
-		htmlSortbox += '			<span class="text-selectable sortbox_text"><i class="layertypeclass ';		
+		htmlSortbox += '		<span class="sort-hover-part layer_sort_layer_text_field">';
+		htmlSortbox += '			<span class="sortbox_text"><i class="layertypeclass ';		
 
-		quicksb += '<li id="layer_quicksort_'+serial+'" class="quicksortlayer ui-state-default">';
-		quicksb += '<div class="add-layer-button text-selectable">'		
-		quicksb += '<i class="';
+		
 		switch (objLayer.type) {
 			case "text":
 				htmlSortbox += 'rs-icon-layerfont';
-				quicksb += 'rs-icon-layerfont';
+		
 			break;
 			case "image":
 				htmlSortbox += 'rs-icon-layerimage';
-				quicksb += 'rs-icon-layerimage';
+		
 			break;
 			case "video":
-				htmlSortbox += 'rs-icon-layervideo';
-				quicksb += 'rs-icon-layervideo';
+				htmlSortbox += 'rs-icon-layervideo';		
+			break;
+
+			case "audio":
+				htmlSortbox += 'rs-icon-layeraudio';		
+			break;
+			
+			case "button":
+				htmlSortbox += 'rs-icon-layerbutton';		
+			break;
+
+			case "shape":
+				htmlSortbox += 'rs-icon-layershape';		
+			break;
+
+			case "svg":
+				htmlSortbox += 'rs-icon-layersvg';		
 			break;
 		}
 
 		htmlSortbox += '"></i>';
-		quicksb += '"></i>';
-		htmlSortbox += '				<input class="text-selectable timer-layer-text" style="margin-top:-1px !important" type="text" enabled value="'+sortboxText + '">';
-		quicksb += '				<span class="add-layer-txt">'+sortboxText + '</span>';
+
+		htmlSortbox += '				<input class="timer-layer-text" style="margin-top:-1px !important" type="text" enabled value="'+sortboxText + '">';
+
 		htmlSortbox += '			</span>';
 		htmlSortbox += '		</span>';
 		htmlSortbox += '		<span class="timer-manual-edit"><i class="eg-icon-pencil"></i></span>'
@@ -2111,72 +2759,183 @@ var tpLayerTimelinesRev = new function(){
 
 		htmlSortbox += '</li>';
 
-		quicksb +='<span class="quick-layer-lock"><i class="eg-icon-lock-open"></i></span>';
-		quicksb +='<span class="quick-layer-view"><i class="eg-icon-eye"></i></span>';
-		quicksb +='</div></li>';
+		quicksb += '<li id="layer_quicksort_'+serial+'" data-serial="'+serial+'" class="quicksortlayer ui-state-default layer-toolbar-li">';
+		var btlist ='<span class="quick-edit-toolbar-in-list">';
+
+		
+		switch (objLayer.type) {
+			case "text":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layerfont_n"></i>';
+				btlist += '<span id="button_edit_layer_'+serial+'" class="button_edit_layer layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';
+				btlist += '<span id="button_reset_size_'+serial+'" class="button_reset_size layer-short-tool revblue"><i class="eg-icon-resize-normal"></i></span>';
+			break;	
+			case "shape":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layershape_n"></i>';
+				btlist += '<span id="button_edit_shape_'+serial+'" class="button_edit_shape layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';
+				btlist += '<span  class="layer-short-tool revdarkgray"></span>';
+			break;
+			case "button":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layerbutton_n"></i>';
+				btlist += '<span id="button_edit_layer_'+serial+'" class="button_edit_layer layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';
+				btlist += '<span id="button_reset_size_'+serial+'" class="button_reset_size layer-short-tool revblue"><i class="eg-icon-resize-normal"></i></span>';
+			break;
+			case "image":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layerimage_n"></i>';
+				btlist += '<span  id="button_change_image_source_'+serial+'" class="button_change_image_source layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';
+				btlist += '<span id="button_reset_size_'+serial+'" class="button_reset_size layer-short-tool revblue"><i class="eg-icon-resize-normal"></i></span>';
+			break;
+			case "video":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layervideo_n"></i>';
+				btlist += '<span  id="button_change_video_settings_'+serial+'" class="button_change_video_settings layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';				
+				btlist += '<span  class="layer-short-tool revdarkgray"></span>';
+			break;
+			case "audio":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layeraudio_n"></i>';
+				btlist += '<span  id="button_changeaudio_settings_'+serial+'" class="button_change_audio_settings layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';				
+				btlist += '<span  class="layer-short-tool revdarkgray"></span>';
+				classLI = " layer-sort-audio-item"
+			break;
+			case "svg":
+				quicksb += '<span class="layer-short-tool revdarkgray layer-title-with-icon"><i class="rs-icon-layersvg_n"></i>';
+				btlist += '<span  id="button_changesvg_settings_'+serial+'" class="button_change_svg_settings layer-short-tool revblue"><i class="eg-icon-pencil"></i></span>';				
+				btlist += '<span  class="layer-short-tool revdarkgray"></span>';
+			break;
+		}
+		
+		quicksb += '<input type="text" class="layer-title-in-list" value="'+sortboxText+'"></span>';
+		quicksb += btlist;		
+		quicksb += '<span id="button_delete_layer_'+serial+'" class="button_delete_layer layer-short-tool revred"><i class="rs-lighttrash"></i></span>';
+		quicksb += '<span id="button_duplicate_layer_'+serial+'" class="button_duplicate_layer layer-short-tool revyellow" data-isstatic=""><i class="rs-lightcopy"></i></span>';
+		quicksb += '<span style="display:block;float:none;clear:both"></span></span>';
+		quicksb += '<span class="quick-layer-view layer-short-tool revdarkgray '+visibleclass+'"><i class="eg-icon-eye"></i></span>';
+		quicksb += '<span class="quick-layer-lock layer-short-tool revdarkgray"><i class="eg-icon-lock-open"></i></span>';
+		quicksb += '<div style="clear:both;display:block"></div>';
+		quicksb +='</li>';
+
+		
 
 		jQuery('#layers-left ul').append(htmlSortbox);
 		jQuery('.quick-layers-list').append(quicksb);
 
+		
+		
 		if (jQuery('.quick-layers-list li').length>1) jQuery('.nolayersavailable').hide();
 
 		htmlSortbox = "";
-		htmlSortbox += '<li id="layer_sort_time_'+serial+'" class="sortablelayers mastertimer-layer ui-state-default'+classLI+'">';
+		htmlSortbox += '<li data-serial="'+serial+'" id="layer_sort_time_'+serial+'" class="sortablelayers mastertimer-layer ui-state-default'+classLI+'">';
 		htmlSortbox += '  <div class="timeline">';
 		htmlSortbox += '		<div class="tl-fullanim">';
-		htmlSortbox += '			<span class="start-puller"><span class="sortbox_time">'+msToSec(objLayer.time)+'</span></span>';
+		htmlSortbox += '			<span style="z-index:100!important;" class="sortbox_time">'+msToSec(objLayer.time)+'</span>';
+		htmlSortbox += '			<span style="z-index:100!important;" class="sortbox_timeend">'+msToSec(objLayer.endtime)+'</span>';
+		htmlSortbox += '			<span class="start-puller"></span>';
 		htmlSortbox += '			<div class="tl-startanim"><span class="sortbox_speedin">'+msToSec(objLayer.speed)+'</span><span class="start-anim-puller"></span><div class="splitinextratime"></div></div>';
 		htmlSortbox += '			<div class="tl-endanim"><span class="sortbox_speedout">'+msToSec(objLayer.endspeed)+'</span><span class="end-anim-puller"></span><div class="splitoutextratime"></div></div>';
-		htmlSortbox += '			<span class="end-puller"><span class="sortbox_timeend">'+msToSec(objLayer.endtime)+'</span></span>';
+		htmlSortbox += '			<span class="end-puller"></span>';
 		htmlSortbox += '		</div>';
 		htmlSortbox += '		<div class="slide-idle-section"></div>';
 		htmlSortbox += ' </div>';
 		htmlSortbox += '</li>';
 		jQuery('#layers-right ul').append(htmlSortbox);
 
-		jQuery('.master-rightcell .layers-wrapper, .master-leftcell .layers-wrapper, #divLayers-wrapper').perfectScrollbar("update");
+		
+		jQuery('#layer_quicksort_'+serial).on('mouseenter',function(event) {
+			jQuery('.layer_due_list_element_selected').removeClass('layer_due_list_element_selected');
+			jQuery('#slide_layer_'+jQuery(this).data('serial')).addClass("layer_due_list_element_selected");
+		});
 
-		var cur = jQuery('#layer_sort_time_'+serial+" .timeline"),
+		jQuery('#layer_quicksort_'+serial).on('mouseleave',function(event) {
+			jQuery('.layer_due_list_element_selected').removeClass('layer_due_list_element_selected');			
+		});
+
+		jQuery("#layers-left .tipsy_enabled_top").tipsy({
+  				gravity:"s",
+  				delayIn: 70
+  		});
+
+
+
+		
+		var li = jQuery('#layer_sort_time_'+serial),
+			cur = li.find(".timeline"),
 			qcur = jQuery('#layer_quicksort_'+serial),
 			dragfull = cur.find('.tl-fullanim'),
 			dragspeedin = cur.find('.tl-startanim'),
-			dragspeedout = cur.find('.tl-endanim'),
-			maxtime = (jQuery('#mastertimer-maxtime').position().left)-15; //slidemaxtime==undefined || slidemaxtime=="" || slidemaxtime<=0 ? g_slideTime : slidemaxtime;
+			dragspeedout = cur.find('.tl-endanim'),			
+			maxtime = (t.mainMaxTimeLeft)-15; //slidemaxtime==undefined || slidemaxtime=="" || slidemaxtime<=0 ? g_slideTime : slidemaxtime;
+		
+		if (objLayer.type=="audio") {
+			li.data('objref',objLayer);			
 
-		qcur.find('.quick-layer-lock').click(function() {
-			var b = jQuery(this),
-				i = b.find('i'),
-				p = b.closest('.quicksortlayer');
+  			t.drawAudioMap(objLayer);
+  			li.on('mousemove',function(e) {  				
+  				//try{
+	  				var li = jQuery(this),
+	  					serial = li.data('serial'),
+	  					player = jQuery('#slide_layer_'+serial+" audio")[0];
+	  				if (!li.hasClass("ui-state-hover")) return false;
+					
+					clearTimeout(li.data('audiopreview'));
+					li.find('.audio-progress').remove();
+					player.pause();
+	  				
+	  				
+	  				li.data('audiopreview',setTimeout(function() {
+		  				
+		  				var	dragfull = li.find('.tl-fullanim'),
+		  					dl = dragfull.position().left,  					
+		  					dw = dragfull.width(),
+		  					time = (e.pageX-li.offset().left)-dl;
 
-			if (i.hasClass("eg-icon-lock")) {
-				i.removeClass("eg-icon-lock").addClass("eg-icon-lock-open");
-			} else {
-				i.removeClass("eg-icon-lock-open").addClass("eg-icon-lock");
-			}
-		});
+		  				
+		  				li.find('.audio-progress').remove();
+		  				li.append('<div class="audio-progress"></div>');
+		  				var ap = li.find('.audio-progress'),
+		  					shift = Math.floor((time / (player.duration*100))); 
 
-		qcur.find('.quick-layer-view').click(function() {
-			var b = jQuery(this),
-				i = b.find('i'),
-				p = b.closest('.quicksortlayer');
+		  				if (time>player.duration*100) 
+		  					time = time - ((player.duration*100)*shift);
 
-			if (p.hasClass("sortitem-hidden")) {
-				i.removeClass("eg-icon-eye").addClass("eg-icon-eye-off");
-			} else {
-				i.removeClass("eg-icon-eye-off").addClass("eg-icon-eye");
-			}
-		});
+		  					  				
+		  				if (time>0) {
+		  					restw = (player.duration-time/100) * 100;  					  				
+		  					punchgs.TweenLite.fromTo(ap,(player.duration-time/100),{left:(dl+time+(shift*(player.duration*100))),transformOrigin:"0% 50%", width:restw,scaleX:0},{scale:1,ease:punchgs.Linear.easeNone});
+		  				}
+		  				if (time>0) {
+		  					player.play();
+		  					player.currentTime = time/100;
+		  				}  			
+		  			},400));	  				
+		  		//} catch(er) {
 
+		  		//}
+  			});
 
-		setCurTimer(dragfull);
+  			li.on('mouseleave',function(e) {
+  				try {
+  					var li = jQuery(this),  					
+	  					serial = li.data('serial'),
+	  					player = jQuery('#slide_layer_'+serial+" audio")[0];
+	  				clearTimeout(li.data('audiopreview'));
+	  				li.find('.audio-progress').remove();
+  					player.pause();
+  				} catch(er) { }
+	  		});
+  		}
+
+		// SAVE SOME TIME LATER....
+		var fobj = {};
+		fobj.serial = serial;
+		fobj.li = li;		
+		fobj.timeline = cur;
+		fobj.startanim = dragfull.find('.tl-startanim');
+		fobj.endanim = dragfull.find('.tl-endanim');
+		dragfull.data('fobj',fobj);
+
+		setCurTimer(dragfull,true);
 		cur.parent().find('.slide-idle-section').css({left:(maxtime+15)+"px"});
-		
-		jQuery('#mastertimer-wrapper').height((jQuery('#layers-right ul li').length+1)*32);
-		jQuery('.layers-wrapper').height(jQuery('#mastertimer-wrapper').height()-40);
-		jQuery('.layers-wrapper').perfectScrollbar("update");
 
-		
-
+		t.resetTimeLineHeight();
+				
 		// DRAG LEFT / RIGHT THE FULL ANIMATION
 		dragfull.draggable({
 			containment:"parent",
@@ -2190,7 +2949,7 @@ var tpLayerTimelinesRev = new function(){
 			},
 			stop:function() {
 
-				var maxtime = (jQuery('#mastertimer-maxtime').position().left)-15,
+				var maxtime = (t.mainMaxTimeLeft)-15,
 					l = parseInt(dragfull.position().left),
 					w = dragfull.width(),
 					speedoutw = dragspeedout.width();
@@ -2198,53 +2957,54 @@ var tpLayerTimelinesRev = new function(){
 				if (l<15) dragfull.css({left:"15px"});
 				if (l>maxtime+speedoutw-w+15) dragfull.css({left:(maxtime+speedoutw-w+15)+"px"});
 				if (dragfull.position().left<15) dragfull.css({left:15});
-				
-
-
 				t.updateCurTimer("dragstop",jQuery(this));
 				jQuery(this).closest('li').removeClass("showstarttoend");
 				dragfull.closest('.timeline').removeClass("onchange");
+				u.add_layer_change();
 			},
 			drag:function() {
 				t.updateCurTimer("drag",jQuery(this));
 			}
 		})
 
+		
+		
+		var dsiw = dragspeedin.data('dsw') !=undefined ? dragspeedin.data('dsw')  : dragspeedin.width(),
+			dsow = dragspeedout.data('dew') !=undefined ? dragspeedout.data('dew') : dragspeedout.width();
+
 		// CHANGE DURATION OF ELEMENTS
 		dragfull.resizable({
 			containment:"parent",
 			handles:"w,e",
-			minWidth: (dragspeedin.width()+dragspeedout.width()),
-			maxWidth: (maxtime+dragspeedout.width()),
+			minWidth: (dsiw+dsow),
+			maxWidth: (maxtime+dsow),
 
 			// BASIC SETTINGS FOR THE DRAGBAR
 			create:function() {
 				
-
-				var maxtime = (jQuery('#mastertimer-maxtime').position().left)-15,
-					w = dragfull.width(),
-					speedoutw = dragspeedout.width(),
-					l = parseInt(dragfull.position().left);
-
+				var maxtime = (t.mainMaxTimeLeft)-15,
+					w =dragfull.data('dfw') !=undefined ? dragfull.data('dfw') :  dragfull.width(),					
+					speedoutw = dragspeedout.data('dew') != undefined ? dragspeedout.data('dew') : dragspeedout.width(),
+					dfl = dragfull.data('dfl') !=undefined ? dragfull.data('dfl') : dragfull.position().left,
+					l = parseInt(dfl);
+								
 				// IF THE TIMELINE TOO LONGTH AT START
-				if (w+speedoutw>maxtime) {
+				if (w-speedoutw>maxtime) {
 					var neww = maxtime-l+ speedoutw;
-						newl = maxtime+speedoutw - neww + 15;
-					dragfull.css({width:neww+"px",left:newl+"px"});
+						newl = maxtime+speedoutw - neww;
+					dragfull.css({width:(neww+15)+"px",left:newl+"px"});
 				}
 			},
 
 			// ON START TO RESIZE, CHANGE SOME IMPORTANT PARAMETERS
 			start:function(e,ui) {
-				
-				
 					
 				// ADD CLASS ONCHANGE
 				dragfull.closest('.timeline').addClass("onchange");
 				jQuery('#timline-manual-dialog').show();
 				
 
-				var maxtime = (jQuery('#mastertimer-maxtime').position().left)-15,
+				var maxtime = (t.mainMaxTimeLeft)-15,
 					w = dragfull.width(),
 					speedinw = dragspeedin.width(),
 					speedoutw = dragspeedout.width(),
@@ -2263,20 +3023,22 @@ var tpLayerTimelinesRev = new function(){
 				// OVERWRITE THE BASIC OPTIONS
 				dragfull.resizable("option","minWidth",minwidth);
 				dragfull.resizable("option","maxWidth",maxwidth);
-
-				// CONSOLE LOGGING
-
+				__ctime.data('offset',1);
+				
 				if (jQuery(dir).hasClass("ui-resizable-w"))
 					jQuery(this).closest('li').addClass("showtlstart");
-				else
+				else 
 					jQuery(this).closest('li').addClass("showtlend");
+				
 			},
 
 
 			stop:function() {
-				t.updateCurTimer("resizestop",jQuery(this));
+				t.updateCurTimer("resizestop",jQuery(this),"start");
 				jQuery(this).closest('li').removeClass("showtlstart").removeClass("showtlend");
 				dragfull.closest('.timeline').removeClass("onchange");
+				__ctime.data('offset',0);
+				u.add_layer_change();
 			},
 			resize:function(event) {
 				if (jQuery(event.srcElement).hasClass("ui-resizable-w"))
@@ -2286,25 +3048,31 @@ var tpLayerTimelinesRev = new function(){
 			}
 			//snap:".tl-fullanim"
 		});
-
+		
 		dragspeedin.resizable({
 			minWidth:0,
 			handles:"e",
 			start:function() {
 				var w = dragfull.width(),
-					speedoutw = dragspeedout.width();
+					speedoutw = dragspeedout.width(),
+					speedinw = dragspeedin.width(),		
+					
+					l = parseInt(dragfull.position().left);
 
 				dragspeedin.resizable("option","maxWidth",(w-speedoutw));
 				dragfull.closest('.timeline').addClass("onchange");
 				jQuery(this).closest('li').addClass("showstartspeed");
 				dragfull.closest('.timeline').addClass("onchange");
 				jQuery('#timline-manual-dialog').show();
+				__ctime.data('offset',1);				
 			},
 			stop:function() {
 				var dragfull = jQuery(this).closest('li').find('.tl-fullanim');
 				jQuery(this).closest('li').removeClass("showstartspeed");
 				t.updateCurTimer("speedinstop",dragfull);
 				dragfull.closest('.timeline').removeClass("onchange");
+				__ctime.data('offset',0);
+				u.add_layer_change();
 			},
 			resize:function() {
 
@@ -2314,28 +3082,32 @@ var tpLayerTimelinesRev = new function(){
 			//snap:".tl-fullanim"
 		});
 
+		
 		dragspeedout.resizable({
 			minWidth:1,
 			handles:"w",
 			start:function() {
-				var maxtime = (jQuery('#mastertimer-maxtime').position().left)-15,
+				var maxtime = (t.mainMaxTimeLeft)-15,
 					w = dragfull.width(),
 					speedinw = dragspeedin.width(),
 					speedoutw = dragspeedout.width(),
 					l = parseInt(dragfull.position().left),
-					minwidth = speedinw+speedoutw,
+					minwidth = speedinw+speedoutw,					
 					maxwidth = maxtime+speedoutw;
 				dragspeedout.resizable("option","minWidth",(l+w-maxtime-15));
 				dragspeedout.resizable("option","maxWidth",(w-speedinw));
 				dragfull.closest('.timeline').addClass("onchange");
 				jQuery(this).closest('li').addClass("showendspeed");
-				jQuery('#timline-manual-dialog').show();
+				jQuery('#timline-manual-dialog').show();				
+				__ctime.data('offset',1);			
 			},
 			stop:function() {
 				var dragfull = jQuery(this).closest('li').find('.tl-fullanim');
 				t.updateCurTimer("speedoutstop",dragfull);
 				jQuery(this).closest('li').removeClass("showendspeed");
 				dragfull.closest('.timeline').removeClass("onchange");
+				__ctime.data('offset',0);
+				u.add_layer_change();
 			},
 			resize:function() {
 				var dragfull = jQuery(this).closest('li').find('.tl-fullanim');
@@ -2343,6 +3115,7 @@ var tpLayerTimelinesRev = new function(){
 			}
 			//snap:".tl-fullanim"
 		});
+		
 	}
 
 	/**
@@ -2352,10 +3125,9 @@ var tpLayerTimelinesRev = new function(){
 	var checkTillSlideEnd = function(serial,objLayer) {
 
 		
-		var maxtime = ((jQuery('#mastertimer-maxtime').position().left)-15)*10,
+		var maxtime = ((t.mainMaxTimeLeft)-15)*10,
 			li = jQuery('#layer_sort_'+serial);
-		
-
+			
 		if ( objLayer.endtime-objLayer.endspeed >= maxtime) {
 			objLayer.endWithSlide = true;
 			li.find('.till_slideend').addClass("tillendon");
@@ -2363,47 +3135,62 @@ var tpLayerTimelinesRev = new function(){
 			objLayer.endWithSlide = false;
 			li.find('.till_slideend').removeClass("tillendon");
 
-		}
+		}	
 	}
 
 
 	/**
 	 * update timeline of current layer
 	 */
-	t.updateCurrentLayerTimeline = function(){
+	t.updateCurrentLayerTimeline = function(){				
+		var timer = jQuery('#layers-right').find('.ui-state-hover .timeline .tl-fullanim');
+		
+		setTimeout(function() {					
+			setCurTimer(timer);					
+			t.updateCurTimer("",timer);
+		},20);
+	}
 
-		jQuery('.sortlist').find('.tl-fullanim').each(function() {
-			var caption = jQuery(this);
-			setTimeout(function() {
-					setCurTimer(caption);
-				},20);
+	t.updateAllLayerTimeline = function() {
+		jQuery('#layers-right').find('.sortablelayers.mastertimer-layer').each(function(i) {
+			var timer = jQuery(this).find('.timeline .tl-fullanim');			
+			
+			setCurTimer(timer);
+			t.updateCurTimer("",timer,true)
 		})
-
 	}
 
 	/**
-		Set the Current Timer Line to Position end start/end time should be set as well
-	*/
-	var setCurTimer = function(timer) {
-
-		var li = timer.closest("li"),
-			sortLayerID = li.attr("id"),
-			serial = u.getSerialFromSortID(sortLayerID),
-			objLayer = u.getLayer(serial);
-
-
+	 * update timeline of one layer
+	 */
+	t.updateLayerTimeline = function(timer){						
 		
-		var tl = jQuery('#layer_sort_time_'+serial).find('.timeline'),
-			tw = tl.width(),
-			dragfull = tl.find('.tl-fullanim'),
-			dragstart =dragfull.find('.tl-startanim'),
-			dragend = dragfull.find('.tl-endanim'),
-			ft = ((jQuery('#mastertimer-maxtime').position().left)-15)*10,
+		setTimeout(function() {					
+			setCurTimer(timer);					
+			t.updateCurTimer("",timer);
+		},20);
+	}
+
+
+
+
+	var setCurTimer = function(timer) {
+		
+		
+		var fobj = timer.data('fobj'),
+			li = fobj.li			
+			serial = fobj.serial,
+			objLayer = u.getLayer(serial);
+				
+		var tl = fobj.timeline,			
+			dragfull = timer,
+			dragstart =fobj.startanim, 			
+			dragend = fobj.endanim,
+			ft = ((t.mainMaxTimeLeft)-15)*10,
 			ietime = tl.find('.splitinextratime'),
 			oetime = tl.find('.splitoutextratime'),
-			fromreal = false;
-					
-			
+			fromreal = false;		
+				
 		if (objLayer.realEndTime && objLayer.realEndTime!="undefined" && objLayer.realEndTime!=undefined) {				
 			 objLayer.endtime = objLayer.realEndTime;
 			 if (objLayer.endWithSlide) objLayer.endtime = 	(parseInt(ft,0)+parseInt(objLayer.endspeed,0));			
@@ -2411,6 +3198,7 @@ var tpLayerTimelinesRev = new function(){
 			 delete objLayer.endTimeFinal;
 			 delete objLayer.endSpeedFinal;			 
 		}
+		
 		
 		if (objLayer.endtime=="undefined" || objLayer.endtime==undefined) {
 			objLayer.endtime = ft;
@@ -2427,24 +3215,39 @@ var tpLayerTimelinesRev = new function(){
 		if (objLayer.endspeed<=0) objLayer.endspeed = 2;
 		if (objLayer.speed<=0) objLayer.speed = 2;		
 
+		
 
 		ietime.css({width:isw+"px"});
 		oetime.css({width:osw+"px"});
-				
-		var result = objLayer.endtime - objLayer.time;
+		objLayer.split_in_extratime = isw;
+		objLayer.split_out_extratime = osw;
 
-		dragfull.css({width:(( result)/10)+"px",
-					  left: (15+(objLayer.time/10))+"px"});
-
-		dragstart.css({width:(objLayer.speed/10) +"px" });
-		dragend.css({right:"0px",width:(objLayer.endspeed / 10)+"px" });
-		checkTillSlideEnd(serial,objLayer);
+		var result = objLayer.endtime - objLayer.time,
+			dfw = result/10,
+			dfl = 15+(objLayer.time/10),
+			dew = objLayer.endspeed/10,
+			dsw = objLayer.speed/10;
 
 		
+		
+		dragfull.css({width:dfw+"px",
+					  left: dfl+"px"});
+		
+		dragstart.css({width:dsw +"px" });
+		dragend.css({right:"0px",width:dew+"px" });
+
+		dragfull.data('dfw',dfw);
+		dragfull.data('dfl',dfl);
+		dragend.data('dew',dew);
+		dragstart.data('dsw',dsw);
+
+		var canvas = li.find('canvas');
+		if (canvas)
+			punchgs.TweenLite.set(canvas,{left:dfl+15});
+		
+
+		checkTillSlideEnd(serial,objLayer);
 	}
-
-	
-
 
 
 	/**
@@ -2491,27 +3294,54 @@ var tpLayerTimelinesRev = new function(){
 	/**
 		Update the Current Timelines
 	*/
-	t.updateCurTimer = function(event,timer) {
-		var li = timer.closest("li"),
-			sortLayerID = li.attr("id"),
-			serial = u.getSerialFromSortID(sortLayerID),
-			objLayer = u.getLayer(serial),
-			l = timer.position().left
+	t.updateCurTimer = function(event,timer,onlydraw) {		
+
+		var fobj = timer.data('fobj'),
+			li = fobj.li			
+			serial = fobj.serial,
+			objLayer = u.getLayer(serial);
+				
+		var tl = fobj.timeline,			
+			dragfull = timer,
+			dragstart =fobj.startanim, 			
+			dragend = fobj.endanim,			
+			l = timer.position().left,
 			w = parseInt(timer.width(),0),
 			tl = li.find('.timeline'),
-			tw = tl.width(),
-			dragstart = tl.find('.tl-startanim'),
-			inspeedw = dragstart.width(),
-			dragend = tl.find('.tl-endanim'),
+			tw = tl.width(),			
+			inspeedw = dragstart.width(),			
 			outspeedw = dragend.width(),
 			startspeed = inspeedw*10,
 			endspeed = outspeedw*10,
 			starttime = (l-15)*10,
 			endtime = 	(l-15 + w)*10,
-			slidemaxtime = ((jQuery('#mastertimer-maxtime').position().left)-15)*10,
+			slidemaxtime = ((t.mainMaxTimeLeft)-15)*10,
 			ietime = li.find('.splitinextratime'),
 			oetime = li.find('.splitoutextratime');
 
+
+		if (__ctime.data('offset')===1) {
+			var x =0;
+			switch (event) {
+				case "changestart":
+					x = l;
+				break;
+				case "changeend":
+					x = l+w;
+				break;
+				case "speedin":
+				case "speedinstop":
+					x = l + inspeedw;
+				break;
+				case "speedout":
+				case "speedoutstop":
+					x = l + w - outspeedw;
+				break;
+			}
+			punchgs.TweenLite.set(__ctime,{left:x});
+			punchgs.TweenLite.set(__ctimeb,{left:x});
+			__ctimei.html(t.convToTime(x-15));
+		}
 
 		var isw = getSplitCounts(objLayer.text,objLayer.split,objLayer.splitdelay),
 			osw = getSplitCounts(objLayer.text,objLayer.endsplit,objLayer.endsplitdelay);
@@ -2519,32 +3349,43 @@ var tpLayerTimelinesRev = new function(){
 		ietime.css({width:isw+"px"});
 		oetime.css({width:osw+"px"});
 
-
-
-		jQuery('#layer_sort_time_'+serial).find('.sortbox_time').html(msToSec(starttime));
-		jQuery('#layer_sort_time_'+serial).find('.sortbox_timeend').html(msToSec(endtime));
-		jQuery('#layer_sort_time_'+serial).find('.sortbox_speedin').html(msToSec(startspeed));
-		jQuery('#layer_sort_time_'+serial).find('.sortbox_speedout').html(msToSec(endspeed));
-
-		jQuery('#layer_speed').val(startspeed);
-		jQuery('#layer_endspeed').val(endspeed);
+		
+		if (onlydraw!==true) {
+			jQuery('#layer_sort_time_'+serial).find('.sortbox_time').html(msToSec(starttime));
+			jQuery('#layer_sort_time_'+serial).find('.sortbox_timeend').html(msToSec(endtime));
+			jQuery('#layer_sort_time_'+serial).find('.sortbox_speedin').html(msToSec(startspeed));
+			jQuery('#layer_sort_time_'+serial).find('.sortbox_speedout').html(msToSec(endspeed));
+					
+			if (selectedLayerSerial == serial) {
+				jQuery('#layer_speed').val(startspeed);
+				jQuery('#layer_endspeed').val(endspeed);
+			}
+		}
 
 		dragstart.css({ left:"0px" });
 		dragend.css({ left:"auto", right:"0px" });
 
-		objLayer.speed = startspeed;
-		objLayer.endspeed = endspeed;
-		objLayer.time = starttime;
-		objLayer.endtime = endtime;
+		var canvas = li.find('canvas');
+		if (canvas)
+			punchgs.TweenLite.set(canvas,{left:15+starttime/10});
 
-		jQuery('#clayer_start_time').val(starttime);
-		jQuery('#clayer_end_time').val(endtime);
-		jQuery('#clayer_start_speed').val(startspeed);
-		jQuery('#clayer_end_speed').val(endspeed);
+		if (onlydraw!==true) {
+			objLayer.speed = startspeed;
+			objLayer.endspeed = endspeed;
+			objLayer.time = starttime;
+			objLayer.endtime = endtime;
+			objLayer.split_in_extratime = isw;
+			objLayer.split_out_extratime = osw;
+
+			jQuery('#clayer_start_time').val(starttime);
+			jQuery('#clayer_end_time').val(endtime);
+			jQuery('#clayer_start_speed').val(startspeed);
+			jQuery('#clayer_end_speed').val(endspeed);
+		}
 
 		checkTillSlideEnd(serial,objLayer);
 
-		masterTimerPositionChange(true);
+		t.masterTimerPositionChange(true);
 	}
 
 	/**
@@ -2575,12 +3416,15 @@ var tpLayerTimelinesRev = new function(){
 	t.deleteLayerFromSortbox = function(serial){
 
 		var sortboxLayer = t.getHtmlSortItemFromSerial(serial),
-			sortboxTimeLayer = getHtmlSortTimeItemFromSerial(serial),
-			quickItem = getHtmlQuickTimeItemFromSerial(serial);
-		
-		sortboxLayer.remove();
-		sortboxTimeLayer.remove();
-		quickItem.remove();
+			sortboxTimeLayer = t.getHtmlSortTimeItemFromSerial(serial),
+			quickItem = t.getHtmlQuickTimeItemFromSerial(serial);
+		try{
+			sortboxLayer.remove();
+			sortboxTimeLayer.remove();
+			quickItem.remove();
+		} catch(e) {
+
+		}
 
 		if (jQuery('.quick-layers-list li').length<2) jQuery('.nolayersavailable').show();
 
@@ -2611,9 +3455,10 @@ var tpLayerTimelinesRev = new function(){
 			var objUpdate = {order:i};
 			u.updateLayer(serial,objUpdate);
 
+			
 			//update sortbox order input
-			var depth = i+1;
-			jQuery("#"+sortID+" input.sortbox_depth").val(depth);
+			var depth = i+5;	
+			jQuery("#"+sortID+" .sortbox_depth").text(depth);
 			// Change Right Side Of Layer Container Also.
 			jQuery('#layer_sort_time_'+serial).appendTo(jQuery('#layers-right ul'));
 			jQuery('#layer_quicksort_'+serial).appendTo(jQuery('.quick-layers-list'));
@@ -2633,7 +3478,7 @@ var tpLayerTimelinesRev = new function(){
 		for(var key in u.getLayers()){
 			var layer = l[key];			
 			if(layer.order !== undefined){
-				var zindex = layer.order+100;
+				var zindex = Number(layer.order)+100;
 				jQuery("#slide_layer_"+key).css("z-index",zindex);
 			}
 		};
@@ -2696,13 +3541,13 @@ var tpLayerTimelinesRev = new function(){
 		
 		for(var i=0; i<layers_array.length;i++){
 			var objLayer = layers_array[i];
-			addToSortbox(objLayer.serial,objLayer);
+			t.addToSortbox(objLayer.serial,objLayer);
 		}
 
 				
 
 		if(selectedLayerSerial != -1)
-			setSortboxItemSelected(selectedLayerSerial);
+			t.setSortboxItemSelected(selectedLayerSerial);
 
 
 
@@ -2730,7 +3575,7 @@ var tpLayerTimelinesRev = new function(){
 		});
 
 		//set click event
-		jQuery(".sortlist, #layers-right, .quick-layers-list").delegate("li","mousedown",function(){
+		jQuery(".sortlist, #layers-right").delegate("li","mousedown",function(){
 			
 			if (jQuery(this).hasClass("ui-state-hover")) return true;
 			if (jQuery(this).hasClass("mastertimer-slide")) {
@@ -2742,39 +3587,6 @@ var tpLayerTimelinesRev = new function(){
 			
 		});
 
-
-		//on show / hide layer icon click - show / hide layer
-		jQuery(".quick-layers-list").delegate(".quick-layer-view","mousedown",function(event){
-
-			var sortboxID = jQuery(this).closest('.quicksortlayer').attr("id");
-			var serial = u.getSerialFromSortID(sortboxID);
-			var objLayer = u.getLayer(serial);
-			
-			if(isLayerVisible(serial)){
-				objLayer.visible = false;
-				t.hideLayer(serial);
-			}else{
-				objLayer.visible = true;
-				t.showLayer(serial);
-			}
-			//prevnt the layer from selecting
-			event.stopPropagation();
-		});
-
-		//on show / hide layer icon click - show / hide layer
-		jQuery(".quick-layers-list").delegate(".quick-layer-lock","mousedown",function(event){
-			var sortboxID = jQuery(this).closest('.quicksortlayer').attr("id");
-			var serial = u.getSerialFromSortID(sortboxID);
-			if(t.isLayerLocked(serial)) {				
-				t.unlockLayer(serial);
-			}
-			else {
-				t.lockLayer(serial);				
-			}
-			event.stopPropagation();
-		});
-
-		
 
 
 		jQuery('.quick-layer-all-lock').click(function() {
@@ -2822,7 +3634,7 @@ var tpLayerTimelinesRev = new function(){
 				serial = u.getSerialFromSortID(sortboxID),
 				objLayer = u.getLayer(serial),
 				button = jQuery(this),
-				maxtime = (jQuery('#mastertimer-maxtime').position().left-15)*10;
+				maxtime = (t.mainMaxTimeLeft-15)*10;
 
 			if (button.hasClass("tillendon")) {
 				button.removeClass("tillendon")
@@ -2830,16 +3642,22 @@ var tpLayerTimelinesRev = new function(){
 				if (objLayer.endtime-objLayer.endspeed >= maxtime) {					
 					objLayer.endtime = maxtime + objLayer.endspeed - 100;
 
-					jQuery('#layer_sort_time_'+serial).find('.sortbox_timeend').html(msToSec(maxtime+objLayer.endspeed-100));
-					//t.updateCurrentLayerTimeline();
-					setCurTimer(jQuery('#layer_sort_time_'+serial).find('.timeline'))
+					jQuery('#layer_sort_time_'+serial).find('.sortbox_timeend').html(msToSec(maxtime+objLayer.endspeed-100));		
+					jQuery('#clayer_end_time').val((maxtime+objLayer.endspeed-100));
+
+					
+					setCurTimer(jQuery('#layer_sort_time_'+serial).find('.timeline .tl-fullanim'));
 				}
 			} else {
 				button.addClass("tillendon");
 
 				objLayer.endtime =  maxtime + objLayer.endspeed;
 				jQuery('#layer_sort_time_'+serial).find('.sortbox_timeend').html(msToSec(maxtime + objLayer.endspeed));
-				setCurTimer(jQuery('#layer_sort_time_'+serial).find('.timeline'));
+				jQuery('#clayer_end_time').val((maxtime + objLayer.endspeed));
+
+
+				setCurTimer(jQuery('#layer_sort_time_'+serial).find('.timeline .tl-fullanim'));
+
 			}
 
 		});
@@ -2913,10 +3731,11 @@ var tpLayerTimelinesRev = new function(){
 	t.hideLayer = function(serial,skipGlobalButton){
 		var htmlLayer = jQuery("#slide_layer_"+serial);
 		htmlLayer.hide();
+		htmlLayer.addClass("currently_not_visible");
 		setSortboxItemHidden(serial);
 		
 		if(skipGlobalButton != true){
-			if(isAllLayersHidden())
+			if(t.isAllLayersHidden())
 				jQuery("#button_sort_visibility").addClass("e-disabled");
 		}
 	}
@@ -2928,6 +3747,7 @@ var tpLayerTimelinesRev = new function(){
 	t.showLayer = function(serial,skipGlobalButton){
 		var htmlLayer = jQuery("#slide_layer_"+serial);
 		htmlLayer.show();
+		htmlLayer.removeClass("currently_not_visible");
 		setSortboxItemVisible(serial);
 
 		if(skipGlobalButton != true)
@@ -2943,18 +3763,20 @@ var tpLayerTimelinesRev = new function(){
 	/**
 	 * get true / false if the layer is hidden
 	 */
-	var isLayerVisible = function(serial){
-		var htmlLayer = jQuery("#slide_layer_"+serial);
-		var isVisible = htmlLayer.is(":visible");
+	t.isLayerVisible = function(serial){
+		var htmlLayer = jQuery("#slide_layer_"+serial),
+		isVisible = true;
+		if (htmlLayer.hasClass("currently_not_visible"))
+			isVisible = false;
 		return(isVisible);
 	}
 
 	/**
 	 * get true / false if all layers hidden
 	 */
-	var isAllLayersHidden = function(){
+	t.isAllLayersHidden = function(){
 		for(serial in u.arrLayers){
-			if(isLayerVisible(serial) == true) {
+			if(t.isLayerVisible(serial) == true) {
 				return(false);
 			}
 		}
@@ -3003,8 +3825,8 @@ var tpLayerTimelinesRev = new function(){
 	 */
 	t.setSortboxItemSelected = function(serial){
 		var sortItem = t.getHtmlSortItemFromSerial(serial),
-			sortTimeItem = getHtmlSortTimeItemFromSerial(serial),
-			quickItem = getHtmlQuickTimeItemFromSerial(serial);
+			sortTimeItem = t.getHtmlSortTimeItemFromSerial(serial),
+			quickItem = t.getHtmlQuickTimeItemFromSerial(serial);
 		
 		t.unselectSortboxItems();
 		if (sortItem)
@@ -3021,8 +3843,8 @@ var tpLayerTimelinesRev = new function(){
 	 */
 	var setSortboxItemHidden = function(serial){
 		var sortItem = t.getHtmlSortItemFromSerial(serial),
-			sortTimeItem = getHtmlSortTimeItemFromSerial(serial),
-			quickItem = getHtmlQuickTimeItemFromSerial(serial);
+			sortTimeItem = t.getHtmlSortTimeItemFromSerial(serial),
+			quickItem = t.getHtmlQuickTimeItemFromSerial(serial);
 
 		if (sortItem)
 			sortItem.addClass("sortitem-hidden");
@@ -3031,6 +3853,7 @@ var tpLayerTimelinesRev = new function(){
 		if (quickItem) {
 			quickItem.addClass("sortitem-hidden");
 			quickItem.find('.eg-icon-eye').addClass("eg-icon-eye-off").removeClass('eg-icon-eye');
+			quickItem.find('.quick-layer-view').addClass("in-off");
 		}
 	}
 
@@ -3039,8 +3862,8 @@ var tpLayerTimelinesRev = new function(){
 	 */
 	var setSortboxItemVisible = function(serial){
 		var sortItem = t.getHtmlSortItemFromSerial(serial),
-			sortTimeItem = getHtmlSortTimeItemFromSerial(serial),
-			quickItem = getHtmlQuickTimeItemFromSerial(serial);
+			sortTimeItem = t.getHtmlSortTimeItemFromSerial(serial),
+			quickItem = t.getHtmlQuickTimeItemFromSerial(serial);
 		if (sortItem)
 			sortItem.removeClass("sortitem-hidden");
 		if (sortTimeItem)
@@ -3054,8 +3877,8 @@ var tpLayerTimelinesRev = new function(){
 	 */
 	var setSortboxItemLocked = function(serial){
 		var sortItem = t.getHtmlSortItemFromSerial(serial),
-			sortTimeItem = getHtmlSortTimeItemFromSerial(serial),
-			quickItem = getHtmlQuickTimeItemFromSerial(serial);
+			sortTimeItem = t.getHtmlSortTimeItemFromSerial(serial),
+			quickItem = t.getHtmlQuickTimeItemFromSerial(serial);
 		
 		if (sortItem)
 			sortItem.addClass("sortitem-locked");
@@ -3070,8 +3893,8 @@ var tpLayerTimelinesRev = new function(){
 	 */
 	var setSortboxItemUnlocked = function(serial){
 		var sortItem = t.getHtmlSortItemFromSerial(serial),
-			sortTimeItem = getHtmlSortTimeItemFromSerial(serial),
-			quickItem = getHtmlQuickTimeItemFromSerial(serial);
+			sortTimeItem = t.getHtmlSortTimeItemFromSerial(serial),
+			quickItem = t.getHtmlQuickTimeItemFromSerial(serial);
 		
 		if (sortItem)
 			sortItem.removeClass("sortitem-locked");
@@ -3093,7 +3916,7 @@ var tpLayerTimelinesRev = new function(){
 		return(htmlSortItem);
 	}
 
-	var getHtmlSortTimeItemFromSerial = function(serial){
+	t.getHtmlSortTimeItemFromSerial = function(serial){
 		var htmlSortItem = jQuery("#layer_sort_time_"+serial);
 		if(htmlSortItem.length == 0){
 			UniteAdminRev.showErrorMessage("Html sort field with serial: "+serial+" not found!");
@@ -3102,7 +3925,7 @@ var tpLayerTimelinesRev = new function(){
 		return(htmlSortItem);
 	}
 
-	var getHtmlQuickTimeItemFromSerial = function(serial){
+	t.getHtmlQuickTimeItemFromSerial = function(serial){
 		var htmlSortItem = jQuery("#layer_quicksort_"+serial);
 		if(htmlSortItem.length == 0){
 			UniteAdminRev.showErrorMessage("Html sort field with serial: "+serial+" not found!");
@@ -3160,8 +3983,8 @@ var tpLayerTimelinesRev = new function(){
 				if (bgposition==undefined) bgposition="center center";
 				
 
-				var w= w || jQuery('#divbgholder').width(),
-					h= h || jQuery('#divbgholder').height();
+				var w= w !=undefined ? w : jQuery('#divbgholder').width(),
+					h= h !=undefined ? h : jQuery('#divbgholder').height();
 				opt.slotw=Math.ceil(w/opt.slots),
 				opt.sloth=Math.ceil(h/opt.slots);
 				
@@ -3292,12 +4115,12 @@ var tpLayerTimelinesRev = new function(){
 		
 		
 		
-		//////////////////////////////
+	//////////////////////////////
 	//	SWAP SLIDE PROGRESS		//
 	//////////////////////////////
-	var slideAnimation = function(nextsh,actsh,comingtransition,givebackmtl) {
+	var slideAnimation = function(nextsh,actsh,comingtransition,givebackmtl,smallpreview) {
 
-
+		
 			if (nextsh!=undefined) {
 				var nextli = nextsh,
 					actli = actsh,
@@ -3317,7 +4140,11 @@ var tpLayerTimelinesRev = new function(){
 					
 			}
 
-			
+			if (comingtransition=="slidingoverlayvertical") 
+						comingtransition = "slidingoverlayup"	
+
+			if (comingtransition=="slidingoverlayhorizontal") 
+						comingtransition = "slidingoverlayleft"	
 		
 			if (comingtransition=="slideoverhorizontal") 
 						comingtransition = "slideoverleft"
@@ -3372,6 +4199,10 @@ var tpLayerTimelinesRev = new function(){
 							 ['slotfade-horizontal', 9, 0,0,500,'horizontal',true,null,9,p2o,p2o,500,25],
 							 ['slotfade-vertical', 10, 0,0 ,500,'vertical',true,null,10,p2o,p2o,500,25],
 							 ['fade', 11, 0, 1 ,300,'horizontal',true,null,11,p2io,p2io,1000,1],
+							 ['crossfade', 11, 1, 1 ,300,'horizontal',true,null,11,p2io,p2io,1000,1],
+							 ['fadethroughdark', 11, 2, 1 ,300,'horizontal',true,null,11,p2io,p2io,1000,1],
+							 ['fadethroughlight', 11, 3, 1 ,300,'horizontal',true,null,11,p2io,p2io,1000,1],
+							 ['fadethroughtransparent', 11, 4, 1 ,300,'horizontal',true,null,11,p2io,p2io,1000,1],
 							 ['slideleft', 12, 0,1,0,'horizontal',true,true,12,p3io,p3io,1000,1],
 							 ['slideup', 13, 0,1,0,'horizontal',true,true,13,p3io,p3io,1000,1],
 							 ['slidedown', 14, 0,1,0,'horizontal',true,true,14,p3io,p3io,1000,1],
@@ -3414,8 +4245,13 @@ var tpLayerTimelinesRev = new function(){
 							 ['scaledownfrombottom', 13, 4,1,0,'horizontal',true,true,43,p2io,p2i,1000,1],
 							 ['zoomout', 13, 5,1,0,'horizontal',true,true,44,p2io,p2i,1000,1],
 							 ['zoomin', 13, 6,1,0,'horizontal',true,true,45,p2io,p2i,1000,1],
+							 ['slidingoverlayup', 27, 0,1,0,'horizontal',true,true,47,p1io,p1o,2000,1],
+							 ['slidingoverlaydown', 28, 0,1,0,'horizontal',true,true,48,p1io,p1o,2000,1],
+							 ['slidingoverlayright', 30, 0,1,0,'horizontal',true,true,49,p1io,p1o,2000,1],
+							 ['slidingoverlayleft', 29, 0,1,0,'horizontal',true,true,50,p1io,p1o,2000,1],
 							 ['notransition',26,0,1,0,'horizontal',true,null,46,p2io,p2i,1000,1],							 
 						   ];
+
 
 
 			
@@ -3446,11 +4282,8 @@ var tpLayerTimelinesRev = new function(){
 
 
 
-			if (nexttrans>26) nexttrans = 26;
+			if (nexttrans>30) nexttrans = 30;
 			if (nexttrans<0) nexttrans = 0;
-
-
-
 
 			// PREPARED DEFAULT SETTINGS PER TRANSITION
 			STA = transitionsArray[STAindex];
@@ -3466,6 +4299,8 @@ var tpLayerTimelinesRev = new function(){
 			mtl.add(punchgs.TweenLite.set(nextsh.find('.defaultimg'),{autoAlpha:0}));
 			mtl.pause();
 
+			mtl.add(punchgs.TweenLite.set(actsh,{autoAlpha:1,force3D:"auto",zIndex:0}),0);
+			mtl.add(punchgs.TweenLite.set(nextsh,{autoAlpha:1,force3D:"auto",zIndex:1}),0);
 			
 
 
@@ -3527,7 +4362,9 @@ var tpLayerTimelinesRev = new function(){
 			ei = ei==="default" ? STA[9] || punchgs.Power2.easeInOut : ei || STA[9] || punchgs.Power2.easeInOut;
 			eo = eo==="default" ? STA[10] || punchgs.Power2.easeInOut : eo || STA[10] || punchgs.Power2.easeInOut;
 
-			/////////////////////////////////////
+
+
+	/////////////////////////////////////
 	// THE SLOTSLIDE - TRANSITION I.  //
 	////////////////////////////////////
 	if (nexttrans==0) {								// BOXSLIDE
@@ -3813,15 +4650,81 @@ var tpLayerTimelinesRev = new function(){
 	// SIMPLE FADE ANIMATION //
 	///////////////////////////
 	if (nexttrans==11 || nexttrans==26) {
-				var ssamount=0;
-						if (nexttrans==26) masterspeed=0;
+				var ssamount=0,
+					bgcol = specials == 2 ? "#000000" : specials == 3 ? "#ffffff" : "transparent";
+				if (nexttrans==26) masterspeed=0;
 
-						// ALL NEW SLOTS SHOULD BE SLIDED FROM THE LEFT TO THE RIGHT
-						nextsh.find('.slotslide').each(function(i) {
-							var ss=jQuery(this);
-							mtl.add(punchgs.TweenLite.from(ss,masterspeed/1000,{autoAlpha:0,force3D:"auto",ease:ei}),0);
-						});
+				if (smallpreview) {
+					mtl.add(punchgs.TweenLite.set(nextsh.parent(),{backgroundColor:bgcol,force3D:"auto"}),0);
+					switch (specials) {
+						case 0: 
+							mtl.add(punchgs.TweenLite.fromTo(actsh,masterspeed/1000,{autoAlpha:0,zIndex:1},{autoAlpha:1,zIndex:1,force3D:"auto",ease:ei}),0);
+							mtl.add(punchgs.TweenLite.set(nextsh,{autoAlpha:1,force3D:"auto",zIndex:0}),0);
+						break;
+
+						case 1:
+							mtl.add(punchgs.TweenLite.fromTo(actsh,masterspeed/1000,{autoAlpha:0},{autoAlpha:1,force3D:"auto",ease:ei}),0);
+							mtl.add(punchgs.TweenLite.fromTo(nextsh,masterspeed/1000,{autoAlpha:1},{autoAlpha:0,force3D:"auto",ease:ei}),0);
+						break;
+
+						case 2:
+						case 3:
+						case 4:
+							mtl.add(punchgs.TweenLite.fromTo(nextsh,masterspeed/2000,{autoAlpha:1},{autoAlpha:0,force3D:"auto",ease:ei}),0);
+							mtl.add(punchgs.TweenLite.set(actsh,{autoAlpha:0,force3D:"auto"}),0);
+							mtl.add(punchgs.TweenLite.fromTo(actsh,masterspeed/2000,{autoAlpha:0},{autoAlpha:1,force3D:"auto",ease:ei}),masterspeed/2000);							
+						break;
+					}
+				} else {				
+					nextsh.find('.slotslide').each(function(i) {
+						var ss=jQuery(this);
+						mtl.add(punchgs.TweenLite.fromTo(ss,masterspeed/1000,{autoAlpha:0},{autoAlpha:1,force3D:"auto",ease:ei}),0);
+					});
+				}
 	}
+
+	//////////////////////
+	// SLIDING OVERLAYS //
+	//////////////////////
+		
+	if (nexttrans==27||nexttrans==28||nexttrans==29||nexttrans==30) {
+
+		var slot = nextsh.find('.slot'),		
+			nd = nexttrans==27 || nexttrans==28 ? 1 : 2,
+			mhp = nexttrans==27 || nexttrans==29 ? "-100%" : "+100%",
+			php = nexttrans==27 || nexttrans==29 ? "+100%" : "-100%",
+			mep = nexttrans==27 || nexttrans==29 ? "-80%" : "80%",
+			pep = nexttrans==27 || nexttrans==29 ? "80%" : "-80%",
+			ptp = nexttrans==27 || nexttrans==29 ? "10%" : "-10%",
+			fa = {overwrite:"all"},
+			ta = {autoAlpha:0,zIndex:1,force3D:"auto",ease:punchgs.Power1.easeInOut},
+			fb = {position:"inherit",autoAlpha:0,overwrite:"all"},
+			tb = {autoAlpha:1,force3D:"auto",ease:punchgs.Power1.easeOut},
+			fc = {overwrite:"all",zIndex:2},
+			tc = {autoAlpha:1,force3D:"auto",overwrite:"all",ease:punchgs.Power1.easeInOut},
+			fd = {overwrite:"all",zIndex:2},
+			td = {autoAlpha:1,force3D:"auto",ease:punchgs.Power1.easeInOut},
+			at = nd==1 ? "y" : "x";
+
+		fa[at] = "0px";
+		ta[at] = mhp;
+		fb[at] = ptp;
+		tb[at] = "0%";
+		fc[at] = php;
+		tc[at] = mhp;
+		fd[at] = mep;
+		td[at] = pep;
+
+		slot.append('<span style="background-color:rgba(0,0,0,0.6);width:100%;height:100%;position:absolute;top:0px;left:0px;display:block;z-index:2"></span>');
+		
+		
+		mtl.add(punchgs.TweenLite.fromTo(actsh,masterspeed/1000,fa,ta),0);						
+		mtl.add(punchgs.TweenLite.fromTo(nextsh.find('.defaultimg'),masterspeed/2000,fb,tb),masterspeed/2000);				
+		mtl.add(punchgs.TweenLite.fromTo(slot,masterspeed/1000,fc,tc),0);	
+		mtl.add(punchgs.TweenLite.fromTo(slot.find('.slotslide div'),masterspeed/1000,fd,td),0);			
+	}
+
+
 
 	if (nexttrans==12 || nexttrans==13 || nexttrans==14 || nexttrans==15) {
 				masterspeed = masterspeed;
@@ -4280,19 +5183,25 @@ var tpLayerTimelinesRev = new function(){
 		});
 	}	
 
+	
+
 			// SHOW FIRST LI && ANIMATE THE CAPTIONS
 			mtl.add(punchgs.TweenLite.set(nextsh.find('.defaultimg'),{autoAlpha:1}));
 			mtl.add(punchgs.TweenLite.set(nextsh.find('.slot'),{autoAlpha:0}));		
 
 			mtl.seek(100000);
-
+	
 			if (givebackmtl!=undefined)
 				return mtl;
 			else
 				jQuery('#divbgholder').data('slidetimeline',mtl);
 			
 		}
-		
+	
+
+	
+
+
 	///////////////////////
 	//	REMOVE SLOTS	//
 	/////////////////////
@@ -4317,4 +5226,5 @@ var tpLayerTimelinesRev = new function(){
 			if (seekinpos) mst.seek(tpos);
 		}
 	}
+	
 }

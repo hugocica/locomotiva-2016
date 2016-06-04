@@ -17,7 +17,7 @@ class RevSliderTemplate {
 	private $templates_path			= '/revslider/templates/';
 	private $templates_path_plugin	= 'admin/assets/imports/';
 	
-	const SHOP_VERSION				= '1.0.0';
+	const SHOP_VERSION				= '1.2.0';
 	
 	
 	
@@ -28,35 +28,35 @@ class RevSliderTemplate {
 	public function _download_template($uid){
 		global $wp_version;
 		
+		$return = false;
+		
 		$uid = esc_attr($uid);
 		
-		$api_key = get_option('revslider-api-key', '');
-		$username = get_option('revslider-username', '');
 		$code = get_option('revslider-code', '');
 		$shop_version = self::SHOP_VERSION;
 		
 		$validated = get_option('revslider-valid', 'false');
 		if($validated == 'false'){
-			$api_key = '';
-			$username = '';
 			$code = '';
 		}
 		
 		$rattr = array(
-			'api' => urlencode($api_key),
-			'username' => urlencode($username),
 			'code' => urlencode($code),
 			'shop_version' => urlencode($shop_version),
 			'version' => urlencode(RevSliderGlobals::SLIDER_REVISION),
-			'uid' => urlencode($uid)
+			'uid' => urlencode($uid),
+			'product' => urlencode('revslider')
 		);
+		
+		
 		
 		$upload_dir = wp_upload_dir(); // Set upload folder
 		// Check folder permission and define file location
 		if(wp_mkdir_p( $upload_dir['basedir'].$this->templates_path ) ) { //check here to not flood the server
 			$request = wp_remote_post($this->templates_url.$this->templates_download, array(
 				'user-agent' => 'WordPress/'.$wp_version.'; '.get_bloginfo('url'),
-				'body' => $rattr
+				'body' => $rattr,
+				'timeout' => 45 //DIRK 
 			));
 			
 			if(!is_wp_error($request)) {
@@ -68,18 +68,20 @@ class RevSliderTemplate {
 						$ret = @file_put_contents( $file, $response );
 						if($ret !== false){
 							//return $file so it can be processed. We have now downloaded it into a zip file
-							return $file;
+							$return = $file;
 						}else{//else, print that file could not be written
-							return array('error' => __('Can\'t write the file into the uploads folder of WordPress, please change permissions and try again!', REVSLIDER_TEXTDOMAIN));
+							$return = array('error' => __('Can\'t write the file into the uploads folder of WordPress, please change permissions and try again!', 'revslider'));
 						}
+					}else{
+						$return = array('error' => __('Purchase Code is invalid', 'revslider'));
 					}
 				}
 			}//else, check for error and print it to customer
 		}else{
-			return array('error' => __('Can\'t write into the uploads folder of WordPress, please change permissions and try again!', REVSLIDER_TEXTDOMAIN));
+			$return = array('error' => __('Can\'t write into the uploads folder of WordPress, please change permissions and try again!', 'revslider'));
 		}
 		
-		return false;
+		return $return;
 	}
 	
 	
@@ -127,25 +129,21 @@ class RevSliderTemplate {
 			
 			$validated = get_option('revslider-valid', 'false');
 			
-			$api_key = get_option('revslider-api-key', '');
-			$username = get_option('revslider-username', '');
 			$code = get_option('revslider-code', '');
 			$shop_version = self::SHOP_VERSION;
 			
 			if($validated == 'false'){
-				$api_key = '';
-				$username = '';
 				$code = '';
 			}
 			
 			
 			$rattr = array(
-				'api' => urlencode($api_key),
-				'username' => urlencode($username),
 				'code' => urlencode($code),
 				'shop_version' => urlencode($shop_version),
-				'version' => urlencode(RevSliderGlobals::SLIDER_REVISION)
+				'version' => urlencode(RevSliderGlobals::SLIDER_REVISION),
+				'product' => urlencode('revslider')
 			);
+			
 			
 			$request = wp_remote_post($this->templates_url.$this->templates_list, array(
 				'user-agent' => 'WordPress/'.$wp_version.'; '.get_bloginfo('url'),
@@ -158,7 +156,7 @@ class RevSliderTemplate {
 					$templates = json_decode($response, true);
 					
 					if(is_array($templates)) {
-						update_option('rs-templates-new', $templates);
+						RevSliderFunctionsWP::update_option('rs-templates-new', $templates, false);
 					}
 				}
 			}
@@ -176,6 +174,7 @@ class RevSliderTemplate {
 		
 		$new = get_option('rs-templates-new', false);
 		$cur = get_option('rs-templates', array());
+		$cur = array();
 		
 		if($new !== false && !empty($new) && is_array($new)){
 			if(empty($cur)){
@@ -195,8 +194,13 @@ class RevSliderTemplate {
 									
 									$n['exists'] = true; //if this flag is not set here, the template will be removed from the list
 									
+									if(isset($n['new_slider'])){
+										unset($n['new_slider']); //remove this again, as the new flag should be removed now
+									}
+									
 									$cur['slider'][$ck] = $n;
 									$found = true;
+									
 									break;
 								}
 							}
@@ -204,6 +208,7 @@ class RevSliderTemplate {
 						
 						if(!$found){
 							$n['exists'] = true;
+							$n['new_slider'] = true;
 							$cur['slider'][] = $n;
 						}
 						
@@ -220,9 +225,9 @@ class RevSliderTemplate {
 					$cur['slides'] = $new['slides']; // push always all slides
 				}
 			}
-		
-			update_option('rs-templates', $cur);
-			update_option('rs-templates-new', false);
+			
+			RevSliderFunctionsWP::update_option('rs-templates', $cur, false);
+			RevSliderFunctionsWP::update_option('rs-templates-new', false, false);
 			
 			$this->_update_images();
 		}
@@ -245,7 +250,7 @@ class RevSliderTemplate {
 			}
 		}
 		
-		update_option('rs-templates', $cur);
+		RevSliderFunctionsWP::update_option('rs-templates', $cur, false);
 		
 	}
 	
@@ -256,6 +261,12 @@ class RevSliderTemplate {
 	 */
 	private function _update_images(){
 		$templates = get_option('rs-templates', array());
+		$curl = new WP_Http_Curl();
+		if(!$curl->test()){
+			$curl = false;
+		}
+		
+		$connection = 0;
 		
 		$reload = array();
 		
@@ -264,20 +275,32 @@ class RevSliderTemplate {
 			if(!empty($templates['slider']) && is_array($templates['slider'])){
 				foreach($templates['slider'] as $key => $temp){
 					
+					if($connection > 3) continue; //cant connect to server
+						
 					// Check folder permission and define file location
 					if( wp_mkdir_p( $upload_dir['basedir'].$this->templates_path ) ) {
 						$file = $upload_dir['basedir'] . $this->templates_path . '/' . $temp['img'];
 						$file_plugin = RS_PLUGIN_PATH . $this->templates_path_plugin . '/' . $temp['img'];
 						
+						
 						if((!file_exists($file) && !file_exists($file_plugin)) || isset($temp['push_image'])){
-							
-							$image_data = @file_get_contents($this->templates_url.$this->templates_server_path.$temp['img']); // Get image data
+							if($curl !== false){
+								$image_data = @$curl->request($this->templates_url.$this->templates_server_path.$temp['img']); // Get image data
+								if(isset($image_data['body']) && isset($image_data['response']) && isset($image_data['response']['code']) && $image_data['response']['code'] == '200'){
+									$image_data = $image_data['body'];
+								}else{
+									$image_data = false;
+								}
+							}else{
+								$image_data = @file_get_contents($this->templates_url.$this->templates_server_path.$temp['img']); // Get image data
+							}
 							if($image_data !== false){
 								$reload[$temp['alias']] = true;
 								unset($templates['slider'][$key]['push_image']);
 								@mkdir(dirname($file));
 								@file_put_contents( $file, $image_data );
 							}else{//could not connect to server
+								$connection++;
 							}
 						}else{//use default image
 						}
@@ -288,19 +311,30 @@ class RevSliderTemplate {
 			if(!empty($templates['slides']) && is_array($templates['slides'])){
 				foreach($templates['slides'] as $key => $temp){
 					foreach($temp as $k => $tvalues){
-					
+						
+						if($connection > 3) continue; //cant connect to server
+						
 						// Check folder permission and define file location
 						if( wp_mkdir_p( $upload_dir['basedir'].$this->templates_path ) ) {
 							$file = $upload_dir['basedir'] . $this->templates_path . '/' . $tvalues['img'];
 							$file_plugin = RS_PLUGIN_PATH . $this->templates_path_plugin . '/' . $tvalues['img'];
 							
 							if((!file_exists($file) && !file_exists($file_plugin)) || isset($reload[$key])){ //update, so load again
-								$image_data = @file_get_contents($this->templates_url.$this->templates_server_path.$tvalues['img']); // Get image data
-								
+								if($curl !== false){
+									$image_data = @$curl->request($this->templates_url.$this->templates_server_path.$tvalues['img']); // Get image data
+									if(isset($image_data['body']) && isset($image_data['response']) && isset($image_data['response']['code']) && $image_data['response']['code'] == '200'){
+										$image_data = $image_data['body'];
+									}else{
+										$image_data = false;
+									}
+								}else{
+									$image_data = @file_get_contents($this->templates_url.$this->templates_server_path.$tvalues['img']); // Get image data
+								}
 								if($image_data !== false){
 									@mkdir(dirname($file));
 									@file_put_contents( $file, $image_data );
 								}else{//could not connect to server
+									$connection++;
 								}
 							}else{//use default image
 							}
@@ -312,7 +346,11 @@ class RevSliderTemplate {
 			}
 		}
 		
-		update_option('rs-templates', $templates); //remove the push_image
+		if($connection > 3){
+			//set value that the server cant be contacted
+		}
+		
+		RevSliderFunctionsWP::update_option('rs-templates', $templates, false); //remove the push_image
 	}
 	
 	
@@ -379,7 +417,7 @@ class RevSliderTemplate {
 		if(!empty($templates)){
 			foreach($templates as $key => $template){
 				$templates[$key]['params'] = json_decode($template['params'], true);
-				$templates[$key]['layers'] = json_decode($template['layers'], true);
+				//$templates[$key]['layers'] = json_decode($template['layers'], true);
 				$templates[$key]['settings'] = json_decode($template['settings'], true);
 			}
 		}
@@ -446,8 +484,11 @@ class RevSliderTemplate {
 					$template['settings'] = (isset($template['settings'])) ? $template['settings'] : '';
 					
 					$templates[$key]['params'] = json_decode($template['params'], true);
-					$templates[$key]['layers'] = json_decode($template['layers'], true);
+					//$templates[$key]['layers'] = json_decode($template['layers'], true);
 					$templates[$key]['settings'] = json_decode($template['settings'], true);
+					
+					//$templates[$key][]
+					//add missing uid and zipname
 				}
 			}
 		}
@@ -539,13 +580,24 @@ class RevSliderTemplate {
 		$defaults = (isset($defaults['slider'])) ? $defaults['slider'] : array();
 		
 		if(!empty($sliders)){
+			
 			if(!empty($defaults)){
 				foreach($defaults as $key => $slider){
 					foreach($sliders as $ikey => $installed){
 						if($installed['alias'] == $slider['alias']){
+							//check if $sliders has slides, if not, set for redownload by deleting Template Slider in table
+							$c_slides = $this->getThemePunchTemplateSlides(array($installed));
+							if(empty($c_slides)){
+								//delete slider in table
+								$wpdb->delete($table_name, array('type' => 'template', 'id' => $installed['id']));
+								break;
+							}
+							
 							$img = $slider['img'];
 							$preview = (isset($slider['preview'])) ? $slider['preview'] : false;
-							$defaults[$key] = $installed;
+							$defaults[$key] = array_merge($defaults[$key], $installed);
+							
+							unset($defaults[$key]['installed']);
 							
 							$defaults[$key]['img'] = $img;
 							$defaults[$key]['version'] = $slider['version'];
@@ -554,11 +606,13 @@ class RevSliderTemplate {
 							
 							if(isset($slider['is_new'])){
 								$defaults[$key]['is_new'] = true;
-								$defaults[$key]['zip'] = $slider['zip'];
 								$defaults[$key]['width'] = $slider['width'];
 								$defaults[$key]['height'] = $slider['height'];
-								$defaults[$key]['uid'] = $slider['uid'];
 							}
+							$defaults[$key]['zip'] = $slider['zip'];
+							$defaults[$key]['uid'] = $slider['uid'];
+							
+							if(isset($slider['new_slider'])) $defaults[$key]['new_slider'] = $slider['new_slider'];
 							
 							if($preview !== false) $defaults[$key]['preview'] = $preview;
 							break;
@@ -568,8 +622,9 @@ class RevSliderTemplate {
 			}
 		}
 		
-		return $defaults;
+		krsort($defaults);
 		
+		return $defaults;
 	}
 	
 	
@@ -596,9 +651,17 @@ class RevSliderTemplate {
 				//$image = $file_plugin; //server path
 			}
 		}else{
-			
-			//jump to a default image here?
-			$image = false;
+			//redownload image from server and store it
+			$this->_update_images();
+			if(file_exists($file)){ //downloaded image first, for update reasons
+				if($url){
+					$image = $upload_dir['baseurl'] . $this->templates_path . '/' . $image;
+				}else{
+					$image = $upload_dir['basedir'] . $this->templates_path . '/' . $image; //server path
+				}
+			}else{
+				$image = false;
+			}
 		}
 		
 		return $image;
@@ -614,25 +677,115 @@ class RevSliderTemplate {
 		if($template['img'] == ''){
 			//set default image
 		}
+		
+		//check for version and compare, only allow download if version is high enough
+		$deny = '';
+		if(isset($template['required'])){
+			if(version_compare(RevSliderGlobals::SLIDER_REVISION, $template['required'], '<')){
+				$deny = ' deny_download';
+			}
+		}
 		?>
 		<div data-src="<?php echo $template['img']; ?>" class="template_slider_item_import"
 			data-gridwidth="<?php echo $template['width']; ?>"
 			data-gridheight="<?php echo $template['height']; ?>"
 			data-zipname="<?php echo $template['zip']; ?>"
 			data-uid="<?php echo $template['uid']; ?>"
+			<?php
+			if($deny !== ''){ //add needed version number here 
+				?>
+				data-versionneed="<?php echo $template['required']; ?>"
+				<?php
+			}
+			?>
 			>
-			<!--div class="template_title"><?php echo (isset($template['title'])) ? $template['title'] : ''; ?></div-->
-			<div class="not-imported-overlay"></div>
-			<div style="position:absolute;top:10px;right:10px;width:35px;text-align:right;z-index:2">				
-				<div class="icon-install_slider"></div>
+			<?php /* <!--div class="template_title"><?php echo (isset($template['title'])) ? $template['title'] : ''; ?></div-->*/ ?>
+			
+			
+			<div class="template_thumb_overview"></div>
+			<div class="template_preview_add_wrapper">
+				<?php if(isset($template['preview']) && $template['preview'] !== ''){ ?>
+				<a class="preview_template_slider" href="<?php echo esc_attr($template['preview']); ?>" target="_blank"><i class="eg-icon-search"></i></a>
+				<?php } ?>
+				<span class="show_more_template_slider"><i class="eg-icon-plus"></i></span>
+
 			</div>
+		</div>
+
+		<div class="template_thumb_more">
+			<span class="ttm_label"><?php echo $template['title'];?></span>
+			<?php
+			if(isset($template['description'])){
+				echo $template['description'];
+			}
+			if(isset($template['setup_notes']) && !empty($template['setup_notes'])){
+				?>
+				<span class="ttm_label"><?php _e('Setup Notes', 'revslider'); ?></span>
+				<?php
+				echo $template['setup_notes'];
+				?>
+				<span class="ttm_space"></span>				
+				<?php
+			}
+			?>
+			<span class="ttm_label"><?php _e('Requirements', 'revslider'); ?></span>
+			<ul class="ttm_requirements">
+				<li><?php
+				if(version_compare(RevSliderGlobals::SLIDER_REVISION, $template['required'], '>=')){
+					?><i class="eg-icon-check"></i><?php
+				}else{
+					?><i class="eg-icon-cancel"></i><?php
+					$allow_install = false;
+				}				
+				_e('Slider Revolution Version', 'revslider');
+				echo ' '.$template['required'];
+				?></li>
+				<?php
+				$allow_install = true;
+				if(isset($template['plugin_require']) && !empty($template['plugin_require'])){
+					foreach($template['plugin_require'] as $pk => $pr){
+						if($pr['installed'] === true){
+							$pr_icon = '<i class="eg-icon-check"></i>';
+						}else{
+							$pr_icon = '<i class="eg-icon-cancel"></i>';
+							$allow_install = false;
+						}
+						
+						echo '<li>';
+						 echo $pr_icon; //echo the icon
+						if(isset($pr['url'])) echo '<a href="'.esc_attr($pr['url']).'" target="_blank">';
+						echo $pr['name'];
+						if(isset($pr['url'])) echo '</a>';
+						echo '</li>';
+					}
+				}
+				?>
+			</ul>		
+			<span class="ttm_space"></span>
+			<span class="ttm_label_direct"><?php _e('Available Version', 'revslider'); ?></span>
+			<span class="ttm_label_half ttm_available"><?php echo $template['version'];?></span>	
+			<span class="ttm_space"></span>
+			<?php
+			if($deny == '' && $allow_install == true){
+				?>
+				<div class="install_template_slider<?php echo $deny; ?>" data-zipname="<?php echo $template['zip']; ?>" data-uid="<?php echo $template['uid']; ?>"><i class="eg-icon-download"></i><?php _e('Install Slider', 'revslider'); ?></div>							
+				<?php
+				if(isset($template['package']) && $template['package'] !== ''){
+					?>
+					<span class="tp-clearfix" style="margin-bottom:5px"></span>
+					<div class="install_template_slider_package<?php echo $deny; ?>" data-zipname="<?php echo $template['zip']; ?>" data-uid="<?php echo $template['uid']; ?>"><i class="eg-icon-download"></i><?php _e('Install Slider Pack', 'revslider'); ?></div>							
+					<?php
+				}
+			} else {
+				?>
+				<div class="dontadd_template_slider_item"><i class="icon-not-registered"></i><?php _e('Requirements not met', 'revslider'); ?></div>
+				<?php
+			}
+			?>
+			<span class="tp-clearfix" style="margin-bottom:5px"></span>
 			
 		</div>
-		<div style="position:absolute;top:10px;right:50px;width:35px;text-align:right;z-index:2">
-			<?php if(isset($template['preview']) && $template['preview'] !== ''){ ?>
-			<a class="icon-preview_slider" href="<?php echo esc_attr($template['preview']); ?>" target="_blank"></a>
-			<?php } ?>
-		</div>
+
 		<?php
 	}
 	
@@ -648,23 +801,109 @@ class RevSliderTemplate {
 		if($template['img'] == ''){
 			//set default image
 		}
-		
+		//check for version and compare, only allow download if version is high enough
+		$deny = '';
+		if(isset($template['required'])){
+			if(version_compare(RevSliderGlobals::SLIDER_REVISION, $template['required'], '<')){
+				$deny = ' deny_download';
+			}
+		}
 		?>
 		<div class="template_slide_item_import">
-			<div class="template_slide_item_img" 
+			<div class="template_slide_item_img<?php echo $deny; ?>" 
 				data-src="<?php echo $template['img']; ?>" 
 				data-gridwidth="<?php echo $template['width']; ?>"
 				data-gridheight="<?php echo $template['height']; ?>"
 				data-zipname="<?php echo $template['zip']; ?>"
 				data-uid="<?php echo $template['uid']; ?>"
 				data-slidenumber="<?php echo $template['number']; ?>"
-			>
-				<div class="not-imported-overlay"></div>
+				<?php
+				if($deny !== ''){ //add needed version number here 
+					?>
+					data-versionneed="<?php echo $template['required']; ?>"
+					<?php
+				}
+				?>
+			></div>
+			<div class="template_thumb_overview"></div>
+			<div class="template_preview_add_wrapper">				
+				<span class="show_more_template_slider"><i class="eg-icon-plus"></i></span>
 			</div>
-			<div style="position:absolute;top:10px;right:10px;width:100%;text-align:right;z-index:2">
-				<div class="icon-install_slider"></div>
-			</div>
-			<div class="template_title"><?php echo (isset($template['title'])) ? $template['title'] : ''; ?></div>
+			
+		</div>
+
+		<div class="template_thumb_more">
+			<span class="ttm_label"><?php echo $template['title'];?></span>
+			<?php
+			if(isset($template['description'])){
+				echo $template['description'];
+			}
+			?>
+			<?php
+			if(isset($template['setup_notes']) && !empty($template['setup_notes'])){
+				?>
+				<span class="ttm_label"><?php _e('Setup Notes', 'revslider'); ?></span>
+				<?php
+				echo $template['setup_notes'];
+				?>
+				<span class="ttm_space"></span>				
+				<?php
+			}
+			?>
+			<span class="ttm_label"><?php _e('Requirements', 'revslider'); ?></span>
+			<ul class="ttm_requirements">
+				<li><?php
+				$allow_install = true;
+				if(version_compare(RevSliderGlobals::SLIDER_REVISION, $template['required'], '>=')){
+					?><i class="eg-icon-check"></i><?php
+				}else{
+					?><i class="eg-icon-cancel"></i><?php
+					$allow_install = false;
+				}				
+				_e('Slider Revolution Version', 'revslider');
+				echo ' '.$template['required'];
+				?></li>
+				<?php
+				
+				if(isset($template['plugin_require']) && is_array($template['plugin_require']) && !empty($template['plugin_require'])){
+					foreach($template['plugin_require'] as $pk => $pr){
+						if($pr['installed'] === true){
+							$pr_icon = '<i class="eg-icon-check"></i>';
+						}else{
+							$pr_icon = '<i class="eg-icon-cancel"></i>';
+							$allow_install = false;
+
+						}
+						
+						echo '<li>';
+						echo $pr_icon; //echo the icon
+						if(isset($pr['url'])) echo '<a href="'.esc_attr($pr['url']).'" target="_blank">';
+						echo $pr['name'];
+						if(isset($pr['url'])) echo '</a>';
+						echo '</li>';
+					}
+				}
+
+				//allow / disallow download
+				?>
+			</ul>		
+			<span class="ttm_space"></span>
+			<span class="ttm_label_direct"><span class="ttm_label_half"><?php _e('Installed Vers.', 'revslider'); ?></span><span class="ttm_label_half"><?php _e('Available Vers.', 'revslider'); ?></span></span>
+			<span class="ttm_label_half ttm_insalled"><span class="ttm_label_half ttm_available"><?php echo $template['version'];?></span>	
+			<span class="ttm_space"></span>	
+			<?php
+			if($deny == '' && $allow_install == true){
+				?>
+				<div class="install_template_slide<?php echo $deny; ?>" data-slidenumber="<?php echo $template['number']; ?>" data-zipname="<?php echo $template['zip']; ?>" data-uid="<?php echo $template['uid']; ?>"><i class="eg-icon-download"></i><?php _e('Install Slider', 'revslider'); ?></div>							
+				<?php
+			} else {
+				?>
+				<div class="dontadd_template_slider_item"><i class="icon-not-registered"></i><?php _e('Requirements not met', 'revslider'); ?></div>
+				<?php
+			}
+			?>
+			<span class="tp-clearfix" style="margin-bottom:5px"></span>
+			
 		</div>
 
 		<?php
@@ -679,7 +918,8 @@ class RevSliderTemplate {
 		$params = $template['params'];
 		$settings = $template['settings'];
 		$slide_id = $template['id'];
-		$title = str_replace("'", "", RevSliderBase::getVar($params, 'title', 'Slide'));
+		
+
 		if($slider_id !== false) $title = ''; //remove Title if Slider
 		
 		$width = RevSliderBase::getVar($settings, "width", 1240);
@@ -734,7 +974,6 @@ class RevSliderTemplate {
 			if($thumb == '') $thumb = RevSliderBase::getVar($params, "image");
 		}
 		
-
 		$bg_fullstyle ='';
 		$bg_extraClass='';
 		$data_urlImageForView='';
@@ -763,27 +1002,198 @@ class RevSliderTemplate {
 				<?php }else{ ?>
 				data-slideid="<?php echo $slide_id; ?>"
 				<?php } ?>
-				>
-				
-				<div class="not-imported-overlay"></div>			
-				<div style="position:absolute;top:10px;right:10px;width:35px;text-align:right;z-index:2"><div class="icon-add_slider"></div></div>
-				
+				>																					
 			</div>
-			<div style="position:absolute;top:10px;right:50px;width:35px;text-align:right;z-index:2">				
-					<?php if(isset($template['preview']) && $template['preview'] !== ''){ ?>
-					<a class="icon-preview_slider" href="<?php echo esc_attr($template['preview']); ?>" target="_blank"></a>
-					<?php } ?>
-				</div>
+			<div class="template_thumb_overview"></div>
+			<div class="template_preview_add_wrapper">
+				<?php if(isset($template['preview']) && $template['preview'] !== ''){ ?>
+				<a class="preview_template_slider" href="<?php echo esc_attr($template['preview']); ?>" target="_blank"><i class="eg-icon-search"></i></a>
+				<?php } ?>
+				<span data-sliderid="<?php echo $slider_id; ?>" data-slideid="<?php echo $slide_id; ?>" class="show_more_template_slider <?php if (isset($template["user_template"])) echo 'add_user_template_slide_item'; ?>"><i class="eg-icon-plus"></i></span>
+
+			</div>
 			<?php if($slider_id == false){ ?>
-				<div class="template_title"><?php echo $title; ?></div>
-			<?php
-			}
-			?>
+				
+			<?php } ?>
 
 		</div>
-		<?php
+		<?php 
+		if (isset($template["user_template"])) {
+			// USER TEMPLATE, CAN BE IGNORED
+		} else {
+			?>
+			<div class="template_thumb_more">
+				<?php if (isset($template['title']))  { 
+				?>	
+					<span class="ttm_label"><?php echo $template['title'];?></span>
+					<?php
+					if(isset($template['description'])){
+						echo $template['description'];
+					}
+				}
+					?>
+				<?php
+				if(isset($template['setup_notes']) && !empty($template['setup_notes'])){
+					?>
+					<span class="ttm_label"><?php _e('Setup Notes', 'revslider'); ?></span>
+					<?php
+					echo $template['setup_notes'];
+					?>
+					<span class="ttm_space"></span>				
+					<?php
+				}
+				?>
+				<span class="ttm_label"><?php _e('Requirements', 'revslider'); ?></span>
+				<ul class="ttm_requirements">
+					<?php 
+					$allow_install = true;
+					if (isset($template['required'])) {
+						?>
+						<li><?php
+				
+				
+						if(version_compare(RevSliderGlobals::SLIDER_REVISION, $template['required'], '>=')){
+							?><i class="eg-icon-check"></i><?php
+						}else{
+							?><i class="eg-icon-cancel"></i><?php
+							$allow_install = false;
+						}				
+						_e('Slider Revolution Version', 'revslider');
+						echo ' '.$template['required'];
+						?></li>					
+						<?php
+					}
+					
+					if(isset($template['plugin_require']) && !empty($template['plugin_require'])){
+						foreach($template['plugin_require'] as $pk => $pr){
+							if($pr['installed'] === true){
+								$pr_icon = '<i class="eg-icon-check"></i>';
+							}else{
+								$pr_icon = '<i class="eg-icon-cancel"></i>';
+								$allow_install = false;
+
+							}
+							
+							echo '<li>';
+							echo $pr_icon; //echo the icon
+							if(isset($pr['url'])) echo '<a href="'.esc_attr($pr['url']).'" target="_blank">';
+							echo $pr['name'];
+							if(isset($pr['url'])) echo '</a>';
+							echo '</li>';
+						}
+					}
+
+					//allow / disallow download
+					?>
+				</ul>		
+				<?php
+				if (isset($template['version'])) {
+					?>
+					<span class="ttm_space"></span>
+					<span class="ttm_label_direct"><span class="ttm_label_half"><?php _e('Installed Vers.', 'revslider'); ?></span><span class="ttm_label_half"><?php _e('Available Vers.', 'revslider'); ?></span></span>
+					<span class="ttm_label_half ttm_insalled"><?php echo isset($template['current_version']) ? $template['current_version'] : 'N/A';?></span><span class="ttm_label_half ttm_available"><?php echo $template['version'];?></span>	
+					<?php 
+				}
+				?>
+				<span class="ttm_space"></span>		
+				<?php
+				if ($allow_install !== false) {
+					if($slider_id !== false){
+						?>								
+						<div class="install_template_slider" data-zipname="<?php echo $template['zip']; ?>" data-uid="<?php echo $template['uid']; ?>"><i class="eg-icon-download"></i><?php _e('Re-Install Slider', 'revslider'); ?></div>							
+						<span class="tp-clearfix" style="margin-bottom:5px"></span>
+						<?php
+						if(isset($template['package']) && $template['package'] !== ''){
+							$txt = ($template['package_full_installded']) ? __('Re-Install Slider Pack', 'revslider') : __('Install Slider Pack', 'revslider');
+							?>
+							<div class="install_template_slider_package" data-zipname="<?php echo $template['zip']; ?>" data-uid="<?php echo $template['uid']; ?>"><i class="eg-icon-download"></i><?php echo $txt; ?></div>							
+							<span class="tp-clearfix" style="margin-bottom:5px"></span>
+							<?php
+						}
+					}
+					?>	 
+					<?php
+					if($slider_id !== false){
+						?>
+						<div class="add_template_slider_item" data-sliderid="<?php echo $slider_id; ?>">
+						<?php
+					}else{
+						?>
+						<div class="add_template_slide_item" data-slideid="<?php echo $slide_id; ?>">
+						<?php
+					}
+					?>
+					<i class="eg-icon-plus"></i><?php if ($slider_id == false) { echo __('Add Slide', 'revslider'); } else { echo __('Add Slider', 'revslider'); } ?></div>	
+					<?php
+					if ($slider_id !== false && isset($template['package']) && $template['package'] !== '' && $template['package_full_installded']) {
+						?>
+						<div class="add_template_slider_item_package" data-uid="<?php echo $template['uid']; ?>"><i class="eg-icon-plus"></i><?php echo __('Add Slider Pack', 'revslider'); ?></div>
+						<?php
+					}
+				} else {
+					?>
+					<div class="dontadd_template_slider_item"><i class="icon-not-registered"></i><?php _e('Requirements not met', 'revslider'); ?></div>
+					<?php
+				} ?>
+			</div>		
+			<?php
+		}
 	}
 	
+	
+	/**
+	 * Get all uids from a certain package, by one uid
+	 * @since: 5.2.5
+	 */
+	public function get_package_uids($uid, $sliders = false){
+		if($sliders == false){
+			$sliders = $this->getThemePunchTemplateSliders();
+		}
+		
+		$uids = array();
+		
+		$package = false;
+		foreach($sliders as $slider){
+			if($slider['uid'] == $uid){
+				if(isset($slider['package'])){
+					$package = $slider['package'];
+				}
+				break;
+			}
+		}
+		
+		if($package !== false){
+			$i = 0;
+			foreach($sliders as $slider){
+				if(isset($slider['package']) && $slider['package'] == $package){
+					if(isset($slider['installed'])){ //add an invalid slider id as we have not yet installed it
+						$i--;
+						$sid = $i;
+					}else{ //add the installed slider id, as we have the template installed already
+						$sid = $slider['id'];
+					}
+					$uids[$sid] = $slider['uid'];
+				}
+			}
+		}
+		
+		return $uids;
+	}
+	
+	/**
+	 * check if all Slider of a certain package is installed, do this with the uid of a slider
+	 * @since: 5.2.5
+	 */
+	public function check_package_all_installed($uid, $sliders = false){
+		$uids = $this->get_package_uids($uid, $sliders);
+		
+		foreach($uids as $sid => $uid){
+			if($sid < 0) return false;
+		}
+		
+		return true;
+		
+	}
 }
 
 ?>

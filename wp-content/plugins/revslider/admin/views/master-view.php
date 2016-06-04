@@ -21,7 +21,7 @@ if(isset($_REQUEST['update_shop'])){
 ?>
 
 <div id="waitaminute" style="<?php echo $waitstyle; ?>">
-	<div class="waitaminute-message"><i class="eg-icon-emo-coffee"></i><br><?php _e("Please Wait...",REVSLIDER_TEXTDOMAIN); ?></div>
+	<div class="waitaminute-message"><i class="eg-icon-emo-coffee"></i><br><?php _e("Please Wait...", 'revslider'); ?></div>
 </div>
 
 
@@ -41,6 +41,7 @@ if(isset($_REQUEST['update_shop'])){
 		'mobile': '<?php echo RevSliderBase::getVar($glval, 'width_mobile', 480); ?>'
 	};
 	
+	var RS_DEMO = <?php echo (RS_DEMO) ? 'true' : 'false'; ?>;
 </script>
 
 <div id="div_debug"></div>
@@ -144,8 +145,7 @@ if(isset($_REQUEST['update_shop'])){
 
 	/* SHOW A WAIT FOR PROGRESS */
 	function showWaitAMinute(obj) {
-		var wm = jQuery('#waitaminute');
-
+		var wm = jQuery('#waitaminute');		
 		// SHOW AND HIDE WITH DELAY
 		if (obj.delay!=undefined) {
 
@@ -162,12 +162,12 @@ if(isset($_REQUEST['update_shop'])){
 		// SHOW IT
 		if (obj.fadeIn != undefined) {
 			punchgs.TweenLite.to(wm,obj.fadeIn/1000,{autoAlpha:1,ease:punchgs.Power3.easeInOut});
-			punchgs.TweenLite.set(wm,{display:"block"});
-			
+			punchgs.TweenLite.set(wm,{display:"block"});			
 		}
 
 		// HIDE IT
 		if (obj.fadeOut != undefined) {
+
 			punchgs.TweenLite.to(wm,obj.fadeOut/1000,{autoAlpha:0,ease:punchgs.Power3.easeInOut,onComplete:function() {
 					punchgs.TweenLite.set(wm,{display:"block"});	
 				}});  

@@ -14,8 +14,10 @@ require_once($folderIncludes . 'functions-wordpress.class.php');
 require_once($folderIncludes . 'db.class.php');
 require_once($folderIncludes . 'cssparser.class.php');
 require_once($folderIncludes . 'wpml.class.php');
+require_once($folderIncludes . 'woocommerce.class.php');
 require_once($folderIncludes . 'em-integration.class.php');
 require_once($folderIncludes . 'aq-resizer.class.php');
 require_once($folderIncludes . 'plugin-update.class.php');
+require_once($folderIncludes . 'addon-admin.class.php');
 
 ?>

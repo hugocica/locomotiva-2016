@@ -1,13 +1,14 @@
-/********************************************
- * REVOLUTION 5.0 EXTENSION - LAYER ANIMATION
- * @version: 1.1.0 (09.01.2015)
+/************************************************
+ * REVOLUTION 5.2 EXTENSION - LAYER ANIMATION
+ * @version: 2.5 (28.04.2016)
  * @requires jquery.themepunch.revolution.js
  * @author ThemePunch
-*********************************************/
+************************************************/
 
 (function($) {
 
-var _R = jQuery.fn.revolution;
+var _R = jQuery.fn.revolution,
+	_ISM = _R.is_mobile();
 
 ///////////////////////////////////////////
 // 	EXTENDED FUNCTIONS AVAILABLE GLOBAL  //
@@ -23,14 +24,19 @@ jQuery.extend(true,_R, {
 		
 		if (t!=undefined && t!="none")
 		 if (ap==true || ap=="true" || ap=="on" ||  ap=="1sttime" || an) {				
-			_R.playVideo(_nc,opt);			
+			_R.playVideo(_nc,opt);	
+
+			_R.toggleState(_nc.data('videotoggledby'));
 			if ( an || ap=="1sttime") {
 				_nc.data('autoplayonlyfirsttime',false);
 				_nc.data('autoplay',"off");
 			}
-		  }	else 
-		  if (ap=="no1sttime") 
-			_nc.data('autoplay','on');		
+		  }	else {
+			  if (ap=="no1sttime") 
+				_nc.data('autoplay','on');
+			  _R.unToggleState(_nc.data('videotoggledby'));
+		  }
+
 	},
 
 	/********************************************************
@@ -95,7 +101,7 @@ jQuery.extend(true,_R, {
 			jQuery.each(opt.layers[index], function(i,a) { allcaptions.push(a); });
 		if (opt.layers["static"])
 			jQuery.each(opt.layers["static"], function(i,a) { allcaptions.push(a); });
-		
+
 		// GO THROUGH ALL CAPTIONS, AND MANAGE THEM
 		if (allcaptions)
 			jQuery.each(allcaptions,function(i) {	
@@ -131,9 +137,21 @@ jQuery.extend(true,_R, {
 		
 
 		if (!_nc.data('_pw')) {
+			if (_nc.data('staticlayer'))
+				_nc.data('_li',_nc.closest('.tp-static-layers'));
+			else
+				_nc.data('_li',_nc.closest('.tp-revslider-slidesli'));
+			_nc.data('slidelink',_nc.hasClass("slidelink"));
 			_nc.data('_pw',_pw);
 			_nc.data('_lw',_lw);
 			_nc.data('_mw',_mw);
+		}
+
+		if (!_nc.data('togglelisteners') && _nc.find('.rs-toggled-content')) {
+			_nc.on('click',function() {
+				_nc.toggleClass('rs-toggle-content-active');
+			});
+			_nc.data('togglelisteners',true);
 		}
 
 		if (opt.sliderLayout=="fullscreen") 
@@ -168,8 +186,10 @@ jQuery.extend(true,_R, {
 
 			
 		var handlecaption=0,
-			layervisible =  makeArray(_nc.data('visibility'),opt)[opt.curWinRange] || makeArray(_nc.data('visibility'),opt) || "on";
+			layervisible =  makeArray(_nc.data('visibility'),opt)[opt.forcedWinRange] || makeArray(_nc.data('visibility'),opt) || "on";
 		
+		
+
 		// HIDE CAPTION IF RESOLUTION IS TOO LOW			
 		if (layervisible=="off" || (_gw<opt.hideCaptionAtLimit && _nc.data('captionhidden')=="on") || (_gw<opt.hideAllCaptionAtLimit)) 
 			_nc.addClass("tp-hidden-caption");											
@@ -187,8 +207,7 @@ jQuery.extend(true,_R, {
 				_nc.data('videoposter',_nc.data('thumbimage'))
 				
 		// FALL BACK TO NORMAL IMAGE IF NO VIDEO SHOULD BE PLAYED ON MOBILE DEVICES
-		if (_nc.hasClass("tp-videolayer") &&  _nc.data('videoposter')!=undefined && _nc.data('posterOnMobile')=="on" && _ISM) {
-
+	/*	if (_nc.hasClass("tp-videolayer") &&  _nc.data('videoposter')!=undefined && (_nc.data('noposteronmobile')=="on" && _ISM)) {			
 			var vidw =  makeArray(_nc.data('videowidth'),opt)[opt.curWinRange] || makeArray(_nc.data('videowidth'),opt) || "auto",
 				vidh =  makeArray(_nc.data('videoheight'),opt)[opt.curWinRange] || makeArray(_nc.data('videoheight'),opt) || "auto";					
 			
@@ -201,7 +220,7 @@ jQuery.extend(true,_R, {
 			else 
 				_nc.css({width:"100%",height:"100%"});										
 			_nc.removeClass("tp-videolayer");							
-		}
+		}*/
 																				
 		// IF IT IS AN IMAGE
 		if (_nc.find('img').length>0) {
@@ -267,22 +286,23 @@ jQuery.extend(true,_R, {
 			offsety=0;
 		}
 
-								
+		var tag = _nc.data('audio')=="html5" ? "audio" : "video";
+
 		// IF IT IS A VIDEO LAYER
-		if (_nc.hasClass("tp-videolayer") || _nc.find('iframe').length>0 || _nc.find('video').length>0) {
+		if (_nc.hasClass("tp-videolayer") || _nc.hasClass("tp-audiolayer") || _nc.find('iframe').length>0 || _nc.find(tag).length>0) {
 
 			_nc.data('layertype',"video");
-			_R.manageVideoLayer(_nc,opt,recalled,internrecalled);				
+			if (_R.manageVideoLayer) _R.manageVideoLayer(_nc,opt,recalled,internrecalled);				
 			if (!recalled && !internrecalled) {
 				var t = _nc.data('videotype');						
-				_R.resetVideo(_nc,opt);					
+				if (_R.resetVideo) _R.resetVideo(_nc,opt);					
 			}
 			
 			var asprat = _nc.data('aspectratio');														
 			if (asprat!=undefined && asprat.split(":").length>1) 			
 				_R.prepareCoveredVideo(asprat,opt,_nc);
 
-			var im = _nc.find('iframe') ? _nc.find('iframe') : im = _nc.find('video'),
+			var im = _nc.find('iframe') ? _nc.find('iframe') : im = _nc.find(tag),
 				html5vid = _nc.find('iframe') ? false : true,				
 				yvcover = _nc.hasClass('coverscreenvideo');
 									
@@ -351,6 +371,8 @@ jQuery.extend(true,_R, {
 		}	// END OF POSITION AND STYLE READ OUTS OF VIDEO
 
 		
+
+		var slidelink = _nc.data('slidelink') || false;
 		
 		// ALL WRAPPED REKURSIVE ELEMENTS SHOULD BE RESPONSIVE HANDLED
 		_nc.find('.tp-resizeme, .tp-resizeme *').each(function() {
@@ -365,6 +387,8 @@ jQuery.extend(true,_R, {
 
 		// RESPONIVE HANDLING OF CURRENT LAYER
 		calcCaptionResponsive(_nc,opt,0,_responsive);
+
+		
 		
 		// _nc FRONTCORNER CHANGES
 		var ncch = _nc.outerHeight(),
@@ -428,23 +452,27 @@ jQuery.extend(true,_R, {
 		elx = elx==="center" || elx==="middle" ? (crw/2 - eow/2) +  hofs : elx==="left" ? hofs : elx==="right" ? (crw - eow) - hofs : _respoffset !=="off"  ? elx * opt.bw : elx;
 		ely = ely=="center" || ely=="middle" ? 	(crh/2 - eoh/2) + vofs : ely =="top" ? vofs : ely=="bottom" ? (crh - eoh)-vofs : _respoffset !=="off"  ? ely*opt.bw : ely;			
 		
-		if (rtl) 
+	
+		if (rtl && !slidelink) 
 			elx = elx + eow;
-		
+	
+		if (slidelink)
+			elx=0;
+	
 		// THE TRANSITIONS OF CAPTIONS
 		// MDELAY AND MSPEED
 												
 		
+
 		var $lts = _nc.data('lasttriggerstate'),
 			$cts = _nc.data('triggerstate'),
-			$start = _nc.data('start') || 100,		
+			$start = _nc.data('start') != undefined ? _nc.data('start') : 100,		
 			$end = _nc.data('end'),
 			mdelay = triggerforce ? 0 : $start==="bytrigger" || $start==="sliderenter" ? 0 : parseFloat($start)/1000,
 			calcx = (elx+offsetx),
 			calcy = (ely+offsety),
 			tpcapindex = _nc.css("z-Index");
-		
-		
+						
 		if (!triggerforce) 
 			if ($lts=="reset" && $start!="bytrigger") {
 				_nc.data("triggerstate","on");
@@ -504,16 +532,20 @@ jQuery.extend(true,_R, {
 		tl.pause();			
 		// LAYER IS TRIGGERED ??
 		
+		// CHECK FOR SVG
+		var $svg = {};
+		$svg.svg = _nc.data('svg_src')!=undefined ? _nc.find('svg') : false;
 		
-
+		
+		// GO FOR ANIMATION
 		if ($progress<1 && _nc.data('outstarted') != 1 || staticdirection==2 || triggerforce) {			
 			var animobject = _nc;
 
 			if (_nc.data('mySplitText') !=undefined) _nc.data('mySplitText').revert();
 
-			if (_nc.data('splitin')!=undefined && _nc.data('splitin').match(/chars|words|lines/g) || _nc.data('splitout')!=undefined && _nc.data('splitout').match(/chars|words|lines/g)) {
+			if (_nc.data('splitin')!=undefined && _nc.data('splitin').match(/chars|words|lines/g) || _nc.data('splitout')!=undefined && _nc.data('splitout').match(/chars|words|lines/g)) {				
 				var splittarget = _nc.find('a').length>0 ? _nc.find('a') : _nc;
-				_nc.data('mySplitText',new punchgs.SplitText(splittarget,{type:"lines,words,chars",charsClass:"tp-splitted",wordsClass:"tp-splitted",linesClass:"tp-splitted"}));					
+				_nc.data('mySplitText',new punchgs.SplitText(splittarget,{type:"lines,words,chars",charsClass:"tp-splitted tp-charsplit",wordsClass:"tp-splitted tp-wordsplit",linesClass:"tp-splitted tp-linesplit"}));					
 				_nc.addClass("splitted");
 			}
 
@@ -521,12 +553,19 @@ jQuery.extend(true,_R, {
 		
 			var $a = new Object();
 			
-
+			// PRESET SVG STYLE
+			if ($svg.svg) {
+				$svg.idle = setSVGAnimObject(_nc.data('svg_idle'),newSVGHoverAnimObject());			
+				//$svg.idle.anim.css.color = 
+				punchgs.TweenLite.set($svg.svg,$svg.idle.anim);
+			}
 
 			var reverseanim = _nc.data('transform_in')!=undefined ? _nc.data('transform_in').match(/\(R\)/gi) : false;
 
 			// BUILD ANIMATION LIBRARY AND HOVER ANIMATION
-			if (!_nc.data('$anims') || triggerforce || reverseanim) {				
+			if (!_nc.data('$anims') || triggerforce || reverseanim) {		
+
+
 				var $from = newAnimObject(),
 					$result = newAnimObject(),
 					$hover = newHoverAnimObject(),										
@@ -540,9 +579,17 @@ jQuery.extend(true,_R, {
 				if (hashover) {
 
 					$hover = getAnimDatas($hover,_nc.data('transform_hover'));
-					$hover = convertHoverStyle($hover,_nc.data('style_hover'));
+					$hover = convertHoverStyle($hover,_nc.data('style_hover'));					
+					if ($svg.svg) {
+						$svghover = setSVGAnimObject(_nc.data('svg_hover'),newSVGHoverAnimObject());
+						if ($hover.anim.color!=undefined) {
+							$svghover.anim.fill = $hover.anim.color;	
 
+						}						
+						_nc.data('hoversvg',$svghover);
+					}
 					_nc.data('hover',$hover);
+
 				}
 			
 				// DELAYS
@@ -557,16 +604,20 @@ jQuery.extend(true,_R, {
 					_nc.addClass("rs-hover-ready");		  						
 					_nc.hover(function(e) {
 					 	var nc = jQuery(e.currentTarget),						 		
-					 		t = nc.data('hover'),
+					 		t = nc.data('hover'),					 		
 					 		intl = nc.data('timeline');
 					 		
 					 	if (intl && intl.progress()==1) {						 		
 
-						 	if (nc.data('newhoveranim')===undefined || 	nc.data('newhoveranim')==="none")						 		
-						 		nc.data('newhoveranim',punchgs.TweenLite.to(nc,t.speed,t.anim));						 	
-						 	else {						 		
+						 	if (nc.data('newhoveranim')===undefined || 	nc.data('newhoveranim')==="none")	{						 		
+						 		nc.data('newhoveranim',punchgs.TweenLite.to(nc,t.speed,t.anim));
+						 		if ($svg.svg)  
+						 			nc.data('newsvghoveranim',punchgs.TweenLite.to($svg.svg,t.speed,nc.data('hoversvg').anim));						 	
+
+						 	} else {						 		
 						 		nc.data('newhoveranim').progress(0);
 						 		nc.data('newhoveranim').play();
+						 		if ($svg.svg) nc.data('newsvghoveranim').progress(0).play();
 						 	}
 						 }
 					 },
@@ -576,6 +627,7 @@ jQuery.extend(true,_R, {
 
 					 	if (intl && intl.progress()==1 && nc.data('newhoveranim')!=undefined) {							 						 		
 					 		nc.data('newhoveranim').reverse();
+					 		if ($svg.svg) nc.data('newsvghoveranim').reverse();
 					 	}
 					 });
 				}
@@ -611,7 +663,11 @@ jQuery.extend(true,_R, {
 			 
 			  $a.f.anim.visibility = "hidden";		
 
-			  
+			  _nc.data('eow',eow);
+			  _nc.data('eoh',eoh);
+			  _nc.data('speed',$a.f.speed);
+			  _nc.data('ease',$a.r.anim.ease);			  			  
+
 			  newtl.eventCallback("onStart",function(){			  	
 			  	punchgs.TweenLite.set(_nc,{visibility:"visible"});
 				// FIX VISIBLE IFRAME BUG IN SAFARI
@@ -624,8 +680,9 @@ jQuery.extend(true,_R, {
 			  	data.layer = _nc;
 			  	data.eventtype = "enterstage";
 			  	data.layertype = _nc.data('layertype');
+			  	_nc.data('active',true);
 			  	data.layersettings = _nc.data();			  	
-			  	opt.c.trigger("revolution.layeraction",data)
+			  	opt.c.trigger("revolution.layeraction",[data])
 			  });
 
 			  newtl.eventCallback("onComplete",function() {
@@ -634,9 +691,14 @@ jQuery.extend(true,_R, {
 			  	data.eventtype = "enteredstage";
 			  	data.layertype = _nc.data('layertype');
 			  	data.layersettings = _nc.data();			  	
-			  	opt.c.trigger("revolution.layeraction",data);			  	
+			  	opt.c.trigger("revolution.layeraction",[data]);			  	
 			  	_R.animcompleted(_nc,opt);
 			  });
+
+			  // SHOW ELEMENTS WITH SLIDEENTER A BIT LATER FIRST ! 
+			  if (($start=="sliderenter" && opt.overcontainer))			
+			  	mdelay = 0.6;
+			  
 
 
 			  tl.add(newtl.staggerFromTo(animobject,$a.f.speed,$a.f.anim,$a.r.anim,$a.f.elemdelay),mdelay);	
@@ -647,30 +709,42 @@ jQuery.extend(true,_R, {
 			  	var $mask_rsl = new Object();			  				  					  	
 			  	$mask_rsl.ease = $a.r.anim.ease;					  	
 			  	$mask_rsl.overflow = $mask_frm.anim.overflow ="hidden";
+			  	$mask_rsl.overwrite = "all";
 			  	$mask_rsl.x = $mask_rsl.y = 0;				  	
 
 			  	$mask_frm.anim.x = $mask_frm.anim.x * opt.bw || getBorderDirections($mask_frm.anim.x,opt,eow,eoh,calcy,calcx,"horizontal");
 	  	  		$mask_frm.anim.y = $mask_frm.anim.y * opt.bw || getBorderDirections($mask_frm.anim.y,opt,eow,eoh,calcy,calcx,"vertical");
-			   	  		
-			  						  
+			   	  					  	
 			  	tl.add(punchgs.TweenLite.fromTo(_mw,$a.f.speed,$mask_frm.anim,$mask_rsl,$from.elemdelay),mdelay);				  	
-			  } else {
+			  } else {			  	
 			  	tl.add(punchgs.TweenLite.set(_mw,{overflow:"visible"},$from.elemdelay),0);				  	
 			  }		    				 
 			}
 
 			// SAVE IT TO NCAPTION BEFORE NEW STEPS WILL BE ADDED
 			_nc.data('timeline',tl);
+
+			opt.sliderscrope = opt.sliderscrope === undefined ? Math.round(Math.random()*99999) : opt.sliderscrope;
 			
 			// IF THERE IS ANY EXIT ANIM DEFINED
 			// For Static Layers -> 1 -> In,  2-> Out  0-> Ignore  -1-> Not Static
 			staticdirection = staticLayerStatus(_nc,opt,"in");
 
-			if (($progress === 0 || staticdirection==2) &&  $end!=="bytrigger" && !triggerforce && $end!="sliderleave") 				
-				if (($end!=undefined) && (staticdirection==-1 || staticdirection==2) && ($end!=="bytriger")) 			
-					punchgs.TweenLite.delayedCall(parseInt(_nc.data('end'),0)/1000,_R.endMoveCaption,[_nc,_mw,_pw,opt]);
-				else 
-					punchgs.TweenLite.delayedCall(999999,_R.endMoveCaption,[_nc,_mw,_pw,opt]);						
+			
+			if (opt.endtimeouts === undefined) opt.endtimeouts = [];
+			
+			if (($progress === 0 || staticdirection==2) &&  $end!=="bytrigger" && !triggerforce && $end!="sliderleave") {
+				if (($end!=undefined) && (staticdirection==-1 || staticdirection==2) && ($end!=="bytriger"))
+					var tot = setTimeout(function() {
+						_R.endMoveCaption(_nc,_mw,_pw,opt);
+					},parseInt(_nc.data('end'),0));					
+				/*else
+					var tot = setTimeout(function() {
+						_R.endMoveCaption(_nc,_mw,_pw,opt);
+					},999999999);*/
+				opt.endtimeouts.push(tot);
+
+			}
 			
 
 			// SAVE THE TIMELINE IN DOM ELEMENT
@@ -678,14 +752,18 @@ jQuery.extend(true,_R, {
 			tl = _nc.data('timeline');
 			
 			if (_nc.data('loopanimation')=="on") callCaptionLoops(_lw,opt.bw);		
-						
 			
-			if ($start!="sliderenter" && (staticdirection==-1 || staticdirection==1 || triggerforce || (staticdirection==0 && $progress<1 && _nc.hasClass("rev-static-visbile"))))
+			
+		
+			
+			if (($start!="sliderenter" || ($start=="sliderenter" && opt.overcontainer)) && (staticdirection==-1 || staticdirection==1 || triggerforce || (staticdirection==0 && $progress<1 && _nc.hasClass("rev-static-visbile"))))				
 				if (($progress<1 && $progress>0) || 
 					($progress==0 && $start!="bytrigger" && $lts!="keep") || 
 					($progress==0 && $start!="bytrigger" && $lts=="keep" && $cts=="on") || 				
-					($start=="bytrigger" && $lts=="keep" && $cts=="on")) 				
-					tl.resume($time);			
+					($start=="bytrigger" && $lts=="keep" && $cts=="on")) {				
+						tl.resume($time);			
+						_R.toggleState(_nc.data('layertoggledby'))
+			}
 		}
 		
 		//punchgs.TweenLite.set(_mw,{width:eow, height:eoh});
@@ -705,14 +783,17 @@ jQuery.extend(true,_R, {
 	////////////////////////////
 	endMoveCaption : function(_nc,_mw,_pw,opt) {
 
-		_mw = _mw || _nc.data('_mw');
-		_pw = _pw || _nc.data('_pw');
+		_mw = _mw !=undefined ? _mw : _nc.data('_mw');
+		_pw = _pw !=undefined ? _pw : _nc.data('_pw');
 
 		// Kill TimeLine of "in Animation"
 		_nc.data('outstarted',1);
 		
-		_nc.data('timeline').pause();
-
+		
+		if (_nc.data('timeline'))
+			_nc.data('timeline').pause();
+		else
+			if (_nc.data('_pw')===undefined) return;
 		
 		var tl = new punchgs.TimelineLite(),
 			subtl = new punchgs.TimelineLite(),
@@ -742,8 +823,9 @@ jQuery.extend(true,_R, {
 			  	data.layer = _nc;
 			  	data.eventtype = "leavestage";
 			  	data.layertype = _nc.data('layertype');
-			  	data.layersettings = _nc.data();			  	
-			  	opt.c.trigger("revolution.layeraction",data);			  				  	
+			  	data.layersettings = _nc.data();	
+			  	_nc.data('active',false);		  	
+			  	opt.c.trigger("revolution.layeraction",[data]);			  				  	
 		});
 
 		subtl.eventCallback("onComplete",function(){			  	
@@ -752,10 +834,14 @@ jQuery.extend(true,_R, {
 			  	var data={};
 			  	data.layer = _nc;
 			  	data.eventtype = "leftstage";
+			  	_nc.data('active',false);
 			  	data.layertype = _nc.data('layertype');
 			  	data.layersettings = _nc.data();			  	
-			  	opt.c.trigger("revolution.layeraction",data);			  				  	
+			  	opt.c.trigger("revolution.layeraction",[data]); 	
+			  	if (_R.stopVideo) _R.stopVideo(_nc,opt);
 		});
+
+		
 				
 		tl.add(subtl.staggerTo(animobject,$to.speed,$to.anim,elemdelay),0);	
 				
@@ -789,7 +875,14 @@ jQuery.extend(true,_R, {
 			jQuery.each(opt.layers[index], function(i,a) { allcaptions.push(a); });
 		if (opt.layers["static"])
 			jQuery.each(opt.layers["static"], function(i,a) { allcaptions.push(a); });
-		punchgs.TweenLite.killDelayedCallsTo(_R.endMoveCaption);
+
+		
+		
+		//punchgs.TweenLite.killDelayedCallsTo(_R.endMoveCaption,false,opt.sliderscrope);
+		
+		if (opt.endtimeouts && opt.endtimeouts.length>0) 
+			jQuery.each(opt.endtimeouts,function(i,timeo) {	clearTimeout(timeo);});
+		opt.endtimeouts = new Array();
 
 		// GO THROUGH ALL CAPTIONS, AND MANAGE THEM
 		if (allcaptions)
@@ -801,7 +894,8 @@ jQuery.extend(true,_R, {
 					clearTimeout(_nc.data('videoplaywait'));
 					if (_R.stopVideo) _R.stopVideo(_nc,opt);												
 					_R.endMoveCaption(_nc,null,null,opt)
-					opt.playingvideos = [];
+					//opt.playingvideos = [];
+					if (_R.removeMediaFromList) _R.removeMediaFromList(_nc,opt);
 					opt.lastplayedvideos = [];
 				}
 			});		
@@ -815,7 +909,6 @@ jQuery.extend(true,_R, {
 /**********************************************************************************************
 						-	HELPER FUNCTIONS FOR LAYER TRANSFORMS -
 **********************************************************************************************/
-
 
 
 /////////////////////////////////////
@@ -846,6 +939,35 @@ var newAnimObject = function() {
 	a.anim.overwrite = "all";  
 	return a;
 }
+
+var newSVGHoverAnimObject = function() {
+	var a = new Object();
+	a.anim = new Object();
+	
+	a.anim.stroke="none";
+	a.anim.strokeWidth=0;
+	a.anim.strokeDasharray="none";
+	a.anim.strokeDashoffset="0";
+	return a;
+}
+
+var setSVGAnimObject = function(data,a) {
+	var customarray = data.split(';');	
+	if (customarray)	
+		jQuery.each(customarray,function(index,pa) {
+			var p = pa.split(":")
+			var w = p[0],
+				v = p[1];
+			
+			if (w=="sc") a.anim.stroke=v;
+			if (w=="sw") a.anim.strokeWidth=v;
+			if (w=="sda") a.anim.strokeDasharray=v;
+			if (w=="sdo") a.anim.strokeDashoffset=v;
+		});
+	return a;
+}
+
+
 
 var newEndAnimObject = function() {
 	var a = new Object();
@@ -939,6 +1061,7 @@ var getAnimDatas = function(frm,data,reversed) {
 				if (w=="scaleX" || w=="sX") o.anim.scaleX = animDataTranslator(v,o.anim.scaleX);
 				if (w=="scaleY" || w=="sY") o.anim.scaleY = animDataTranslator(v,o.anim.scaleY);
 				if (w=="opacity" || w=="o") o.anim.opacity = animDataTranslator(v,o.anim.opacity);
+				o.anim.opacity = o.anim.opacity == 0 ? 0.0001 : o.anim.opacity;
 				if (w=="skewX" || w=="skX") o.anim.skewX = animDataTranslator(v,o.anim.skewX);
 				if (w=="skewY" || w=="skY") o.anim.skewY = animDataTranslator(v,o.anim.skewY);
 				if (w=="x") o.anim.x = animDataTranslator(v,o.anim.x);
@@ -1039,6 +1162,7 @@ var staticLayerStatus = function(_nc,opt,dir,dontmod) {
 	
 	var a = -1;		
 	if (_nc.hasClass("tp-static-layer")) {	
+		_nc.data('staticlayer',true);
 		var s = parseInt(_nc.data('startslide'),0),
 			e = parseInt(_nc.data('endslide'),0),
 			pi = opt.c.find('.processing-revslide').index(),
@@ -1132,8 +1256,13 @@ var getcssParams = function(nc,level) {
 	obj.fontSize = gp ? pc.data('fontsize')===undefined ?  parseInt(pc.css('fontSize'),0) || 0 : pc.data('fontsize')  :  nc.data('fontsize')===undefined ?  parseInt(nc.css('fontSize'),0) || 0 : nc.data('fontsize'); 
 	obj.fontWeight = gp ? pc.data('fontweight')===undefined ?  parseInt(pc.css('fontWeight'),0) || 0 : pc.data('fontweight')  :  nc.data('fontweight')===undefined ?  parseInt(nc.css('fontWeight'),0) || 0 : nc.data('fontweight'); 
 	obj.whiteSpace = gp ? pc.data('whitespace')===undefined ?  pc.css('whitespace') || "normal" : pc.data('whitespace')  :  nc.data('whitespace')===undefined ?  nc.css('whitespace') || "normal" : nc.data('whitespace'); 
-			
-	obj.lineHeight = gp ? pc.data('lineheight')===undefined ? parseInt(pc.css('lineHeight'),0) || 0 : pc.data('lineheight')  :  nc.data('lineheight')===undefined ? parseInt(nc.css('lineHeight'),0) || 0 : nc.data('lineheight');
+	
+	
+	if (jQuery.inArray(nc.data('layertype'),["video","image","audio"])===-1 && !nc.is("img"))
+		obj.lineHeight = gp ? pc.data('lineheight')===undefined ? parseInt(pc.css('lineHeight'),0) || 0 : pc.data('lineheight')  :  nc.data('lineheight')===undefined ? parseInt(nc.css('lineHeight'),0) || 0 : nc.data('lineheight');
+	else
+		obj.lineHeight = 0;
+		
 	obj.letterSpacing = gp ? pc.data('letterspacing')===undefined ? parseFloat(pc.css('letterSpacing'),0) || 0 : pc.data('letterspacing') : nc.data('letterspacing')===undefined ? parseFloat(nc.css('letterSpacing')) || 0 : nc.data('letterspacing');
 				
 	obj.paddingTop = nc.data('paddingtop')===undefined ? parseInt(nc.css('paddingTop'),0) || 0 : nc.data('paddingtop');
@@ -1153,6 +1282,7 @@ var getcssParams = function(nc,level) {
 
 	if (level!="rekursive") {
 		obj.color = nc.data('color')===undefined ? "nopredefinedcolor" : nc.data('color');
+
 		obj.whiteSpace = gp ? pc.data('whitespace')===undefined ? pc.css('whiteSpace') || "nowrap" : pc.data('whitespace') : nc.data('whitespace')===undefined ? nc.css('whiteSpace') || "nowrap" : nc.data('whitespace');
 		
 		obj.minWidth = nc.data('width')===undefined ? parseInt(nc.css('minWidth'),0) || 0 : nc.data('width');
@@ -1175,7 +1305,9 @@ var getcssParams = function(nc,level) {
 		obj.man = nc.data('man')===undefined ? parseInt(nc.css('-ms-animation-transition'),0) || "none" : nc.data('man');
 		obj.ani = nc.data('ani')===undefined ? parseInt(nc.css('transition'),0) || "none" : nc.data('ani');
 	}
-
+	
+	
+		
 	obj.styleProps = nc.css(["background-color",							 
 							 "border-top-color",
 							 "border-bottom-color",
@@ -1191,8 +1323,13 @@ var getcssParams = function(nc,level) {
 							 "border-top-width",							 
 							 "color",							 
 							 "text-decoration",
-							 "font-style",
-							 "border-radius"]);		 
+							 "font-style",							 
+							 "borderTopLeftRadius",
+							 "borderTopRightRadius",
+							 "borderBottomLeftRadius",
+							 "borderBottomRightRadius"							 
+							 ]);		 
+	
 	return obj;
 }
 
@@ -1219,6 +1356,12 @@ var minmaxconvert = function(a,m,r,fr) {
 /////////////////////////////////////////////////////////////////
 var calcCaptionResponsive = function(nc,opt,level,responsive) {
 	var getobj;
+	try{
+		if (nc[0].nodeName=="BR" || nc[0].tagName=="br")
+			return false;
+	} catch(e) {
+
+	}
 
 	if (nc.data('cssobj')===undefined) {									
 		getobj = getcssParams(nc,level);
@@ -1270,6 +1413,7 @@ var calcCaptionResponsive = function(nc,opt,level,responsive) {
 			 lineHeight: Math.round(obj.lineHeight * bh) + "px",
 			 overwrite:"auto"});
 
+
 		if (level!="rekursive") {
 			
 			
@@ -1289,8 +1433,15 @@ var calcCaptionResponsive = function(nc,opt,level,responsive) {
 				 whiteSpace:obj.whiteSpace,					 
 				 overwrite:"auto"
 			});
-			if (obj.color!="nopredefinedcolor") 				
+
+			if (obj.color!="nopredefinedcolor") 
 				punchgs.TweenLite.set(nc,{color:obj.color,overwrite:"auto"});
+			
+			if (nc.data('svg_src')!=undefined) {
+				var scolto = obj.color!="nopredefinedcolor" && obj.color!=undefined ? obj.color : obj.css!=undefined && obj.css.color!="nopredefinedcolor" && obj.css.color!=undefined ? obj.css.color : obj.styleProps.color!=undefined ? obj.styleProps.color : obj.styleProps.css!=undefined && obj.styleProps.css.color!=undefined ? obj.styleProps.css.color : false; 
+				if (scolto!=false)	
+					punchgs.TweenLite.set(nc.find('svg'),{fill:scolto,overwrite:"auto"});				
+			}
 			
 		}
 
@@ -1410,6 +1561,7 @@ var callCaptionLoops = function(el,factor) {
 					oo.y = "50%";
 				}
 
+				
 				angle = angle*factor;
 				radius = radius * factor;
 
@@ -1425,8 +1577,8 @@ var callCaptionLoops = function(el,factor) {
 												ease:punchgs.Linear.easeNone,
 												onUpdate:function() {
 
-													var rad = angobj.a * (Math.PI / 180);
-										            punchgs.TweenLite.to(angobj.element,0.1,{force3D:"auto",x:angobj.xoffset+Math.cos(rad) * angobj.unit, y:angobj.yoffset+angobj.unit * (1 - Math.sin(rad))});
+													var rad = (angobj.a+angobj.ang) * (Math.PI / 180);
+										            punchgs.TweenLite.to(angobj.element,0.1,{force3D:"auto",x:angobj.xoffset+Math.cos(rad) * angobj.unit, y:(angobj.unit * (1 - Math.sin(rad)))+angobj.yoffset/0.5});
 
 												},
 												onComplete:function() {

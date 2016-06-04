@@ -28,7 +28,7 @@ var RevSliderAdmin = new function(){
 
 			}
 
-			UniteAdminRev.ajaxRequest(ajaxAction ,data);
+			UniteAdminRev.ajaxRequest(ajaxAction, data);
 		});
 	}
 	
@@ -88,6 +88,13 @@ var RevSliderAdmin = new function(){
 			jQuery('.rs-hide-on-fixed').show();
 		}
 		
+		if(textMode == 'full'){
+			jQuery('.rs-show-on-auto').toggle(100);
+			jQuery('.rs-show-on-auto').show(100);
+		}else{
+			jQuery('.rs-show-on-auto').toggle(100);
+			jQuery('.rs-show-on-auto').hide(100);
+		}
 		if(enableFullScreen){
 			jQuery('.rs-show-on-fullscreen').show();
 			jQuery('.rs-hide-on-fullscreen').hide();
@@ -196,24 +203,33 @@ var RevSliderAdmin = new function(){
 			var arrTypes = jQuery(this).val();
 
 			//replace the categories in multi select
+			var mysel = [];
+			jQuery("#"+catSettingName+' option').each(function(){
+				if(jQuery(this).prop('selected') == true){
+					mysel.push(jQuery(this).val());
+				}
+			});
+			
 			jQuery("#"+catSettingName).empty();
 			jQuery(arrTypes).each(function(index,postType){
 				var objCats = g_postTypesWithCats[postType];
 
-				var flagFirst = true;
-				for(catIndex in objCats){
+				//var flagFirst = true;
+				for(var catIndex in objCats){
 					var catTitle = objCats[catIndex];
 					//add option to cats select
 					var opt = new Option(catTitle, catIndex);
 
-					if(catIndex.indexOf("option_disabled") == 0)
+					if(catIndex.indexOf("option_disabled") == 0){
 						jQuery(opt).prop("disabled","disabled");
-					else{
+					}else{
 						//select first option:
-						if(flagFirst == true){
-							jQuery(opt).prop("selected","selected");
-							flagFirst = false;
-						}
+						//if(flagFirst == true){
+							if(jQuery.inArray(jQuery(opt).val(),mysel) !== -1){
+								jQuery(opt).prop("selected","selected");
+							}
+							//flagFirst = false;
+						//}
 					}
 
 					jQuery("#"+catSettingName).append(opt);
@@ -222,6 +238,7 @@ var RevSliderAdmin = new function(){
 
 			});
 		});
+		jQuery("#"+typeSettingName).change();
 	}
 
 
@@ -235,7 +252,37 @@ var RevSliderAdmin = new function(){
 
 
 		updateCatByPostTypes("post_types","post_category");
-
+		updateCatByPostTypes("product_types","product_category");
+		
+		jQuery('#fetch_type').change(function(){
+			jQuery('.rs-post-type-wrap').hide();
+			jQuery('.rs-post-order-setting').show();
+			jQuery('#post_sortby_row').show();
+			
+			switch(jQuery(this).val()){
+				case 'cat_tag':
+					jQuery('.rs-post-type-wrap').show();
+				break;
+				case 'related':
+				break;
+				case 'popular':
+					//only max post
+					jQuery('.rs-post-order-setting').hide();
+				break;
+				case 'recent':
+					//only max post
+					jQuery('.rs-post-order-setting').hide();
+				break;
+				case 'next_prev':
+					jQuery('#post_sortby_row').hide();
+				break;
+				default:
+				break;
+			}
+			
+		});
+		jQuery('#fetch_type option:selected').change();
+		
 		jQuery("input[name='source_type']").click(function(){ //check for post click
 			if(jQuery(this).val() == 'posts'){ //jQuery(this).val() == 'specific_posts' ||
 				jQuery('#toolbox_wrapper').hide();
@@ -267,23 +314,37 @@ var RevSliderAdmin = new function(){
 				jQuery('#layout-preshow').show();
 				
 			}
+			if(jQuery(this).val() == 'specific_posts'){
+				jQuery('#fetch_type option[value="cat_tag"]').attr('selected', 'selected');
+				jQuery('#fetch_type option:selected').change();
+			}else{
+				jQuery('#fetch_type option:selected').change();
+			}
 			
 			jQuery('.rs-settings-wrapper').hide();
-			if(jQuery(this).val() == 'posts' || jQuery(this).val() == 'specific_posts'){
+			if(jQuery(this).val() == 'posts' || jQuery(this).val() == 'specific_posts' ||  jQuery(this).val() == 'woocommerce'){
 				jQuery('#rs-post-settings-wrapper').show();
+				jQuery('.rs-specific-posts-wrap').hide();
+				jQuery('.rs-woocommerce-product-wrap').hide();
+				jQuery('.rs-post-types-wrapper').hide();
+				jQuery('.rs-show-for-wc').hide();
+				jQuery('.rs-hide-for-wc').show();
 				if(jQuery(this).val() == 'posts'){
 					jQuery('.rs-post-types-wrapper').show();
 					jQuery('.rs-specific-posts-wrap').hide();
-				}else{
+				}else if(jQuery(this).val() == 'specific_posts'){
 					jQuery('.rs-post-types-wrapper').hide();
 					jQuery('.rs-specific-posts-wrap').show();
+				}else if(jQuery(this).val() == 'woocommerce'){
+					jQuery('.rs-woocommerce-product-wrap').show();
+					jQuery('.rs-show-for-wc').show();
+					jQuery('.rs-hide-for-wc').hide();
 				}
 			}else{
 				jQuery('#rs-post-settings-wrapper').hide();
 				jQuery('#rs-'+jQuery(this).val()+'-settings-wrapper').show();
-				if(jQuery(this).val()=="facebook"){
-					jQuery('select[name="facebook-type-source"]').change();
-				}
+				if(jQuery(this).val()=="facebook") jQuery('select[name="facebook-type-source"]').change();
+				if(jQuery(this).val()=="instagram") jQuery('select[name="instagram-type"]').change();
 				if(jQuery("select[name=flickr-type]").val()=='photosets' && jQuery('input[name=source_type]:checked').val()=="flickr") jQuery('input[name=flickr-user-url]').change();
 				if(jQuery('input[name=source_type]:checked').val()=="youtube" && jQuery("select[name='youtube-type-source']").val()=='playlist') jQuery('input[name=youtube-channel-id]').change();
 			}
@@ -409,6 +470,9 @@ var RevSliderAdmin = new function(){
 				jQuery('#facebook-album-wrap').show();
 				jQuery('input[name=facebook-page-url]').change();
 			}
+
+			jQuery('input[name=facebook-type-source]').val(set);
+
 		 });
 		 if(jQuery('input[name=source_type]:checked').val()=="facebook") jQuery('select[name="facebook-type-source"]').change();
 
@@ -556,6 +620,15 @@ var RevSliderAdmin = new function(){
 		});
 		jQuery('select[name=vimeo-type-source]').change();
 
+		/**
+		 * Change Instagram Type
+		 */
+		jQuery('body').on('change','select[name="instagram-type"]',function(){
+		 	var set = jQuery(this).val();
+			jQuery(this).parent().find('div').hide();
+			jQuery("#instagram_"+set).show();
+		 });
+		 if(jQuery('input[name=source_type]:checked').val()=="instagram") jQuery('select[name="instagram-type"]').change();
 
 		/**
 		 * Set bullet type and navigation arrows to none if loop_slide is set to off
@@ -722,7 +795,7 @@ var RevSliderAdmin = new function(){
 		jQuery("#button_export_slider").click(function(){
 			var sliderID = jQuery("#sliderid").val();
 			var useDummy = jQuery('input[name="export_dummy_images"]').is(':checked');
-			var urlAjaxExport = ajaxurl+"?action="+g_uniteDirPlugin+"_ajax_action&client_action=export_slider&dummy="+useDummy+"&nonce=" + g_revNonce;
+			var urlAjaxExport = ajaxurl+UniteAdminRev.return_ajaxurl_param()+"action="+g_uniteDirPlugin+"_ajax_action&client_action=export_slider&dummy="+useDummy+"&nonce=" + g_revNonce;
 			urlAjaxExport += "&sliderid=" + sliderID;
 			location.href = urlAjaxExport;
 		});
@@ -761,15 +834,16 @@ var RevSliderAdmin = new function(){
 			if(confirm(rev_lang.set_settings_on_all_slider) == false)
 				return(false);
 			
-			var data = {sliderid: jQuery("#sliderid").val()}
+			var data = {sliderid: jQuery("#sliderid").val()};
 			
-			if(jQuery('input[name="reset-transitions"]').is(':checked')) data['slide_transition'] = jQuery('select[name="def-transitions"] option:selected').val();
+			if(jQuery('input[name="reset-slide_transition"]').is(':checked')) data['slide_transition'] = jQuery('select[name="def-slide_transition"] option:selected').val();
 			if(jQuery('input[name="reset-transition_duration"]').is(':checked')) data['transition_duration'] = jQuery('input[name="def-transition_duration"]').val();
+			if(jQuery('input[name="reset-image_source_type"]').is(':checked')) data['image_source_type'] = jQuery('select[name="def-image_source_type"] option:selected').val(); 
 			if(jQuery('input[name="reset-background_fit"]').is(':checked')){
-				data['transitions'] = jQuery('#def-background_fit option:selected').val();
-				if(data['transitions'] == 'percentage'){
-					data['bg_fit_x'] = jQuery('#def-bg_fit_x').val();
-					data['bg_fit_y'] = jQuery('#def-bg_fit_y').val();
+				data['bg_fit'] = jQuery('#def-background_fit option:selected').val();
+				if(data['bg_fit'] == 'percentage'){
+					data['bg_fit_x'] = jQuery('input[name="def-bg_fit_x"]').val();
+					data['bg_fit_y'] = jQuery('input[name="def-bg_fit_y"]').val();
 				}
 			}
 			if(jQuery('input[name="reset-bg_position"]').is(':checked')){
@@ -779,13 +853,23 @@ var RevSliderAdmin = new function(){
 					data['bg_position_y'] = jQuery('input[name="def-bg_position_y"]').val();
 				}
 			}
-			if(jQuery('input[name="reset-bg_repeat"]').is(':checked')) data['bg_repeat'] = jQuery('input[name="def-bg_repeat"]').val();
+			if(jQuery('input[name="reset-bg_repeat"]').is(':checked')) data['bg_repeat'] = jQuery('select[name="def-bg_repeat"] option:selected').val();
+			
 			if(jQuery('input[name="reset-kenburn_effect"]').is(':checked')) data['kenburn_effect'] = (jQuery('input[name="def-kenburn_effect"]').is(':checked')) ? 'on' : 'off';
 			if(jQuery('input[name="reset-kb_start_fit"]').is(':checked')) data['kb_start_fit'] = jQuery('input[name="def-kb_start_fit"]').val();
 			if(jQuery('input[name="reset-kb_easing"]').is(':checked')) data['kb_easing'] = jQuery('select[name="def-kb_easing"] option:selected').val();
 			if(jQuery('input[name="reset-kb_end_fit"]').is(':checked')) data['kb_end_fit'] = jQuery('input[name="def-kb_end_fit"]').val();
 			if(jQuery('input[name="reset-kb_duration"]').is(':checked')) data['kb_duration'] = jQuery('input[name="def-kb_duration"]').val();
-
+			
+			
+			if(jQuery('input[name="reset-kb_start_offset_x"]').is(':checked')) data['kb_start_offset_x'] = jQuery('input[name="def-kb_start_offset_x"]').val();
+			if(jQuery('input[name="reset-kb_start_offset_y"]').is(':checked')) data['kb_start_offset_y'] = jQuery('input[name="def-kb_start_offset_y"]').val();
+			
+			if(jQuery('input[name="reset-kb_end_offset_x"]').is(':checked')) data['kb_end_offset_x'] = jQuery('input[name="def-kb_end_offset_x"]').val();
+			if(jQuery('input[name="reset-kb_end_offset_y"]').is(':checked')) data['kb_end_offset_y'] = jQuery('input[name="def-kb_end_offset_y"]').val();
+			if(jQuery('input[name="reset-kb_start_rotate"]').is(':checked')) data['kb_start_rotate'] = jQuery('input[name="def-kb_start_rotate"]').val();
+			if(jQuery('input[name="reset-kb_end_rotate"]').is(':checked')) data['kb_end_rotate'] = jQuery('input[name="def-kb_end_rotate"]').val();
+			
 			UniteAdminRev.ajaxRequest('reset_slide_settings', data);
 		});
 		
@@ -919,7 +1003,13 @@ var RevSliderAdmin = new function(){
 		/**
 		 * add Template Slider through Import. Check for zip name
 		 **/
-		jQuery('body').on('click', '.template_slider_item_import', function(){
+		jQuery('body').on('click', '.template_slider_item_reimport, .install_template_slider', function(){
+			
+			if(jQuery(this).hasClass('deny_download')){
+				alert(rev_lang.this_template_requires_version+' '+jQuery(this).data('versionneed')+' '+rev_lang.of_slider_revolution);
+				return false;
+			}
+			
 			//modify the dialog with some informations 
 			jQuery('.rs-zip-name').text(jQuery(this).data('zipname'));
 			jQuery('.rs-uid').val(jQuery(this).data('uid'));
@@ -929,8 +1019,15 @@ var RevSliderAdmin = new function(){
 			jQuery("#dialog_import_template_slider_from").dialog({
 				modal:true,
 				resizable:false,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					"Local":function(){
+						if(RS_DEMO){
+							alert(rev_lang.not_available_in_demo);
+							return false;
+						}
 						jQuery(".input_import_slider").val('');
 						jQuery('.rs-import-slider-button').hide();
 						
@@ -941,6 +1038,9 @@ var RevSliderAdmin = new function(){
 							height:350,
 							closeOnEscape:true,
 							dialogClass:"tpdialogs",
+							create:function(ui) {				
+								jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+							},
 							buttons:{
 								"Close":function(){
 									jQuery(this).dialog("close");
@@ -968,14 +1068,44 @@ var RevSliderAdmin = new function(){
 			});
 			
 			jQuery('#close-template').click();
+			return false;
+		});
+		
+		
+		
+		jQuery('body').on('click', '.template_slider_item_reimport_package, .install_template_slider_package', function(){
 			
+			if(jQuery(this).hasClass('deny_download')){
+				alert(rev_lang.this_template_requires_version+' '+jQuery(this).data('versionneed')+' '+rev_lang.of_slider_revolution);
+				return false;
+			}
+			
+			//modify the dialog with some informations 
+			jQuery('.rs-zip-name').text(jQuery(this).data('zipname'));
+			jQuery('.rs-uid').val(jQuery(this).data('uid'));
+			jQuery('.rs-package').val('true'); //set that the package needs to be installed
+			
+			if(rs_plugin_validated){
+				//show please wait
+				showWaitAMinute({fadeIn:300,text:rev_lang.please_wait_a_moment});
+				
+				//get from server
+				jQuery('#rs-import-template-from-server').submit();
+			}else{
+				alert(rev_lang.this_feature_only_if_activated);
+			}
+			
+			jQuery('.rs-package').val('false');
+			
+			jQuery('#close-template').click();
+			return false;
 		});
 		
 		
 		/**
 		 * add Template Slider
 		 **/
-		jQuery('body').on('click', '.template_slider_item', function(){
+		jQuery('body').on('click', '.add_template_slider_item', function(){
 			var slider_id = jQuery(this).data('sliderid');
 			
 			
@@ -987,6 +1117,9 @@ var RevSliderAdmin = new function(){
 				height:200,
 				closeOnEscape:true,
 				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					'Close':function(){
 						jQuery(this).dialog("close");
@@ -994,7 +1127,40 @@ var RevSliderAdmin = new function(){
 					'Import':function(){
 						if(jQuery('#rs-duplicate-animation').val() == '') return false;
 						
-						UniteAdminRev.ajaxRequest('duplicate_slider' ,{sliderid:slider_id,title:jQuery('#rs-duplicate-animation').val()}, function(response){
+						UniteAdminRev.ajaxRequest('duplicate_slider', {sliderid:slider_id,title:jQuery('#rs-duplicate-animation').val()}, function(response){
+							jQuery('#close-template').click();
+						});
+					}
+				}
+			});
+		});
+		
+		
+		/**
+		 * add Template Slider Pack
+		 **/
+		jQuery('body').on('click', '.add_template_slider_item_package', function(){
+			var uid = jQuery(this).data('uid');
+			
+			jQuery('#dialog_duplicate_slider_package').dialog({
+				modal:true,
+				resizable:false,
+				title:'Import Package',
+				width:250,
+				height:200,
+				closeOnEscape:true,
+				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
+				buttons:{
+					'Close':function(){
+						jQuery(this).dialog("close");
+					},
+					'Import Package':function(){
+						if(jQuery('#rs-duplicate-prefix').val() == '') return false;
+						
+						UniteAdminRev.ajaxRequest('duplicate_slider_package', {slideruid:uid,title:jQuery('#rs-duplicate-prefix').val()}, function(response){
 							jQuery('#close-template').click();
 						});
 					}
@@ -1010,13 +1176,18 @@ var RevSliderAdmin = new function(){
 			}
 		});
 		
-		jQuery("#button_import_template_slider").click(function(){
+		jQuery("#button_import_template_slider, #button_import_template_slider_b").click(function(){
 			jQuery('#template_area').addClass("show");
+			jQuery('#template_area').trigger("showitnow");
 			return true;
 		});
 		
 		//import slide dialog
 		jQuery("#button_import_slider").click(function(){
+			if(RS_DEMO){
+				alert(rev_lang.not_available_in_demo);
+				return false;
+			}
 			jQuery('.rev-import-slider-button').hide();
 			
 			jQuery(".input_import_slider").val('');
@@ -1025,9 +1196,12 @@ var RevSliderAdmin = new function(){
 				modal:true,
 				resizable:false,
 				width:600,
-				height:350,
+				height:400,
 				closeOnEscape:true,
 				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					"Close":function(){
 						jQuery(this).dialog("close");
@@ -1060,6 +1234,9 @@ var RevSliderAdmin = new function(){
 				height:200,
 				closeOnEscape:true,
 				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:{
 					'Close':function(){
 						jQuery(this).dialog("close");
@@ -1105,9 +1282,10 @@ var RevSliderAdmin = new function(){
 
 			var sliderID = this.id.replace("export_slider_","");
 			var useDummy = false;//jQuery('input[name="export_dummy_images"]').is(':checked');
-			var urlAjaxExport = ajaxurl+"?action="+g_uniteDirPlugin+"_ajax_action&client_action=export_slider&dummy="+useDummy+"&nonce=" + g_revNonce;
+			var urlAjaxExport = ajaxurl+UniteAdminRev.return_ajaxurl_param()+"action="+g_uniteDirPlugin+"_ajax_action&client_action=export_slider&dummy="+useDummy+"&nonce=" + g_revNonce;
 			urlAjaxExport += "&sliderid=" + sliderID;
 			location.href = urlAjaxExport;
+			
 		});
 		
 		
@@ -1121,9 +1299,12 @@ var RevSliderAdmin = new function(){
 			jQuery('.rs-dialog-embed-slider').dialog({
 				modal: true,
 				resizable:false,
-				minWidth:750,
+				minWidth:850,
 				minHeight:300,
-				closeOnEscape:true
+				closeOnEscape:true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				}
 			});
 		});
 		
@@ -1131,20 +1312,11 @@ var RevSliderAdmin = new function(){
 		jQuery(".export_slider_standalone").click(function(){
 			
 			var sliderID = this.id.replace("export_slider_standalone_","");
-
-			var rs_form = jQuery('#rs-preview-form');
+			var useDummy = false;//jQuery('input[name="export_dummy_images"]').is(':checked');
+			var urlAjaxExport = ajaxurl+UniteAdminRev.return_ajaxurl_param()+"action="+g_uniteDirPlugin+"_ajax_action&client_action=preview_slider&only_markup=true&dummy="+useDummy+"&nonce=" + g_revNonce;
+			urlAjaxExport += "&sliderid=" + sliderID;
+			location.href = urlAjaxExport;
 			
-			//set action and data
-			jQuery("#rs-client-action").val('preview_slider');
-			jQuery("#preview_sliderid").val(sliderID);
-			jQuery("#preview_slider_markup").val('true');
-			
-			rs_form.submit();
-			
-			jQuery('#rs-preview-wrapper').show();
-			
-			jQuery(window).trigger('resize');
-
 		});
 	}
 
@@ -1370,6 +1542,9 @@ var RevSliderAdmin = new function(){
 				height:300,
 				closeOnEscape:true,
 				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:buttons
 			});	//dialog end
 
@@ -1404,17 +1579,30 @@ var RevSliderAdmin = new function(){
 			isDemo = false;
 		
 		var layers = UniteLayersRev.getLayers();
-
+		
+		var arrLayersNew = {};
+		for(key in layers){
+			if(layers[key].layer_unavailable !== true && layers[key].deleted !== true){
+				arrLayersNew[key] = layers[key];
+				
+				if(typeof(arrLayersNew[key].layer_unavailable) !== 'undefined') delete(arrLayersNew[key].layer_unavailable);
+				if(typeof(arrLayersNew[key].deleted) !== 'undefined') delete(arrLayersNew[key].deleted);
+				if(typeof(arrLayersNew[key].createdOnInit) !== 'undefined') delete(arrLayersNew[key].createdOnInit);
+			}
+		}
+		
+		
 		if(JSON && JSON.stringify)
-			layers = JSON.stringify(layers);
+			arrLayersNew = JSON.stringify(arrLayersNew);
 
 		var data = {
-				slideid:slideID,
-				layers:layers
-			};
+			slideid:slideID,
+			layers:arrLayersNew
+		};
 
+		data.params = RevSliderSettings.getSettingsObject("form_slide_params");
+		
 		if(!isDemo){ //demo means static captions. This has
-			data.params = RevSliderSettings.getSettingsObject("form_slide_params");
 
 			data.params.slide_bg_color = jQuery("#slide_bg_color").val();
 			data.params.slide_bg_external = jQuery("#slide_bg_external").val();
@@ -1465,7 +1653,7 @@ var RevSliderAdmin = new function(){
 			var csel = jQuery('.bgsrcchanger:checked').val();
 			
 			if(csel == 'vimeo' || csel == 'html5' || csel == 'youtube'){ //check for cover image, if not set, deny the saving
-				if(typeof(data.params.image_id) === 'undefined' || parseInt(data.params.image_id) == 0 || data.params.image_id == ''){
+				if((typeof(data.params.image_id) === 'undefined' || parseInt(data.params.image_id) == 0 || data.params.image_id == '') && ((typeof(data.params.image_url) === 'undefined') || data.params.image_url == '')){
 					alert(rev_lang.cover_image_needs_to_be_set);
 					return false;
 				}
@@ -1478,6 +1666,7 @@ var RevSliderAdmin = new function(){
 				case 'gallery':
 				break;
 				case 'posts':
+				case 'woocommerce':
 				case 'facebook':
 				case 'twitter':
 				case 'instagram':
@@ -1512,7 +1701,16 @@ var RevSliderAdmin = new function(){
 		
 		data.settings['hor_lines'] = hor_lines;
 		data.settings['ver_lines'] = ver_lines;
-
+		
+		// HOOK FOR EXTERNAL ADDONS
+		jQuery.each(UniteLayersRev.addon_callbacks, function(i,callback_element) {
+			var callback = callback_element["callback"],				
+				env = callback_element["environment"],
+				env_sub = callback_element["function_position"];
+			if (env === "saveEditSlide" && env_sub=="data") 				
+				data = callback(data);
+		});
+		
 		if(!isDemo){
 			UniteAdminRev.setAjaxHideButtonID("button_save_slide,button_save_slide-tb");
 			UniteAdminRev.setAjaxLoaderID("loader_update");
@@ -1543,9 +1741,15 @@ var RevSliderAdmin = new function(){
 		/**
 		 * add Template Slider through Import, then add specific slide to current Slider and open it. Check for zip name
 		 **/
-		jQuery('body').on('click', '.template_slide_item_import', function(){
+		jQuery('body').on('click', '.install_template_slide', function(){
+			var data = jQuery(this);
+			
+			if(data.hasClass('deny_download')){
+				alert(rev_lang.this_template_requires_version+' '+data.data('versionneed')+' '+rev_lang.of_slider_revolution);
+				return false;
+			}
+			
 			if(confirm(rev_lang.unsaved_data_will_be_lost_proceed)){
-				var data = jQuery(this).find('.template_slide_item_img');
 				
 				//modify the dialog with some informations 
 				jQuery('.rs-zip-name').text(data.data('zipname'));
@@ -1561,6 +1765,9 @@ var RevSliderAdmin = new function(){
 				jQuery("#dialog_import_template_slide_from").dialog({
 					modal:true,
 					resizable:false,
+					create:function(ui) {				
+						jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+					},
 					buttons:{
 						"Local":function(){
 							jQuery(".input_import_slider").val('');
@@ -1573,6 +1780,9 @@ var RevSliderAdmin = new function(){
 								height:350,
 								closeOnEscape:true,
 								dialogClass:"tpdialogs",
+								create:function(ui) {				
+									jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+								},
 								buttons:{
 									"Close":function(){
 										jQuery(this).dialog("close");
@@ -1660,7 +1870,7 @@ var RevSliderAdmin = new function(){
 			},true);	//allow multiple selection
 		});
 		
-		jQuery('body').on('click', '.template_item', function(){			
+		jQuery('body').on('click', '.add_template_slide_item, .add_user_template_slide_item', function(){			
 			if(confirm(rev_lang.unsaved_data_will_be_lost_proceed)){
 				var data = { slider_id:sliderID };
 				
@@ -1680,19 +1890,23 @@ var RevSliderAdmin = new function(){
 		//save slide actions
 		jQuery("#button_save_slide").click(function(){
 			t.saveEditSlide(slideID);
+			UniteLayersRev.set_save_needed(false);
 		});
 
 		jQuery("#button_save_slide-tb").click(function(){
 			t.saveEditSlide(slideID);
+			UniteLayersRev.set_save_needed(false);
 		});
 
 		//save slide actions
 		jQuery("#button_save_static_slide").click(function(){
 			t.saveEditSlide(slideID, true);
+			UniteLayersRev.set_save_needed(false);
 		});
 
 		jQuery("#button_save_static_slide-tb").click(function(){
 			t.saveEditSlide(slideID, true);
+			UniteLayersRev.set_save_needed(false);
 		});
 
 		//change image actions
@@ -1704,6 +1918,7 @@ var RevSliderAdmin = new function(){
 
 				//set visual image
 				jQuery("#divbgholder").css("background-image","url("+urlImage+")");
+				jQuery('#slide_selector .list_slide_links li.selected .slide-media-container ').css("background-image","url("+urlImage+")")
 
 				//update setting input
 				jQuery("#image_url").val(urlImage);
@@ -1729,7 +1944,7 @@ var RevSliderAdmin = new function(){
 				//set URL to the input fields
 				jQuery('input[name="'+the_target+'"]').val(urlVideo);
 				
-				jQuery('#html5_url_ogv, #html5_url_webm, #html5_url_mp4').change();
+				jQuery('#html5_url_audio, #html5_url_ogv, #html5_url_webm, #html5_url_mp4').change();
 			}); //dialog
 		});	//change image click.
 		
@@ -1813,7 +2028,8 @@ var RevSliderAdmin = new function(){
 			if(bgType == "solid"){
 				var bgColor = jQuery("#slide_bg_color").val();
 				jQuery("#divbgholder").css("background-color",bgColor);
-			}
+				jQuery('#slide_selector .list_slide_links li.selected .slide-media-container ').css({backgroundColor:bgColor});
+			}					
 		});
 
 
@@ -1969,7 +2185,7 @@ var RevSliderAdmin = new function(){
 					if(ahref == 'javascript:void(0)'){
 						ahref = '?page=revslider&view=slide&id='+ response.id;
 					}else{
-						ahref.replace(slideID, response.id);
+						ahref = ahref.replace('id='+slideID, 'id='+response.id);
 					}
 					
 					new_ele.find('a').first().attr('href', ahref);
@@ -2035,6 +2251,9 @@ var RevSliderAdmin = new function(){
 				height:300,
 				closeOnEscape:true,
 				dialogClass:"tpdialogs",
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				buttons:buttons
 			});	//dialog end
 			
@@ -2188,14 +2407,21 @@ var RevSliderAdmin = new function(){
 
 		});
 		
+		jQuery('.tp-moderncheckbox').each(function(){
+			RevSliderSettings.onoffStatus(jQuery(this));
+		});
+		
+		RevSliderSettings.onoffStatus(jQuery('input[name="hideslideonmobile"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="stream_do_cover"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="stream_do_cover_both"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="kenburn_effect"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="save_performance"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="video_force_cover"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="video_nextslide"]'));
+		RevSliderSettings.onoffStatus(jQuery('input[name="video_allowfullscreen"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="video_force_rewind"]'));
 		RevSliderSettings.onoffStatus(jQuery('input[name="video_mute"]'));
+		RevSliderSettings.onoffStatus(jQuery('input[name="thumb_for_admin"]'));
 		
 		jQuery('#video_force_cover').change(function(){
 			if(jQuery(this).is(':checked')){
@@ -2244,13 +2470,23 @@ var RevSliderAdmin = new function(){
 			objData.params.bg_end_position = jQuery("select[name='bg_end_position']").val();
 			objData.params.kb_duration = jQuery("input[name='kb_duration']").val();
 			objData.params.kb_easing = jQuery("select[name='kb_easing']").val();
-
-			objData.layers = UniteLayersRev.getLayers();
 			
+			var ml = UniteLayersRev.getLayers();
+			
+			var arrLayersNew = {};
+			for(key in ml){
+				if(ml[key].layer_unavailable !== true && ml[key].deleted !== true){
+					arrLayersNew[key] = ml[key];
+					
+					if(typeof(arrLayersNew[key].layer_unavailable) !== 'undefined') delete(arrLayersNew[key].layer_unavailable);
+					if(typeof(arrLayersNew[key].deleted) !== 'undefined') delete(arrLayersNew[key].deleted);
+					if(typeof(arrLayersNew[key].createdOnInit) !== 'undefined') delete(arrLayersNew[key].createdOnInit);
+				}
+			}
+			
+			objData.layers = arrLayersNew;
 		}
-
-
-
+		
 		var jsonData = JSON.stringify(objData);
 
 		
@@ -2289,6 +2525,7 @@ var RevSliderAdmin = new function(){
 				jQuery("#divbgholder").removeClass("trans_bg");
 				var bgColor = jQuery("#slide_bg_color").val();
 				jQuery("#divbgholder").css("background-color",bgColor);
+				jQuery('#slide_selector .list_slide_links li.selected .slide-media-container ').css({backgroundColor:bgColor});
 			break;
 			case "external":
 				var urlImage = jQuery("#slide_bg_external").val();
@@ -2428,6 +2665,9 @@ var RevSliderAdmin = new function(){
 				minWidth:700,
 				minHeight:500,
 				closeOnEscape:true,
+				create:function(ui) {				
+					jQuery(ui.target).parent().find('.ui-dialog-titlebar').addClass("tp-slider-new-dialog-title");
+				},
 				open:function () {
 					jQuery(this).closest(".ui-dialog")
 					.find(".ui-button").each(function(i) {
@@ -2452,8 +2692,6 @@ var RevSliderAdmin = new function(){
 							data = jQuery("#textarea_edit_static").val();
 
 						UniteAdminRev.ajaxRequest("update_static_css",data,function(response){
-							jQuery("#dialog_success_message").show().html(response.message);
-
 							if(g_codemirrorCssStatic != null)
 								g_codemirrorCssStatic.setValue(response.css);
 							else
