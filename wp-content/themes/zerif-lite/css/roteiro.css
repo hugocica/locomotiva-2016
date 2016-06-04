@@ -211,7 +211,7 @@ ul.nav li:hover a {
   display: inline-block;
   overflow: hidden;
   outline: none; }
-  ul.nav li:hover abefore {
+  ul.nav li:hover a:before {
     width: 75%;
     transform: translateX(0%);
     background: #e96656;
@@ -528,3 +528,9 @@ footer#footer {
       padding: 10px 35px;
       float: right;
       margin-top: 20px; }
+
+.grid-item {
+  width: 25%; }
+
+.grid-item--width2 {
+  width: 50%; }

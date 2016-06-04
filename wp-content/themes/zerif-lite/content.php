@@ -1,4 +1,4 @@
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article id="post-<?php the_ID(); ?>" <?php post_class('grid-item'); ?>>
 
 	<?php if ( ! is_search() ) : ?>
 
@@ -51,15 +51,15 @@
 	<div class="entry-summary">
 
 		<?php the_excerpt(); ?>
-		
+
 	<?php else : ?>
 
 	<div class="entry-content">
 
-		<?php 
+		<?php
 
 			the_excerpt();
-			
+
 			wp_link_pages( array(
 
 				'before' => '<div class="page-links">' . __( 'Pages:', 'zerif-lite' ),

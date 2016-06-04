@@ -1,12 +1,5 @@
 /* tablet */
 /* (portrait and landscape) ----------- */
-@media only screen and (min-width : 768px) and (max-width : 1024px) {}
-
 /*(portrait)*/
-@media 	only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait), only screen and (min-width : 768px) and (max-width : 895px) {}
-
 /* (landscape) ----------- */
-@media 	only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : landscape),	only screen and (min-width : 896px) and (max-width : 1024px) {}
-
 /* mobile */
-@media only screen and (max-width: 767px) {}

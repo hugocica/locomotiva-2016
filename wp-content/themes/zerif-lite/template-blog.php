@@ -20,15 +20,14 @@ get_header(); ?>
 					$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 					$wp_query = new WP_Query( array('post_type' => 'post', 'showposts' => '8', 'paged' => $paged) );
 
-					if( $wp_query->have_posts() ):
-
-						while ($wp_query->have_posts()) :
-
-							$wp_query->the_post();
+					if( $wp_query->have_posts() ): ?>
+						<div class="grid"> <?php
+						while ($wp_query->have_posts()) : $wp_query->the_post();
+							
 							get_template_part( 'content', get_post_format() );
 
-						endwhile;
-
+						endwhile; ?>
+					</div> <?php
 					endif;
 
 					zerif_paging_nav();

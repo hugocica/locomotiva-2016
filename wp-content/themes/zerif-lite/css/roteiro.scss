@@ -251,7 +251,7 @@ ul {
 					overflow: hidden;
 					outline: none;
 
-					&before {
+					&:before {
 						width: 75%;
 						transform: translateX(0%);
 						background: #e96656;
@@ -643,3 +643,5 @@ footer {
 		}
 	}
 }
+.grid-item { width: 25%; }
+.grid-item--width2 { width: 50%; }

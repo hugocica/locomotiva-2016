@@ -26,33 +26,4 @@ jQuery(document).ready(function($) {
         }
     });
 
-    // tentativa menu
-    $(function() {
-        var $el, leftPos, newWidth,
-            $mainNav = $("#menu-menu-principal");
-
-        $mainNav.append("<li id='magic-line'></li>");
-        var $magicLine = $("#magic-line");
-
-        $magicLine
-            .width($("current-menu-item").width())
-            .css("left", $("current-menu-item a").position().left)
-            .data("origLeft", $magicLine.position().left)
-            .data("origWidth", $magicLine.width());
-
-        $("#menu-menu-principal li a").hover(function() {
-            $el = $(this);
-            leftPos = $el.position().left;
-            newWidth = $el.parent().width();
-            $magicLine.stop().animate({
-                left: leftPos,
-                width: newWidth
-            });
-        }, function() {
-            $magicLine.stop().animate({
-                left: $magicLine.data("origLeft"),
-                width: $magicLine.data("origWidth")
-            });
-        });
-    });
 });
