@@ -26,4 +26,11 @@ jQuery(document).ready(function($) {
         }
     });
 
+    $('.grid').isotope({
+        itemSelector: '.grid-item',
+        percentPosition: true,
+        mansory: {
+            columnWidth: '.grid-sizer'
+        }
+    });
 });

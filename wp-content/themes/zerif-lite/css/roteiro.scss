@@ -643,5 +643,10 @@ footer {
 		}
 	}
 }
-.grid-item { width: 25%; }
-.grid-item--width2 { width: 50%; }
+.grid-sizer, .grid-item {
+	width: 33.3%;
+}
+.post-img-wrap {
+	float: none;
+	width: 100%;
+}

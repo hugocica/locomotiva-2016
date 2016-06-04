@@ -23,7 +23,7 @@ get_header(); ?>
 					if( $wp_query->have_posts() ): ?>
 						<div class="grid"> <?php
 						while ($wp_query->have_posts()) : $wp_query->the_post();
-							
+
 							get_template_part( 'content', get_post_format() );
 
 						endwhile; ?>

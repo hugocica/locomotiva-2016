@@ -529,8 +529,9 @@ footer#footer {
       float: right;
       margin-top: 20px; }
 
-.grid-item {
-  width: 25%; }
+.grid-sizer, .grid-item {
+  width: 33.3%; }
 
-.grid-item--width2 {
-  width: 50%; }
+.post-img-wrap {
+  float: none;
+  width: 100%; }
