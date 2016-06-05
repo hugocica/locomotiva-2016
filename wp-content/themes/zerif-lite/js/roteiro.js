@@ -26,6 +26,31 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // search icon on the menu
+    $('.holder').on({
+        mouseenter: function() {
+            $this = $(this);
+
+            if ($this.parent().hasClass('active')) {
+                $this.fadeOut(500);
+                setTimeout(function() {
+                    $this.removeClass('active')
+                }, 500);
+                setTimeout(function() {
+                    $this.fadeIn(500);
+                }, 500);
+            } else {
+                $(this).parent().addClass('active');
+            }
+        },
+        mouseleave: function() {
+            container = $('.holder');
+
+            $('.holder').parent().removeClass('active');
+        }
+    });
+
+    // blog listing with isotope.js
     $('.grid').isotope({
         itemSelector: '.grid-item',
         percentPosition: true,

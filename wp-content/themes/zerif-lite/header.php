@@ -14,6 +14,7 @@
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <link rel="profile" href="http://gmpg.org/xfn/11">
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <!--[if lt IE 9]>
 <script src="<?php echo esc_url( get_template_directory_uri() ); ?>/js/html5.js"></script>
@@ -36,21 +37,21 @@
 
 	<body <?php body_class(); ?> >
 
-<?php endif; 
+<?php endif;
 
 	global $wp_customize;
-	
+
 	/* Preloader */
 
-	if(is_front_page() && !isset( $wp_customize ) && get_option( 'show_on_front' ) != 'page' ): 
- 
+	if(is_front_page() && !isset( $wp_customize ) && get_option( 'show_on_front' ) != 'page' ):
+
 		$zerif_disable_preloader = get_theme_mod('zerif_disable_preloader');
-		
+
 		if( isset($zerif_disable_preloader) && ($zerif_disable_preloader != 1)):
 			echo '<div class="preloader">';
 				echo '<div class="status">&nbsp;</div>';
 			echo '</div>';
-		endif;	
+		endif;
 
 	endif; ?>
 
@@ -89,15 +90,15 @@
 					else:
 
 						echo '<a href="'.esc_url( home_url( '/' ) ).'" class="navbar-brand">';
-						
+
 							if( file_exists(get_stylesheet_directory()."/images/logo.png")):
-							
+
 								echo '<img src="'.get_stylesheet_directory_uri().'/images/logo.png" alt="'.get_bloginfo('title').'">';
-							
+
 							else:
-								
+
 								echo '<img src="'.get_template_directory_uri().'/images/logo.png" alt="'.get_bloginfo('title').'">';
-								
+
 							endif;
 
 						echo '</a>';
@@ -111,6 +112,7 @@
 			<nav class="navbar-collapse bs-navbar-collapse collapse" role="navigation"   id="site-navigation">
 				<a class="screen-reader-text skip-link" href="#content"><?php _e( 'Skip to content', 'zerif-lite' ); ?></a>
 				<?php wp_nav_menu( array('theme_location' => 'primary', 'container' => false, 'menu_class' => 'nav navbar-nav navbar-right responsive-nav main-nav-list', 'fallback_cb'     => 'zerif_wp_page_menu')); ?>
+				<?php echo get_search_form(); ?>
 			</nav>
 
 		</div>
