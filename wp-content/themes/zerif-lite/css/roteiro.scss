@@ -272,7 +272,7 @@ a {
 				}
 				&:active {
 					a {
-						display: inline-block;
+						// display: inline-block;
 						overflow: hidden;
 						outline: none;
 
@@ -302,7 +302,9 @@ a {
 		.active {
 			input {
 				&.search-query {
-					width: 230px;
+					width: 420px;
+					padding-left: 15px;
+					padding-right: 15px;
 					background-color: rgba(255, 255, 255, 1);
 				}
 			}
@@ -311,14 +313,15 @@ a {
 			&.search-query {
 				width: 0;
 				position: absolute;
-				top: 41%;
-				right: 34px;
-				transition: all 0.6s cubic-bezier(.55,0,.1,1) 0.6s;
+				top: 47%;
+				right: 32px;
+				transition: all 0.2s cubic-bezier(.55,0,.1,1) 0.2s;
 				background-color: rgba(255, 255, 255, 0);
 				border: none;
-				border-bottom: 2px solid #000;
+				border-bottom: 2px solid #404040;
 				padding-right: 0;
 				padding-left: 0;
+				z-index: 999;
 			}
 		}
 		button {
@@ -329,17 +332,17 @@ a {
 				transform: translate3d(-50%,-50%,0);
 				margin: -4px 0 0 8px;
 				// width: 230px;
-				width: 34px;
-				height: 34px;
+				width: 40px;
+				height: 40px;
 				cursor: pointer;
-				transition: all .5s cubic-bezier(.55,0,.1,1) .5s;
-				color: #000;
+				transition: all 0.2s cubic-bezier(.55,0,.1,1) 0.2s;
+				color: #404040;
 				padding: 0;
 				background-color: transparent;
 				border-bottom: 2px solid transparent;
 
 				&:hover {
-					border-bottom: 2px solid #000;
+					border-bottom: 2px solid #404040;
 
 					svg {
 				  		circle {
@@ -371,7 +374,7 @@ a {
 					transform: rotate(-270deg);
 
 					circle {
-					  	stroke-dasharray: 100;
+					  	stroke-dasharray: 110;
 					  	stroke-dashoffset: 0;
 					  	transition: all 1s cubic-bezier(.55,0,.1,1);
 					}
@@ -762,7 +765,7 @@ footer {
 }
 .listpost-content-wrap {
 	background-color: #f5f5f5;
-	padding: 15px 25px;
+	padding: 15px 0 0;
 	margin-top: -7px;
 	border: 1px solid #404040;
 	border-top: none;
@@ -772,6 +775,7 @@ footer {
 	h1 {
 		line-height: 22px;
 		margin-bottom: 25px;
+		padding: 0 25px;
 
 		&.entry-title {
 			a {
@@ -786,5 +790,48 @@ footer {
 				}
 			}
 		}
+	}
+	.entry-content {
+		font-family: Aller;
+		padding: 0 25px 15px;
+
+		.read-more-wrapper {
+			width: 100%;
+			text-align: right;
+
+			.read-more-btn {
+				font-family: Aller;
+				font-size: 16px;
+			}
+		}
+	}
+	.entry-footer {
+		padding: 5px 25px 0;
+		background-color: #fff;
+		// border-top: 1px solid #404040;
+		border-bottom-left-radius: 4px;
+		border-bottom-right-radius: 4px;
+		text-align: left;
+
+		.author-pic {
+			border: 1px solid #404040;
+			display: inline-block;
+			border-radius: 50%;
+			padding: 5px;
+			overflow: hidden;
+		}
+	}
+}
+
+.conteudo-interno {
+	.entry-thumb {
+		height: 340px;
+		margin-left: -15px;
+		margin-right: -15px;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+	}
+	.entry-header {
 	}
 }

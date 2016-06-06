@@ -225,7 +225,6 @@ a.inverse-link {
       bottom: 0px;
       left: 12.5%; }
   #main-nav ul.nav li:active a {
-    display: inline-block;
     overflow: hidden;
     outline: none; }
     #main-nav ul.nav li:active a:before {
@@ -243,20 +242,23 @@ a.inverse-link {
     transition: all ease 0.4s; }
 
 #main-nav #searchform .active input.search-query {
-  width: 230px;
+  width: 420px;
+  padding-left: 15px;
+  padding-right: 15px;
   background-color: white; }
 
 #main-nav #searchform input.search-query {
   width: 0;
   position: absolute;
-  top: 41%;
-  right: 34px;
-  transition: all 0.6s cubic-bezier(0.55, 0, 0.1, 1) 0.6s;
+  top: 47%;
+  right: 32px;
+  transition: all 0.2s cubic-bezier(0.55, 0, 0.1, 1) 0.2s;
   background-color: rgba(255, 255, 255, 0);
   border: none;
-  border-bottom: 2px solid #000;
+  border-bottom: 2px solid #404040;
   padding-right: 0;
-  padding-left: 0; }
+  padding-left: 0;
+  z-index: 999; }
 
 #main-nav #searchform button.holder {
   position: absolute;
@@ -264,16 +266,16 @@ a.inverse-link {
   right: 0;
   transform: translate3d(-50%, -50%, 0);
   margin: -4px 0 0 8px;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1) 0.5s;
-  color: #000;
+  transition: all 0.2s cubic-bezier(0.55, 0, 0.1, 1) 0.2s;
+  color: #404040;
   padding: 0;
   background-color: transparent;
   border-bottom: 2px solid transparent; }
   #main-nav #searchform button.holder:hover {
-    border-bottom: 2px solid #000; }
+    border-bottom: 2px solid #404040; }
     #main-nav #searchform button.holder:hover svg circle {
       stroke-dashoffset: -100; }
   #main-nav #searchform button.holder i.material-icons {
@@ -296,7 +298,7 @@ a.inverse-link {
     left: auto;
     transform: rotate(-270deg); }
     #main-nav #searchform button.holder svg circle {
-      stroke-dasharray: 100;
+      stroke-dasharray: 110;
       stroke-dashoffset: 0;
       transition: all 1s cubic-bezier(0.55, 0, 0.1, 1); }
 
@@ -613,7 +615,7 @@ footer#footer {
 
 .listpost-content-wrap {
   background-color: #f5f5f5;
-  padding: 15px 25px;
+  padding: 15px 0 0;
   margin-top: -7px;
   border: 1px solid #404040;
   border-top: none;
@@ -621,7 +623,8 @@ footer#footer {
   border-bottom-right-radius: 4px; }
   .listpost-content-wrap h1 {
     line-height: 22px;
-    margin-bottom: 25px; }
+    margin-bottom: 25px;
+    padding: 0 25px; }
     .listpost-content-wrap h1.entry-title a {
       font-size: 23px;
       position: unset; }
@@ -630,3 +633,32 @@ footer#footer {
         left: 50%;
         margin-left: -35px;
         height: 4px; }
+  .listpost-content-wrap .entry-content {
+    font-family: Aller;
+    padding: 0 25px 15px; }
+    .listpost-content-wrap .entry-content .read-more-wrapper {
+      width: 100%;
+      text-align: right; }
+      .listpost-content-wrap .entry-content .read-more-wrapper .read-more-btn {
+        font-family: Aller;
+        font-size: 16px; }
+  .listpost-content-wrap .entry-footer {
+    padding: 5px 25px 0;
+    background-color: #fff;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    text-align: left; }
+    .listpost-content-wrap .entry-footer .author-pic {
+      border: 1px solid #404040;
+      display: inline-block;
+      border-radius: 50%;
+      padding: 5px;
+      overflow: hidden; }
+
+.conteudo-interno .entry-thumb {
+  height: 340px;
+  margin-left: -15px;
+  margin-right: -15px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed; }

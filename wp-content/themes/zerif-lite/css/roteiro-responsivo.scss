@@ -1,6 +1,8 @@
 @media only screen and (max-width : 1200px) {
-    .grid-sizer, .grid-item {
-    	width: 33.3%;
+    .grid {
+        .grid-sizer, .grid-item {
+        	width: 33.3%;
+        }
     }
 }
 
@@ -12,8 +14,10 @@
 
 /*(portrait)*/
 @media 	only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait), only screen and (min-width : 768px) and (max-width : 895px) {
-    .grid-sizer, .grid-item {
-        width: 50%;
+    .grid {
+        .grid-sizer, .grid-item {
+            width: 50%;
+        }
     }
 }
 
@@ -22,7 +26,9 @@
 
 /* mobile */
 @media only screen and (max-width: 767px) {
-    .grid-sizer, .grid-item {
-        width: 100%;
+    .grid {
+        .grid-sizer, .grid-item {
+            width: 100%;
+        }
     }
 }

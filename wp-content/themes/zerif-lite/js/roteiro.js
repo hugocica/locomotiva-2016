@@ -31,6 +31,9 @@ jQuery(document).ready(function($) {
         mouseenter: function() {
             $this = $(this);
 
+            $('input.search-query').val('');
+            $('input.search-query').trigger('focus');
+
             if ($this.parent().hasClass('active')) {
                 $this.fadeOut(500);
                 setTimeout(function() {
@@ -44,12 +47,10 @@ jQuery(document).ready(function($) {
             }
         },
         mouseleave: function() {
-            container = $('.holder');
-
             $('.holder').parent().removeClass('active');
         }
     });
-
+    
     // blog listing with isotope.js
     $('.grid').isotope({
         itemSelector: '.grid-item',
