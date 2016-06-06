@@ -1184,3 +1184,5 @@ show_admin_bar( false );
 
 include_once get_template_directory().'/metaboxes/setup.php';
 include_once get_template_directory().'/metaboxes/loco-spec.php';
+
+remove_filter('the_content', 'wpautop');

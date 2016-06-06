@@ -345,6 +345,8 @@ footer#footer {
     -ms-transition: -ms-transform 0.8s ease-in-out;
     transition: transform 0.8s ease-in-out;
     font-size: 24px; }
+  .dev-box span {
+    display: inline-block; }
   .dev-box:hover a {
     color: #fff; }
   .dev-box:hover .fa-github {
@@ -370,9 +372,10 @@ footer#footer {
   .home-posts .post-content {
     background-color: rgba(0, 0, 0, 0.7);
     width: 100%;
-    padding: 0 15px;
+    padding: 10px 15px 0;
     position: absolute;
-    bottom: 0; }
+    bottom: 0;
+    text-align: left; }
 
 .newsletter-gray-box, .newsletter-red-box {
   color: #fff;
@@ -625,14 +628,15 @@ footer#footer {
     line-height: 22px;
     margin-bottom: 25px;
     padding: 0 25px; }
-    .listpost-content-wrap h1.entry-title a {
-      font-size: 23px;
-      position: unset; }
-      .listpost-content-wrap h1.entry-title a::after {
-        width: 70px;
-        left: 50%;
-        margin-left: -35px;
-        height: 4px; }
+    .listpost-content-wrap h1.entry-title {
+      text-align: left; }
+      .listpost-content-wrap h1.entry-title a {
+        font-size: 23px;
+        position: unset; }
+        .listpost-content-wrap h1.entry-title a::after {
+          width: 70px;
+          margin-left: 25px;
+          height: 4px; }
   .listpost-content-wrap .entry-content {
     font-family: Aller;
     padding: 0 25px 15px; }
@@ -662,3 +666,18 @@ footer#footer {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed; }
+
+.conteudo-interno .entry-header {
+  text-align: left;
+  margin-top: 15px; }
+  .conteudo-interno .entry-header .entry-title {
+    color: #e96656;
+    font-size: 26px; }
+    .conteudo-interno .entry-header .entry-title:before {
+      height: 4px; }
+
+.conteudo-interno .entry-content {
+  margin-top: 30px;
+  font-size: 16px;
+  line-height: 25px;
+  text-align: left; }

@@ -441,6 +441,9 @@ footer {
 		transition: transform 0.8s ease-in-out;
 		font-size: 24px;
 	}
+	span {
+		display: inline-block;
+	}
 	&:hover {
 		a {
 			color: #fff;
@@ -473,9 +476,10 @@ footer {
 	.post-content {
 		background-color: rgba(0, 0, 0, 0.7);
 		width: 100%;
-		padding: 0 15px;
+		padding: 10px 15px 0;
 		position: absolute;
 		bottom: 0;
+		text-align: left;
 	}
 }
 .newsletter-gray-box, .newsletter-red-box {
@@ -778,14 +782,15 @@ footer {
 		padding: 0 25px;
 
 		&.entry-title {
+			text-align: left;
+			
 			a {
 				font-size: 23px;
 				position: unset;
 
 				&::after {
 					width: 70px;
-					left: 50%;
-					margin-left: -35px;
+					margin-left: 25px;
 					height: 4px;
 				}
 			}
@@ -833,5 +838,22 @@ footer {
 		background-attachment: fixed;
 	}
 	.entry-header {
+		text-align: left;
+		margin-top: 15px;
+
+		.entry-title {
+			color: #e96656;
+			font-size: 26px;
+
+			&:before {
+				height: 4px;
+			}
+		}
+	}
+	.entry-content {
+		margin-top: 30px;
+		font-size: 16px;
+		line-height: 25px;
+		text-align: left;
 	}
 }
