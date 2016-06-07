@@ -71,7 +71,7 @@
 			<?php echo get_avatar($post->post_author, 54); ?>
 		</div>
 		<div class="author-meta">
-
+			<h4 class="author-name"><?php echo get_the_author(); ?></h4>
 		</div>
 	</footer><!-- .entry-footer -->
 

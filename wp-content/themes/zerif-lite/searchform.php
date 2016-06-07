@@ -7,7 +7,7 @@
                 <span class="magnifying-glass">
                     <i class="material-icons">search</i>
                     <svg height="38" width="38">
-                        <circle cx="20" cy="20" fill="rgba(64, 64, 64, 0)" r="16" stroke="#404040" stroke-linecap="round" stroke-width="2"></circle>
+                        <circle cx="20" cy="20" fill="rgba(64, 64, 64, 0)" r="16" stroke="#F03F3D" stroke-linecap="round" stroke-width="2"></circle>
                     </svg>
                 </span>
         </button>

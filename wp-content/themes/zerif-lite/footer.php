@@ -17,20 +17,20 @@
 
 	<div class="container">
 
-		<div class="about-text col-md-4">
+		<div class="about-text col-md-4 col-sm-4">
 			<img src="<?php echo get_template_directory_uri(); ?>/images/logo-footer.png" alt="locomotiva logo branco" />
 			<p>Locomotiva - Empresa Júnior de Rádio e TV</p>
 			<p>Unesp Bauru</p>
 		</div>
 
-		<div class="parceiros-box col-md-4">
+		<div class="parceiros-box col-md-4 col-sm-4">
 			<h2 class="section-title inverse">Parceiros</h2>
 			<div>
 				<img src="<?php echo get_template_directory_uri(); ?>/images/jrcom.png" alt="Jr.COM Empresa Júnior de Computação">
 			</div>
 		</div>
 
-		<div class="contato-box col-md-4">
+		<div class="contato-box col-md-4 col-sm-4">
 			<h2 class="section-title inverse">Contato</h2>
 			<?php
 			if ( !empty($contato_config['contato_email']) ) { ?>
@@ -59,7 +59,7 @@
 
 <div id="copyright-container">
 	<div class="container">
-		<div class="cr-box col-md-8 col-sm-7">
+		<div class="cr-box col-md-8 col-sm-6">
 			<?php
 				if ( date('Y') != '2016' )
 					$date_range = '-' . date('Y');

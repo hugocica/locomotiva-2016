@@ -65,7 +65,7 @@
 					sort($locomodivos_config['locodivos']);
 					foreach ($locomodivos_config['locodivos'] as $locomodivo) {
 						?>
-						<div class="locomodivo col-md-3">
+						<div class="locomodivo col-md-3 col-sm-4">
 							<figure class="locomodivo-pic" style="background-image: url(<?php echo $locomodivo['photo']; ?>);" data-normal="<?php echo $locomodivo['photo']; ?>" data-hover="<?php echo $locomodivo['photo_hover']; ?>">
 							</figure>
 							<div class="locomodivo-content">
