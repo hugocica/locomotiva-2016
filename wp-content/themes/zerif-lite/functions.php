@@ -1187,10 +1187,17 @@ include_once get_template_directory().'/metaboxes/loco-spec.php';
 
 remove_filter('the_content', 'wpautop');
 
+/**
+ * Add custom fields to users
+ *
+ * @param $user: the user object
+ */
 add_action( 'show_user_profile', 'my_show_extra_profile_fields' );
 add_action( 'edit_user_profile', 'my_show_extra_profile_fields' );
 
-function my_show_extra_profile_fields( $user ) { ?>
+function my_show_extra_profile_fields( $user ) {
+
+	?>
 
 	<h3>Redes Sociais</h3>
 
@@ -1215,4 +1222,19 @@ function my_show_extra_profile_fields( $user ) { ?>
 		</tr>
 
 	</table>
-<?php }
+
+	<?php
+}
+
+add_action( 'personal_options_update', 'my_save_extra_profile_fields' );
+add_action( 'edit_user_profile_update', 'my_save_extra_profile_fields' );
+
+function my_save_extra_profile_fields( $user_id ) {
+
+	if ( !current_user_can( 'edit_user', $user_id ) )
+		return false;
+
+	/* Copy and paste this line for additional fields. Make sure to change 'twitter' to the field ID. */
+	update_usermeta( $user_id, 'facebook', $_POST['facebook'] );
+	update_usermeta( $user_id, 'twitter', $_POST['twitter'] );
+}

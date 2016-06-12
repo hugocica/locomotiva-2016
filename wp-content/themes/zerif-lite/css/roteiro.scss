@@ -887,12 +887,38 @@ footer {
 	}
 	.entry-footer {
 		.author-info {
-			border: 1px solid #404040;
-			background-color: #f5f5f5;
 			padding: 25px 50px 15px;
 			margin-top: 30px;
 			text-align: left;
+			border-bottom: 1px solid #ccc;
+			border-top: 1px solid #ccc;
+			position: relative;
 
+			&:after, &:before {
+				content: "";
+				display: block;
+
+				/* The circle */
+				width: 7px;
+				height: 7px;
+				background: #FFF;
+				border: 1px solid #aaa;
+				box-shadow: #FFF 0 0 0 10px;
+				-webkit-border-radius: 100%;
+				-moz-border-radius: 100%;
+				border-radius: 100%;
+
+				/* Put in the middle of post's border bottom */
+				position: absolute;
+				left: 50%;
+				margin-left: -5px;
+			}
+			&:after {
+				bottom: -4px;
+			}
+			&:before {
+				top: -4px;
+			}
 			.author-pic {
 				display: inline-block;
 				vertical-align: middle;
