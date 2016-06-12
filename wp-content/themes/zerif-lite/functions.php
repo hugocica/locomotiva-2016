@@ -1186,3 +1186,33 @@ include_once get_template_directory().'/metaboxes/setup.php';
 include_once get_template_directory().'/metaboxes/loco-spec.php';
 
 remove_filter('the_content', 'wpautop');
+
+add_action( 'show_user_profile', 'my_show_extra_profile_fields' );
+add_action( 'edit_user_profile', 'my_show_extra_profile_fields' );
+
+function my_show_extra_profile_fields( $user ) { ?>
+
+	<h3>Redes Sociais</h3>
+
+	<table class="form-table">
+
+		<tr>
+			<th><label for="facebook">Facebook</label></th>
+
+			<td>
+				<input type="text" name="facebook" id="facebook" value="<?php echo esc_attr( get_the_author_meta( 'facebook', $user->ID ) ); ?>" class="regular-text" /><br />
+				<span class="description">Digitar o link para o Facebook</span>
+			</td>
+		</tr>
+
+		<tr>
+			<th><label for="twitter">Twitter</label></th>
+
+			<td>
+				<input type="text" name="twitter" id="twitter" value="<?php echo esc_attr( get_the_author_meta( 'twitter', $user->ID ) ); ?>" class="regular-text" /><br />
+				<span class="description">Digitar o nome de usuário do Twitter</span>
+			</td>
+		</tr>
+
+	</table>
+<?php }

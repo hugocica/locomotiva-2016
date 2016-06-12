@@ -20,15 +20,17 @@ get_header(); ?>
 
 					 get_template_part( 'content', 'single' );
 
-					 echo '<div class="container">';
-					//  zerif_post_nav();
+					 ?>
+					 <div class="container">
+					 <?php
 
 					// If comments are open or we have at least one comment, load up the comment template
 					if ( comments_open() || '0' != get_comments_number() ) :
 						comments_template('');
 					endif;
-
-					echo '</div>';
+					?>
+					</div>
+					<?php
 				endwhile; // end of the loop. ?>
 			</main><!-- #main -->
 		</div><!-- #primary -->
