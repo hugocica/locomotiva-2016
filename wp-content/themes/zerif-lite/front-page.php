@@ -50,11 +50,13 @@
 									$class = "col-lg-4 col-md-4 col-sm-6 normal";
 								$count_posts++;
 								$bg_img = wp_get_attachment_image_src( get_post_thumbnail_id(get_the_ID()), 'big' ); ?>
-								<article id="post-<?php the_ID(); ?>" class="<?php echo $class; ?> home-posts" style="background-image: url('<?php echo $bg_img[0]; ?>');">
-									<div class="post-content">
-										<a href="<?php the_permalink(); ?>"><h3><?php the_title(); ?></h3></a>
-									</div>
-								</article>
+								<a href="<?php the_permalink(); ?>">
+									<article id="post-<?php the_ID(); ?>" class="<?php echo $class; ?> home-posts" style="background-image: url('<?php echo $bg_img[0]; ?>');">
+										<div class="post-content">
+											<h3><?php the_title(); ?></h3>
+										</div>
+									</article>
+								</a>
 							<?php endwhile;
 						wp_reset_postdata();
 						endif;
