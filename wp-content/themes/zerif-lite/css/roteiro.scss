@@ -886,9 +886,21 @@ footer {
 				height: 4px;
 			}
 		}
+		.entry-meta {
+			margin-top: 25px;
+
+			img {
+				max-width: 24px;
+			}
+			.entry-date {
+				display: inline-block;
+				margin: 0;
+				margin-left: 5px;
+			}
+		}
 	}
 	.entry-content {
-		margin-top: 30px;
+		margin-top: 20px;
 		font-size: 16px;
 		line-height: 25px;
 		text-align: left;
@@ -946,7 +958,7 @@ footer {
 				}
 				.social-media-wrapper {
 					margin-bottom: 0;
-					
+
 					.social-link {
 						width: 36px;
 						height: 36px;

@@ -694,9 +694,17 @@ footer#footer {
     font-size: 26px; }
     .conteudo-interno .entry-header .entry-title:before {
       height: 4px; }
+  .conteudo-interno .entry-header .entry-meta {
+    margin-top: 25px; }
+    .conteudo-interno .entry-header .entry-meta img {
+      max-width: 24px; }
+    .conteudo-interno .entry-header .entry-meta .entry-date {
+      display: inline-block;
+      margin: 0;
+      margin-left: 5px; }
 
 .conteudo-interno .entry-content {
-  margin-top: 30px;
+  margin-top: 20px;
   font-size: 16px;
   line-height: 25px;
   text-align: left; }
