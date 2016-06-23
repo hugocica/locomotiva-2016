@@ -67,59 +67,141 @@
 				</section>
 
                 <section id="home-content">
+					<div class="entry-content">
+						<section id="servicos-section" class="page-section container">
+							<h2 class="section-title"><span>Confira nossos</span>Serviços</h2>
+							<div class="section-content-wrapper">
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+									<img src="http://localhost/locomotiva/wp-content/themes/zerif-lite/images/icons/videos-vetor.png" alt="ícone serviços de vídeos">
+									<div class="section-content-wrapper">
+										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+									<img src="http://localhost/locomotiva/wp-content/themes/zerif-lite/images/icons/cobertura-vetor.png" alt="ícone serviços de cobertura">
+									<div class="section-content-wrapper">
+										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+									<img src="http://localhost/locomotiva/wp-content/themes/zerif-lite/images/icons/consulting.png" alt="ícone serviços de consultoria">
+									<div class="section-content-wrapper">
+										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+									</div>
+								</div>
+							</div>
+						</section>
+
+						<section id="newsletter-section" class="page-section clearfix">
+							<div class="newsletter-gray-box col-lg-6 col-md-6">
+								<div class="right-box">
+									<p>OS <strong>LOCOMOTIVOS</strong> TRABALHAM <strong>A TODO VAPOR</strong><br>PARA <strong>SEMPRE</strong><br>TRAZER CONTEÚDOS NOVOS PARA VOCÊ!</p>
+									<p>JÁ PENSOU EM FICAR POR DENTRO<br>DESSAS NOVIDADES?</p>
+								</div>
+							</div>
+							<div class="newsletter-red-box col-lg-6 col-md-6">
+								<div class="left-box">
+									<p>CADASTRE SEU E-MAIL<br>E MANTENHA-SE ATUALIZADO</p>
+									<form class="subscriber-form" method="post">
+										<div class="loader"></div>
+										<input type="email" id="email">
+										<div class="indicator" data-content="Digite aqui seu e-mail"></div>
+									</form>
+								</div>
+							</div>
+						</section>
+					</div>
+
+					<?php /* ?>
                     <?php while ( have_posts() ) : the_post(); ?>
+
 					<div class="entry-content">
 
-					<?php the_content(); ?>
+					<?php //the_content(); ?>
 
-				</div><!-- .entry-content -->
+
+					</div><!-- .entry-content -->
 
 					<?php endwhile;  ?>
-                </section>
+					*/ ?>
 
-				<?php if ( !empty($page_config['show_youtube']) || !empty($page_config['show_podcast']) ) { ?>
-				<?php
-					if ( $page_config['show_youtube'] == 'Sim' && $page_config['show_podcast'] == 'Sim' ) {
-						$youtube_class = 'col-md-6 padding-left-0';
-						$podcast_class = "col-md-6 padding-right-0";
-					} else {
-						$youtube_class = 'col-md-12';
-						$podcast_class = 'col-md-12';
-					}
-				?>
-				<section id="midia-home-section" class="page-section container">
-					<?php if ( $page_config['show_youtube'] == 'Sim' ) { ?>
-						<div class="youtube-container <?php echo $youtube_class; ?>">
-							<h2 class="section-title"><span>Assista nossos</span>vídeos</h2>
-								<iframe id="ytplayer" class="youtube-player" type="text/html" width="100%" src="http://www.youtube.com/embed?listType=user_uploads&list=LocomotivaJr" frameborder="0" style="margin-bottom: 15px;" /></iframe>
-								<script src="https://apis.google.com/js/platform.js"></script>
-								<div class="g-ytsubscribe" style="margin-top: 15px; padding-top: 15px;" data-channel="LocomotivaJr" data-layout="full" data-count="hidden"></div>
-						</div>
-					<?php } ?>
-					<?php if ( $page_config['show_podcast'] == 'Sim' ) { ?>
-						<div class="podcast-container <?php echo $podcast_class; ?>">
-							<h2 class="section-title"><span>Ouça nosso</span>podcast</h2>
-						</div>
-					<?php } ?>
-				</section>
-				<?php } ?>
+            </section>
 
-				<section id="social-home-section" class="page-section container">
-					<div class="col-md-12">
-						<h2 class="section-title"><span>Nos siga em nossas</span>redes sociais</h2>
-						<div class="facebook-wrapper col-md-4 padding-left-0">
-							<div class="fb-page" data-href="https://www.facebook.com/locomotivajr" data-tabs="timeline" data-width="320" data-height="380" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/locomotivajr"><a href="https://www.facebook.com/locomotivajr">Locomotiva - Empresa Jr. RTV</a></blockquote></div></div>
-						</div>
-						<div class="insta-wrapper col-md-6">
-
-						</div>
+			<?php if ( !empty($page_config['show_youtube']) || !empty($page_config['show_podcast']) ) { ?>
+			<?php
+				if ( $page_config['show_youtube'] == 'Sim' && $page_config['show_podcast'] == 'Sim' ) {
+					$youtube_class = 'col-md-6 padding-left-0';
+					$podcast_class = "col-md-6 padding-right-0";
+				} else {
+					$youtube_class = 'col-md-12';
+					$podcast_class = 'col-md-12';
+				}
+			?>
+			<section id="midia-home-section" class="page-section container">
+				<?php if ( $page_config['show_youtube'] == 'Sim' ) { ?>
+					<div class="youtube-container <?php echo $youtube_class; ?>">
+						<h2 class="section-title"><span>Assista nossos</span>vídeos</h2>
+							<iframe id="ytplayer" class="youtube-player" type="text/html" width="100%" src="http://www.youtube.com/embed?listType=user_uploads&list=LocomotivaJr" frameborder="0" style="margin-bottom: 15px;" /></iframe>
+							<script src="https://apis.google.com/js/platform.js"></script>
+							<div class="g-ytsubscribe" style="margin-top: 15px; padding-top: 15px;" data-channel="LocomotivaJr" data-layout="full" data-count="hidden"></div>
 					</div>
-				</section>
+				<?php } ?>
+				<?php if ( $page_config['show_podcast'] == 'Sim' ) { ?>
+					<div class="podcast-container <?php echo $podcast_class; ?>">
+						<h2 class="section-title"><span>Ouça nosso</span>podcast</h2>
+					</div>
+				<?php } ?>
+			</section>
+			<?php } ?>
 
-			</main><!-- #main -->
+			<section id="social-home-section" class="page-section container">
+				<div class="col-md-12">
+					<h2 class="section-title"><span>Nos siga em nossas</span>redes sociais</h2>
+					<div class="facebook-wrapper col-md-4 padding-left-0">
+						<div class="fb-page" data-href="https://www.facebook.com/locomotivajr" data-tabs="timeline" data-width="320" data-height="380" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/locomotivajr"><a href="https://www.facebook.com/locomotivajr">Locomotiva - Empresa Jr. RTV</a></blockquote></div></div>
+					</div>
+					<div class="insta-wrapper col-md-6">
 
-		</div><!-- #primary -->
+					</div>
+				</div>
+			</section>
+
+		</main><!-- #main -->
+
+	</div><!-- #primary -->
 
 <div id="fb-root"></div>
+
+<script>
+	(function () {
+		var content, form, indicator, input, loader;
+		input = document.querySelector('input');
+		form = document.querySelector('form');
+		indicator = document.querySelector('.indicator');
+		loader = document.querySelector('.loader');
+		content = input.value;
+		form.addEventListener('submit', function (e) {
+			e.preventDefault();
+			indicator.setAttribute('data-content', 'Saving...');
+			loader.classList.add('full');
+			return setTimeout(function () {
+				indicator.setAttribute('data-content', 'You\'ve been subscribed!');
+				loader.classList.add('done');
+				input.classList.add('full');
+				return input.value('');
+			}, 3000);
+		});
+		input.addEventListener('input', function () {
+			return indicator.setAttribute('data-content', 'Now hit enter!');
+		});
+		balapaCop('Subscribe Form Interaction', '#999');
+	}.call(this));
+</script>
 
 <?php get_footer(); ?>
