@@ -66,5 +66,15 @@
 								'template' => get_stylesheet_directory() . '/metaboxes/homepage-meta.php'
 							)
 						);
+		$servicos_config = new WPAlchemy_MetaBox(
+							array(
+								'id' => '_servicos_metabox',
+								'title' => 'Serviços',
+								'types' => array('page'),
+								'context' => 'normal',
+								'priority' => 'high',
+								'template' => get_stylesheet_directory() . '/metaboxes/servicos-meta.php'
+							)
+						);
 	}
 ?>

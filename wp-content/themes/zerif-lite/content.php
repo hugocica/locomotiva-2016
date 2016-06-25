@@ -1,6 +1,6 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class('grid-item'); ?>>
 
-	<?php if ( ! is_search() ) : ?>
+	<?php //if ( ! is_search() ) : ?>
 
 		<?php if ( has_post_thumbnail()) : ?>
 
@@ -22,11 +22,11 @@
 
 		<?php endif; ?>
 
-	<?php else:  ?>
+	<?php /* else:  ?>
 
 			<div class="listpost-content-wrap-full">
 
-	<?php endif; ?>
+	<?php endif; */ ?>
 
 	<div class="list-post-top">
 

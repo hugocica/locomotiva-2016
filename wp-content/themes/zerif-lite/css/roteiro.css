@@ -393,28 +393,31 @@ footer#footer {
   .home-posts:hover .post-content {
     color: #fff; }
 
-.newsletter-gray-box, .newsletter-red-box {
+#home-content #servicos-section .servicos-content-wrapper {
+  margin-top: 15px; }
+
+#home-content #newsletter-section .newsletter-gray-box, #home-content #newsletter-section .newsletter-red-box {
   color: #fff;
   padding: 65px 55px 40px;
   height: 300px; }
-  .newsletter-gray-box p, .newsletter-red-box p {
+  #home-content #newsletter-section .newsletter-gray-box p, #home-content #newsletter-section .newsletter-red-box p {
     font-size: 22px;
     line-height: 28px; }
-    .newsletter-gray-box p strong, .newsletter-red-box p strong {
+    #home-content #newsletter-section .newsletter-gray-box p strong, #home-content #newsletter-section .newsletter-red-box p strong {
       font-size: 22px;
       line-height: 28px; }
 
-.newsletter-gray-box {
+#home-content #newsletter-section .newsletter-gray-box {
   background-color: #404041; }
 
-.newsletter-red-box {
+#home-content #newsletter-section .newsletter-red-box {
   background-color: #F03F3D; }
-  .newsletter-red-box .subscriber-form {
+  #home-content #newsletter-section .newsletter-red-box .subscriber-form {
     display: block;
     position: relative;
     width: 450px;
     overflow: hidden; }
-    .newsletter-red-box .subscriber-form .loader {
+    #home-content #newsletter-section .newsletter-red-box .subscriber-form .loader {
       position: absolute;
       top: 0;
       left: 0;
@@ -426,14 +429,14 @@ footer#footer {
       pointer-events: none;
       -webkit-transition: 3s all ease;
       transition: 3s all ease; }
-      .newsletter-red-box .subscriber-form .loader.full {
+      #home-content #newsletter-section .newsletter-red-box .subscriber-form .loader.full {
         width: 100%; }
-      .newsletter-red-box .subscriber-form .loader.done {
+      #home-content #newsletter-section .newsletter-red-box .subscriber-form .loader.done {
         background: #e74c3c;
         -webkit-transition: .3s all ease;
         transition: .3s all ease;
         height: 0; }
-    .newsletter-red-box .subscriber-form input {
+    #home-content #newsletter-section .newsletter-red-box .subscriber-form input {
       line-height: 80px;
       width: 100%;
       font-size: 24px;
@@ -449,19 +452,19 @@ footer#footer {
       -webkit-transition: .3s all ease;
       transition: .3s all ease;
       font-family: Aller, sans-serif; }
-      .newsletter-red-box .subscriber-form input.full {
+      #home-content #newsletter-section .newsletter-red-box .subscriber-form input.full {
         pointer-events: none !important;
         width: 0%; }
-        .newsletter-red-box .subscriber-form input.full:focus + .indicator {
+        #home-content #newsletter-section .newsletter-red-box .subscriber-form input.full:focus + .indicator {
           height: 5px;
           color: #e74c3c; }
-      .newsletter-red-box .subscriber-form input:focus {
+      #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus {
         color: white; }
-        .newsletter-red-box .subscriber-form input:focus + .indicator {
+        #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus + .indicator {
           height: 100%; }
-          .newsletter-red-box .subscriber-form input:focus + .indicator:after {
+          #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus + .indicator:after {
             color: #e74c3c; }
-    .newsletter-red-box .subscriber-form .indicator {
+    #home-content #newsletter-section .newsletter-red-box .subscriber-form .indicator {
       position: absolute;
       left: 0;
       bottom: 0;
@@ -472,7 +475,7 @@ footer#footer {
       transition: .3s all ease;
       z-index: 9;
       font-family: Aller, sans-serif; }
-      .newsletter-red-box .subscriber-form .indicator:after {
+      #home-content #newsletter-section .newsletter-red-box .subscriber-form .indicator:after {
         content: attr(data-content);
         position: absolute;
         top: -50px;
@@ -485,7 +488,11 @@ footer#footer {
         font-size: 24px;
         z-index: 999;
         text-align: left;
-        font-weight: 300; }
+        font-weight: 300;
+        background-image: url(../images/icons/paper-plane.png);
+        background-repeat: no-repeat;
+        background-position: 95% 75%;
+        background-size: 40px; }
 
 .right-box {
   float: right;

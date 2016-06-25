@@ -66,37 +66,30 @@
 					</a>
 				</section>
 
+				<?php
+					$services = get_post_meta( get_the_ID(), '_servicos_metabox', true );
+				?>
+
                 <section id="home-content">
 					<div class="entry-content">
+
+					<?php if ( $services['show_services'] == 'Sim' ) { ?>
 						<section id="servicos-section" class="page-section container">
 							<h2 class="section-title"><span>Confira nossos</span>Serviços</h2>
 							<div class="section-content-wrapper">
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<img src="http://localhost/locomotiva/wp-content/themes/zerif-lite/images/icons/videos-vetor.png" alt="ícone serviços de vídeos">
-									<div class="section-content-wrapper">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
+
+								<?php foreach ($services['services'] as $service ) { ?>
+									<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+										<img src="<?php echo $service['service_pic']; ?>" alt="ícone serviços de vídeos">
+										<div class="servicos-content-wrapper">
+											<p><?php echo $service['description']; ?></p>
+										</div>
 									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<img src="http://localhost/locomotiva/wp-content/themes/zerif-lite/images/icons/cobertura-vetor.png" alt="ícone serviços de cobertura">
-									<div class="section-content-wrapper">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
-									</div>
-								</div>
-								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
-									<img src="http://localhost/locomotiva/wp-content/themes/zerif-lite/images/icons/consulting.png" alt="ícone serviços de consultoria">
-									<div class="section-content-wrapper">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-										tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-										quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo</p>
-									</div>
-								</div>
+								<?php } ?>
+
 							</div>
 						</section>
+					<?php } ?>
 
 						<section id="newsletter-section" class="page-section clearfix">
 							<div class="newsletter-gray-box col-lg-6 col-md-6">

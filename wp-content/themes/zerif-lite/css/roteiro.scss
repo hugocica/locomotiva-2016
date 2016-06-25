@@ -511,125 +511,139 @@ footer {
 		}
 	}
 }
-.newsletter-gray-box, .newsletter-red-box {
-	color: #fff;
-	padding: 65px 55px 40px;
-	height: 300px;
-
-	p {
-		font-size: 22px;
-		line-height: 28px;
-
-		strong {
-			font-size: 22px;
-			line-height: 28px;
+#home-content {
+	#servicos-section {
+		.servicos-content-wrapper {
+			margin-top: 15px;
 		}
 	}
-}
-.newsletter-gray-box {
-	background-color:#404041;
-}
-.newsletter-red-box {
-	background-color: #F03F3D;
 
-	.subscriber-form {
-		display: block;
-		position: relative;
-		width: 450px;
-		overflow: hidden;
+	#newsletter-section {
+		.newsletter-gray-box, .newsletter-red-box {
+			color: #fff;
+			padding: 65px 55px 40px;
+			height: 300px;
 
-		.loader {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: rgba(255,255,255,.15);
-			width: 0%;
-			z-index: 99;
-			pointer-events: none;
-			-webkit-transition: 3s all ease;
-			transition: 3s all ease;
+			p {
+				font-size: 22px;
+				line-height: 28px;
 
-			&.full {
-				width: 100%;
-			}
-			&.done {
-				background: #e74c3c;
-				-webkit-transition: .3s all ease;
-				transition: .3s all ease;
-				height: 0;
-			}
-		}
-
-		input {
-			line-height: 80px;
-			width: 100%;
-			font-size: 24px;
-			padding: 0 20px;
-			border: none;
-			cursor: pointer;
-			color: blue;
-			position: relative;
-			z-index: 10;
-			background: transparent;
-			color: transparent;
-			font-weight: 300;
-			-webkit-transition: .3s all ease;
-			transition: .3s all ease;
-		  	font-family: Aller, sans-serif;
-
-			&.full {
-				pointer-events: none !important;
-				width: 0%;
-
-				&:focus {
-					+ .indicator {
-						height: 5px;
-						color: #e74c3c;
-					}
+				strong {
+					font-size: 22px;
+					line-height: 28px;
 				}
 			}
+		}
+		.newsletter-gray-box {
+			background-color:#404041;
+		}
+		.newsletter-red-box {
+			background-color: #F03F3D;
 
-			&:focus {
-				color: white;
+			.subscriber-form {
+				display: block;
+				position: relative;
+				width: 450px;
+				overflow: hidden;
 
-				+ .indicator {
-					height: 100%;
+				.loader {
+					position: absolute;
+					top: 0;
+					left: 0;
+					right: 0;
+					bottom: 0;
+					background: rgba(255,255,255,.15);
+					width: 0%;
+					z-index: 99;
+					pointer-events: none;
+					-webkit-transition: 3s all ease;
+					transition: 3s all ease;
+
+					&.full {
+						width: 100%;
+					}
+					&.done {
+						background: #e74c3c;
+						-webkit-transition: .3s all ease;
+						transition: .3s all ease;
+						height: 0;
+					}
+				}
+
+				input {
+					line-height: 80px;
+					width: 100%;
+					font-size: 24px;
+					padding: 0 20px;
+					border: none;
+					cursor: pointer;
+					color: blue;
+					position: relative;
+					z-index: 10;
+					background: transparent;
+					color: transparent;
+					font-weight: 300;
+					-webkit-transition: .3s all ease;
+					transition: .3s all ease;
+				  	font-family: Aller, sans-serif;
+
+					&.full {
+						pointer-events: none !important;
+						width: 0%;
+
+						&:focus {
+							+ .indicator {
+								height: 5px;
+								color: #e74c3c;
+							}
+						}
+					}
+
+					&:focus {
+						color: white;
+
+						+ .indicator {
+							height: 100%;
+
+							&:after {
+								color: #e74c3c;
+							}
+						}
+					}
+				}
+
+				.indicator {
+					position: absolute;
+					left: 0;
+					bottom: 0;
+					right: 0;
+					height: 5px;
+					background: #404041;
+					-webkit-transition: .3s all ease;
+					transition: .3s all ease;
+					z-index: 9;
+				  	font-family: Aller, sans-serif;
 
 					&:after {
-						color: #e74c3c;
+						content: attr(data-content);
+						position: absolute;
+						top: -50px;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						color: #fff;
+						-webkit-transition: inherit;
+						transition: inherit;
+						font-size: 24px;
+						z-index: 999;
+						text-align: left;
+						font-weight: 300;
+						background-image: url(../images/icons/paper-plane.png);
+						background-repeat: no-repeat;
+						background-position: 95% 75%;
+						background-size: 40px;
 					}
 				}
-			}
-		}
-
-		.indicator {
-			position: absolute;
-			left: 0;
-			bottom: 0;
-			right: 0;
-			height: 5px;
-			background: #404041;
-			-webkit-transition: .3s all ease;
-			transition: .3s all ease;
-			z-index: 9;
-		  	font-family: Aller, sans-serif;
-
-			&:after {
-				content: attr(data-content);
-				position: absolute;
-				top: -50px;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				color: #fff;
-				-webkit-transition: inherit;
-				transition: inherit;
-				font-size: 24px;
-				z-index: 999;
-				text-align: left;
-				font-weight: 300;
 			}
 		}
 	}

@@ -107,11 +107,12 @@ function frmFrontFormJS(){
 
 	function loadDropzone( i, repeatRow ) {
 		var uploadFields = __frmDropzone;
-		var selector = '[id ^="'+ uploadFields[i].htmlID +'"][id $="_dropzone"]';
+		var selector = '#'+ uploadFields[i].htmlID + '_dropzone';
+		var fieldName = uploadFields[i].fieldName;
 
-		if ( typeof repeatRow !== 'undefined' ) {
-			selector = '#'+ uploadFields[i].htmlID + '-' + repeatRow +'_dropzone';
-			uploadFields[i].fieldName = uploadFields[i].fieldName.replace('[0]', '['+ repeatRow +']');
+		if ( typeof repeatRow !== 'undefined' && selector.indexOf('-0_dropzone') !== -1 ) {
+			selector = selector.replace( '-0_dropzone', '-' + repeatRow +'_dropzone' );
+			fieldName = fieldName.replace('[0]', '['+ repeatRow +']');
 			delete uploadFields[i].mockFiles;
 		}
 
@@ -158,7 +159,7 @@ function frmFrontFormJS(){
 					var mediaIDs = jQuery.parseJSON(response);
 					for ( var m = 0; m < mediaIDs.length; m++ ) {
 						if ( uploadFields[i].uploadMultiple !== true ) {
-							jQuery('input[name="'+ uploadFields[i].fieldName +'"]').val( mediaIDs[m] );
+							jQuery('input[name="'+ fieldName +'"]').val( mediaIDs[m] );
 						}
 					}
 				});
@@ -172,7 +173,7 @@ function frmFrontFormJS(){
 
 				this.on('removedfile', function( file ) {
 					if ( uploadFields[i].uploadMultiple !== true ) {
-						jQuery('input[name="'+ uploadFields[i].fieldName +'"]').val('');
+						jQuery('input[name="'+ fieldName +'"]').val('');
 					}
 				});
 
@@ -1436,7 +1437,7 @@ function frmFrontFormJS(){
 		}
 
 		if ( childFieldArgs.fieldType == 'lookup' ) {
-			updateLookupFieldOptions( childFieldArgs );
+			updateLookupFieldOptions( childFieldArgs, parentRepeatArgs );
 		} else {
 			// If the original event was NOT triggered from a direct value change to the Lookup field,
 			// do not update the text field value
@@ -1446,13 +1447,40 @@ function frmFrontFormJS(){
 		}
 	}
 
-	function updateLookupFieldOptions( childFieldArgs ) {
-		var childFieldElements = getAllFieldDivsOnCurrentPage(childFieldArgs);
+	function updateLookupFieldOptions( childFieldArgs, parentRepeatArgs ) {
+		var childFieldElements = [];
+		if ( parentRepeatArgs.repeatRow !== '' ) {
+			childFieldElements = getRepeatingFieldDivOnCurrentPage( childFieldArgs, parentRepeatArgs );
+		} else {
+			childFieldElements = getAllFieldDivsOnCurrentPage(childFieldArgs);
+		}
 
 		for ( var i = 0, l=childFieldElements.length; i<l; i++ ) {
 			addRepeatRow( childFieldArgs, childFieldElements[i].id );
 			updateSingleLookupField( childFieldArgs, childFieldElements[i] );
 		}
+	}
+
+	/**
+	 * Get the div for a repeating field on the current page
+	 * @param {Object} childFieldArgs
+	 * @param {string} childFieldArgs.fieldId
+	 * @param {Object} parentRepeatArgs
+	 * @param {string} parentRepeatArgs.repeatingSection
+	 * @param {string} parentRepeatArgs.repeatRow
+	 * @returns {Array}
+     */
+	function getRepeatingFieldDivOnCurrentPage( childFieldArgs, parentRepeatArgs ) {
+		var childFieldDivs = [];
+
+		var selector = 'frm_field_' + childFieldArgs.fieldId + '-';
+		selector += parentRepeatArgs.repeatingSection + '-' + parentRepeatArgs.repeatRow + '_container';
+		var container = document.getElementById( selector );
+		if ( container !== null ) {
+			childFieldDivs.push( container );
+		}
+
+		return childFieldDivs;
 	}
 
 	function updateWatchingFieldValue( childFieldArgs, parentRepeatArgs ) {
@@ -1644,9 +1672,7 @@ function frmFrontFormJS(){
 				triggerChange(jQuery(childSelect), childFieldArgs.fieldKey);
 			}
 		} else {
-			// Add Loading text
-			childSelect.options.length = 1;
-			childSelect.options[1]=new Option( frm_js.loading_text, '', false, false );
+			addLoadingTextToLookup( childSelect );
 
 			// If all parents have values, check for updated options
 			jQuery.ajax({
@@ -1670,6 +1696,13 @@ function frmFrontFormJS(){
 	function maybeUpdateChosenOptions( childSelect ) {
 		if ( childSelect.className.indexOf( 'frm_chzn' ) > -1 && jQuery().chosen ) {
 			jQuery( childSelect ).trigger('chosen:updated');
+		}
+	}
+
+	function addLoadingTextToLookup( childSelect ) {
+		if ( ! childSelect.value ) {
+			childSelect.options.length = 1;
+			childSelect.options[1] = new Option(frm_js.loading_text, '', false, false);
 		}
 	}
 
@@ -3549,6 +3582,9 @@ function frmFrontFormJS(){
 				$edit.removeClass('frm_inplace_edit').addClass('frm_cancel_edit');
 				$edit.html(cancel);
 				checkConditionalLogic( 'editInPlace' );
+
+				// Make sure fields just loaded are properly bound
+				jQuery(document).on('change', '.frm-show-form input[name^="item_meta"], .frm-show-form select[name^="item_meta"], .frm-show-form textarea[name^="item_meta"]', maybeCheckDependent);
 				checkFieldsOnPage();
 			}
 		});
@@ -3844,7 +3880,7 @@ function frmFrontFormJS(){
 			});
 
 			jQuery(document).on('change', '.frm-show-form input[name^="item_meta"], .frm-show-form select[name^="item_meta"], .frm-show-form textarea[name^="item_meta"]', maybeCheckDependent);
-			
+
 			jQuery(document).on('click', '.frm-show-form input[type="submit"], .frm-show-form input[name="frm_prev_page"], .frm-show-form .frm_save_draft', setNextPage);
             
             jQuery(document).on('change', '.frm_other_container input[type="checkbox"], .frm_other_container input[type="radio"], .frm_other_container select', showOtherText);

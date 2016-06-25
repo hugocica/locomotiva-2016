@@ -12,11 +12,15 @@ get_header(); ?>
 
 	<div class="container">
 
-		<div class="content-left-wrap col-md-9">
+		<div class="content-left-wrap col-md-12 padding-left-0 padding-right-0">
 
 			<div id="primary" class="content-area">
 
 				<main id="main" class="site-main" role="main">
+
+				<?php
+					$not_in = array();
+				?>
 
 				<?php if ( have_posts() ) : ?>
 
@@ -26,15 +30,20 @@ get_header(); ?>
 
 					</header><!-- .page-header -->
 
-					<?php while ( have_posts() ) : the_post(); ?>
+					<div class="grid"> <?php
+					while ( have_posts() ) : the_post();
 
-						<?php get_template_part( 'content', get_post_format() ); ?>
+						array_push( $not_in, get_the_ID() );
+						get_template_part( 'content', get_post_format() );
 
-					<?php endwhile; ?>
+					endwhile; ?>
+					</div> <?php
 
-					<?php zerif_paging_nav(); ?>
+					//zerif_paging_nav();
+					echo do_shortcode('[ajax_load_more post_type="post" repeater="default" posts_per_page="'.$posts_per_page.'" exclude="'. implode(',', $not_in) .'" transition="fade" pause="true" scroll="false" button_label="Carregar Mais"]');
 
-				<?php else : ?>
+
+				else : ?>
 
 					<?php get_template_part( 'content', 'none' ); ?>
 
@@ -46,11 +55,13 @@ get_header(); ?>
 
 		</div><!-- .content-left-wrap -->
 
+		<?php /*
 		<div class="sidebar-wrap col-md-3 content-left-wrap">
 
 			<?php get_sidebar(); ?>
 
 		</div><!-- .sidebar-wrap -->
+		*/ ?>
 
 	</div><!-- .container -->
 
