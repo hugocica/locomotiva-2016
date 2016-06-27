@@ -50,7 +50,7 @@ jQuery(document).ready(function($) {
             $('.holder').parent().removeClass('active');
         }
     });
-    
+
     // blog listing with isotope.js
     $('.grid').isotope({
         itemSelector: '.grid-item',
@@ -59,4 +59,10 @@ jQuery(document).ready(function($) {
             columnWidth: '.grid-sizer'
         }
     });
+    setTimeout(
+        function() {
+            $('.grid').isotope();
+        },
+        100
+    );
 });
