@@ -891,6 +891,32 @@ footer {
 	}
 }
 .filters-container {
+	margin-top: -25px;
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+	position: relative;
+	border-bottom: 2px solid #404040;
+	display: inline-block;
+	width: 100%;
+
+	&:after {
+		content: "";
+	    display: block;
+	    /* The circle */
+	    width: 20px;
+	    height: 20px;
+	    background: #FFF;
+	    border: 2px solid #F03F3D;
+	    box-shadow: #FFF 0 0 0 10px;
+	    -webkit-border-radius: 100%;
+	    -moz-border-radius: 100%;
+	    border-radius: 100%;
+	    /* Put in the middle of post's border bottom */
+	    position: absolute;
+		bottom: -10px;
+	    left: 50%;
+	    margin-left: -5px;
+	}
 	.filter-label {
 		display: block;
 		font-weight: 700;
@@ -898,10 +924,17 @@ footer {
 		margin-bottom: 5px;
 	}
 	.filter-wrapper {
-		padding-left: 0;
 		text-align: left;
-		margin-bottom: 45px;
 
+		&:first-of-type {
+			padding-left: 0;
+		}
+		&:nth-child(2) {
+			padding: 0  10px;
+		}
+		&:last-of-type {
+			padding-right: 0;
+		}
 		ul.filter-options {
 			list-style: none;
 			display: inline-block;

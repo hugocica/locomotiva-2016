@@ -700,38 +700,66 @@ footer#footer {
       float: right;
       margin-top: 20px; }
 
-.filters-container .filter-label {
-  display: block;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 5px; }
-
-.filters-container .filter-wrapper {
-  padding-left: 0;
-  text-align: left;
-  margin-bottom: 45px; }
-  .filters-container .filter-wrapper ul.filter-options {
-    list-style: none;
-    display: inline-block;
-    margin-left: 10px;
-    margin-bottom: 0;
-    width: 85%; }
-    .filters-container .filter-wrapper ul.filter-options li {
+.filters-container {
+  margin-top: -25px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  position: relative;
+  border-bottom: 2px solid #404040;
+  display: inline-block;
+  width: 100%; }
+  .filters-container:after {
+    content: "";
+    display: block;
+    /* The circle */
+    width: 20px;
+    height: 20px;
+    background: #FFF;
+    border: 2px solid #F03F3D;
+    box-shadow: #FFF 0 0 0 10px;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    border-radius: 100%;
+    /* Put in the middle of post's border bottom */
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    margin-left: -5px; }
+  .filters-container .filter-label {
+    display: block;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px; }
+  .filters-container .filter-wrapper {
+    text-align: left; }
+    .filters-container .filter-wrapper:first-of-type {
+      padding-left: 0; }
+    .filters-container .filter-wrapper:nth-child(2) {
+      padding: 0  10px; }
+    .filters-container .filter-wrapper:last-of-type {
+      padding-right: 0; }
+    .filters-container .filter-wrapper ul.filter-options {
+      list-style: none;
       display: inline-block;
-      text-transform: uppercase;
-      border: 1px solid #404040;
-      padding: 5px 12px;
-      margin: 0 5px;
-      cursor: pointer; }
-      .filters-container .filter-wrapper ul.filter-options li.active {
-        cursor: default; }
-  .filters-container .filter-wrapper select.customSelect {
-    width: 100%;
-    height: 40px;
-    cursor: pointer;
-    background-color: #fff;
-    box-shadow: 0 2px 0 #fff;
-    border-radius: 2px; }
+      margin-left: 10px;
+      margin-bottom: 0;
+      width: 85%; }
+      .filters-container .filter-wrapper ul.filter-options li {
+        display: inline-block;
+        text-transform: uppercase;
+        border: 1px solid #404040;
+        padding: 5px 12px;
+        margin: 0 5px;
+        cursor: pointer; }
+        .filters-container .filter-wrapper ul.filter-options li.active {
+          cursor: default; }
+    .filters-container .filter-wrapper select.customSelect {
+      width: 100%;
+      height: 40px;
+      cursor: pointer;
+      background-color: #fff;
+      box-shadow: 0 2px 0 #fff;
+      border-radius: 2px; }
 
 .grid {
   margin-left: -10px;

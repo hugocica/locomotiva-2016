@@ -65,4 +65,13 @@ jQuery(document).ready(function($) {
         },
         100
     );
+
+    // Blog filter
+    $('#filter-by-autor, #filter-by-category, #blog-order').change(function() {
+        BlogFilter(
+            $('#filter-by-autor'),
+            $('#filter-by-category'),
+            $('#blog-order')
+        );
+    });
 });
