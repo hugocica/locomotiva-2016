@@ -72,7 +72,7 @@ get_header(); ?>
 					$wp_query = new WP_Query( $args );
 
 					if( $wp_query->have_posts() ): ?>
-						<div class="grid"> <?php
+						<div class="grid" data-per-page="<?php $posts_per_page; ?>"> <?php
 						while ($wp_query->have_posts()) : $wp_query->the_post();
 
 							array_push( $not_in, get_the_ID() );

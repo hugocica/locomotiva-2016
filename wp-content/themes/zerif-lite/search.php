@@ -20,18 +20,26 @@ get_header(); ?>
 
 				<?php
 					$not_in = array();
+					$args = array(
+						's' => get_search_query(),
+						'post_type' => 'post',
+						'posts_per_page' => -1
+					);
+
+					$search_query = new WP_Query( $args );
+
 				?>
 
-				<?php if ( have_posts() ) : ?>
+				<?php if ( $search_query->have_posts() ) : ?>
 
 					<header class="page-header">
 
-						<h1 class="page-title"><?php printf( __( 'Search Results for: %s', 'zerif-lite' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
+						<h1 class="page-title"><?php printf( __( 'Mostrando resultados de busca para: %s', 'zerif-lite' ), '<span>' . get_search_query() . '</span>' ); ?></h1>
 
 					</header><!-- .page-header -->
 
 					<div class="grid"> <?php
-					while ( have_posts() ) : the_post();
+					while ( $search_query->have_posts() ) : $search_query->the_post();
 
 						array_push( $not_in, get_the_ID() );
 						get_template_part( 'content', get_post_format() );

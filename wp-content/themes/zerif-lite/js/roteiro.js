@@ -69,9 +69,9 @@ jQuery(document).ready(function($) {
     // Blog filter
     $('#filter-by-autor, #filter-by-category, #blog-order').change(function() {
         BlogFilter(
-            $('#filter-by-autor'),
-            $('#filter-by-category'),
-            $('#blog-order')
+            $('#filter-by-autor').val(),
+            $('#filter-by-category').val(),
+            $('#blog-order').val()
         );
     });
 });

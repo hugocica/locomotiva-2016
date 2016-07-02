@@ -12,7 +12,7 @@ function locomotiva_enqueue_scripts() {
     wp_enqueue_script('isotope', get_template_directory_uri() . '/js/isotope.pkgd.min.js', true);
     wp_enqueue_script('rougeanus', get_template_directory_uri() . '/js/rougeanus.js', true);
 
-    wp_enqueue_script( 'roteiro_ajax', get_template_directory_uri() . 'js/roteiro-ajax.js' );
+    wp_enqueue_script( 'roteiro_ajax', get_template_directory_uri() . '/js/roteiro-ajax.js' );
 	wp_localize_script( 'roteiro_ajax', 'RoteiroAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 
