@@ -25,7 +25,7 @@
 					);
 		$locosection_mb = new WPAlchemy_MetaBox(
 						array(
-							'id' => '_section_metabox ',
+							'id' => '_section_metabox',
 							'title' => 'Seções',
 							'types' => array('page'),
 							'context' => 'normal',

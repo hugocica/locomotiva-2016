@@ -68,7 +68,7 @@
 							<?php echo $section['title_big']; ?>
 						</h2>
 						<div class="section-content">
-							<?php echo $section ?>
+							<?php echo $section['content']; ?>
 						</div>
 					</div>
 				<?php }

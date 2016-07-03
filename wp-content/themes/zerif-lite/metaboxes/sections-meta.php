@@ -18,7 +18,7 @@
 
 		<p>
 			<?php $metabox->the_field('content'); ?>
-			<label for="<?php $metabox->the_name(); ?>">Conteúdo da Seçã</label>
+			<label for="<?php $metabox->the_name(); ?>">Conteúdo da Seção</label>
 			<div class="customEditor">
 				<textarea rows="10" cols="50" name="<?php $mb->the_name(); ?>" id="<?php $mb->the_name(); ?>"><?php $mb->the_value(); ?></textarea>
 			</div>
