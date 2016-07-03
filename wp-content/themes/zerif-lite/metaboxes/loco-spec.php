@@ -23,6 +23,16 @@
 							'template' => get_stylesheet_directory() . '/metaboxes/destaques-meta.php'
 						)
 					);
+		$locosection_mb = new WPAlchemy_MetaBox(
+						array(
+							'id' => '_section_metabox ',
+							'title' => 'Seções',
+							'types' => array('page'),
+							'context' => 'normal',
+							'priority' => 'high',
+							'template' => get_stylesheet_directory() . '/metaboxes/sections-meta.php'
+						)
+					);
 	} elseif ( $template_file == 'template-projetos.php' ) {
 		$projetos_mb = new WPAlchemy_MetaBox(
 							array(

@@ -9,6 +9,7 @@
 <?php
 	$locomodivos_config = get_post_meta( get_the_ID(), '_locomodivos_metabox', true );
 	$destaque_config = get_post_meta( get_the_ID(), '_empresa_metabox', true );
+	$sections_meta = get_post_meta( get_the_ID(), '_section_metabox', true );
 
 	$extensao_arr = explode( '.', '')
 ?>
@@ -49,17 +50,38 @@
 
 	<div class="container">
 		<?php
+		/*
 		if (have_posts()) :
 			while (have_posts()) : the_post();
 				the_content();
 			endwhile;
 		endif;
+		*/
+		?>
+
+		<?php
+			if ( !empty( $sections_meta ) ) {
+				foreach ( $sections_meta['section'] as $section ) { ?>
+					<div class="page-section clearfix">
+						<h2 class="section-title">
+							<span><?php echo $section['title_small']; ?></span>
+							<?php echo $section['title_big']; ?>
+						</h2>
+						<div class="section-content">
+							<?php echo $section ?>
+						</div>
+					</div>
+				<?php }
+			}
 		?>
 
 		<div class="members-list-container clearfix">
 			<?php
 				if ($locomodivos_config['show'] == 'Sim') { ?>
-					<h2 class="section-title"><span>Conheça nossos</span>Membros</h2>
+					<h2 class="section-title">
+						<span>Conheça nossos</span>
+						Membros
+					</h2>
 				<?php
 					$aux_padding = 0;
 					sort($locomodivos_config['locodivos']);
