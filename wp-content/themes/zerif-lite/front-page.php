@@ -105,6 +105,7 @@
 										<div class="loader"></div>
 										<input type="email" id="email">
 										<div class="indicator" data-content="Digite aqui seu e-mail"></div>
+										<button type="button" id="subscriber-btn"></button>
 									</form>
 								</div>
 							</div>
