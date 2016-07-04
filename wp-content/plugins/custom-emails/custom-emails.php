@@ -52,11 +52,11 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) :
 
 		<p style="text-transform: uppercase; font-size: 24px; color: #58595B; font-weight: 700; margin-bottom: 15px;"><span style="display: block; font-size: 14px; color: #939598;">Olá</span> <?php echo esc_html( $user_name ); ?>,</p>
 
-		<span style="width: 70px; height: 4px; background-color: #F27C3C; display: block; margin-bottom: 30px;"></span>
+		<span style="width: 70px; height: 4px; background-color: #F03F3D; display: block; margin-bottom: 30px;"></span>
 
 		<p style="font-size: 16px; color: #58595B; font-weight: 100;">Obrigado por se juntar ao <?php echo $blogname; ?>!</p>
 
-		<p style="font-size: 16px; color: #58595B; font-weight: 100;">O seu nome de usuário é <strong><?php echo esc_html( $user_login ); ?></strong> e, para definir sua senha, <a style="margin-top: 10px; padding: 8px 12px; background-color: #F27C3C; color: #fff; border-radius: 4px;" href="<?php echo get_permalink( get_page_by_path('redefinir-senha') ) . "?action=rp&key=".$key."&login=" . rawurlencode($user_login) ?>">Clique aqui</a>
+		<p style="font-size: 16px; color: #58595B; font-weight: 100;">O seu nome de usuário é <strong><?php echo esc_html( $user_login ); ?></strong> e, para definir sua senha, <a style="margin-top: 10px; padding: 8px 12px; background-color: #F03F3D; color: #fff; border-radius: 4px;" href="<?php echo get_permalink( get_page_by_path('redefinir-senha') ) . "?action=rp&key=".$key."&login=" . rawurlencode($user_login) ?>">Clique aqui</a>
 		</p>
 
 		<br><br>
@@ -85,7 +85,7 @@ if ( !function_exists('custom_change_password_email') ) {
 
 		<p style="text-transform: uppercase; font-size: 24px; color: #58595B; font-weight: 700; margin-bottom: 15px;"><span style="display: block; font-size: 14px; color: #939598;">Olá</span> ###USERNAME###,</p>
 
-		<span style="width: 70px; height: 4px; background-color: #F27C3C; display: block; margin-bottom: 30px;"></span>
+		<span style="width: 70px; height: 4px; background-color: #F03F3D; display: block; margin-bottom: 30px;"></span>
 
 		<p style="font-size: 16px; color: #58595B; font-weight: 100;">Este aviso confirma que a sua senha foi alterada em ###SITENAME###.</p>
 
@@ -119,7 +119,7 @@ if ( !function_exists('custom_change_email_email') ) {
 
 		<p style="text-transform: uppercase; font-size: 24px; color: #58595B; font-weight: 700; margin-bottom: 15px;"><span style="display: block; font-size: 14px; color: #939598;">Olá</span> ###USERNAME###,</p>
 
-		<span style="width: 70px; height: 4px; background-color: #F27C3C; display: block; margin-bottom: 30px;"></span>
+		<span style="width: 70px; height: 4px; background-color: #F03F3D; display: block; margin-bottom: 30px;"></span>
 
 		<p style="font-size: 16px; color: #58595B; font-weight: 100;">Este aviso confirma que o seu e-mail foi alterada em ###SITENAME###.</p>
 
@@ -163,13 +163,13 @@ if ( !function_exists('send_mails_on_publish') ) {
 		include( 'email_header.php' );
 		?>
 
-		<p style="text-transform: uppercase; font-size: 24px; color: #58595B; font-weight: 700; margin-bottom: 15px;"><span style="display: block; font-size: 14px; color: #939598;">Olá</span> Gestor!</p>
+		<p style="text-transform: uppercase; font-size: 24px; color: #58595B; font-weight: 700; margin-bottom: 15px;"><span style="display: block; font-size: 14px; color: #939598;"></span>Olá!</p>
 
-		<span style="width: 70px; height: 4px; background-color: #F27C3C; display: block; margin-bottom: 30px;"></span>
+		<span style="width: 70px; height: 4px; background-color: #F03F3D; display: block; margin-bottom: 30px;"></span>
 
-		<p style="font-size: 16px; color: #58595B; font-weight: 100;">Há um novo documento disponível para você: <strong><?php echo $post->post_title; ?></strong></p>
+		<p style="font-size: 16px; color: #58595B; font-weight: 100;">A Locomotiva preparou mais um conteúdo especialmente para você! O artigo <strong><?php echo $post->post_title; ?></strong> está disponível em nosso portal, você pode conferí-lo quando quiser.</p>
 
-		<p style="font-size: 16px; color: #58595B; font-weight: 100;">Para ter acesso a este e mais documentos, <a href="<?php echo get_permalink( get_page_by_path( 'espaco-do-gestor' ) ); ?>">clique aqui!</a></p>
+		<p style="font-size: 16px; color: #58595B; font-weight: 100;">Para ter acesso a este e mais outros artigos, <a href="<?php echo get_permalink( get_page_by_path( 'blog' ) ); ?>">clique aqui!</a></p>
 
 		<?php
 		include( 'email_footer.php' );
