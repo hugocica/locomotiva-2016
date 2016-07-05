@@ -461,11 +461,12 @@ footer#footer {
         #home-content #newsletter-section .newsletter-red-box .subscriber-form input.full:focus + .indicator {
           height: 5px;
           color: #e74c3c; }
-      #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus {
-        color: white; }
-        #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus + .indicator {
+      #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus, #home-content #newsletter-section .newsletter-red-box .subscriber-form input.not-empty {
+        color: white;
+        cursor: text; }
+        #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus + .indicator, #home-content #newsletter-section .newsletter-red-box .subscriber-form input.not-empty + .indicator {
           height: 100%; }
-          #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus + .indicator:after {
+          #home-content #newsletter-section .newsletter-red-box .subscriber-form input:focus + .indicator:after, #home-content #newsletter-section .newsletter-red-box .subscriber-form input.not-empty + .indicator:after {
             color: #e74c3c; }
     #home-content #newsletter-section .newsletter-red-box .subscriber-form .indicator {
       position: absolute;

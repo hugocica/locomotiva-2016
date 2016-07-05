@@ -602,8 +602,9 @@ footer {
 						}
 					}
 
-					&:focus {
+					&:focus, &.not-empty {
 						color: white;
+						cursor: text;
 
 						+ .indicator {
 							height: 100%;

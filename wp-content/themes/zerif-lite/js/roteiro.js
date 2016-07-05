@@ -51,6 +51,22 @@ jQuery(document).ready(function($) {
         }
     });
 
+    // subscriber function
+    $('#subscriber-email').keypress(function(e) {
+        if ( e.which == 13 ) {
+            SubscriberMail( $(this).val() );
+        }
+
+        if ( $(this).val().length == 0 ) {
+            $(this).removeClass('not-empty');
+        } else {
+            $(this).addClass('not-empty');
+        }
+    });
+    $('#subscriber-btn').click(function() {
+        SubscriberMail( $('#subscriber-email').val() );
+    });
+
     // blog listing with isotope.js
     $('.grid').isotope({
         itemSelector: '.grid-item',

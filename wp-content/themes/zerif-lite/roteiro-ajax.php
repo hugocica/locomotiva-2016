@@ -36,4 +36,29 @@ function display_cards( $args ) {
     die();
 }
 
+add_action( 'wp_ajax_add_subscriber', 'add_subscriber' );
+add_action( 'wp_ajax_nopriv_add_subscriber', 'add_subscriber' );
+
+function add_subscriber() {
+    global $wpdb;
+    $email = trim( $_POST['email'] );
+
+    if ( !empty($email) ) {
+        $wpdb->insert(
+            'wp_subscribers',
+            array(
+                'email' => $email
+            )
+        );
+
+        $results['type'] = 'success';
+    } else {
+        $results['type'] = 'E-mail em branco';
+    }
+
+    echo json_encode( $results );
+
+    die();
+}
+
 ?>

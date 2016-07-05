@@ -101,12 +101,12 @@
 							<div class="newsletter-red-box col-lg-6 col-md-6">
 								<div class="left-box">
 									<p>CADASTRE SEU E-MAIL<br>E MANTENHA-SE ATUALIZADO</p>
-									<form class="subscriber-form" method="post">
+									<div class="subscriber-form">
 										<div class="loader"></div>
-										<input type="email" id="email">
+										<input type="email" id="subscriber-email">
 										<div class="indicator" data-content="Digite aqui seu e-mail"></div>
 										<button type="button" id="subscriber-btn"></button>
-									</form>
+									</div>
 								</div>
 							</div>
 						</section>
@@ -171,31 +171,5 @@
 	</div><!-- #primary -->
 
 <div id="fb-root"></div>
-
-<script>
-	// (function () {
-	// 	var content, form, indicator, input, loader;
-	// 	input = document.querySelector('input');
-	// 	form = document.querySelector('form');
-	// 	indicator = document.querySelector('.indicator');
-	// 	loader = document.querySelector('.loader');
-	// 	content = input.value;
-	// 	form.addEventListener('submit', function (e) {
-	// 		e.preventDefault();
-	// 		indicator.setAttribute('data-content', 'Saving...');
-	// 		loader.classList.add('full');
-	// 		return setTimeout(function () {
-	// 			indicator.setAttribute('data-content', 'You\'ve been subscribed!');
-	// 			loader.classList.add('done');
-	// 			input.classList.add('full');
-	// 			return input.value('');
-	// 		}, 3000);
-	// 	});
-	// 	input.addEventListener('input', function () {
-	// 		return indicator.setAttribute('data-content', 'Now hit enter!');
-	// 	});
-	// 	balapaCop('Subscribe Form Interaction', '#999');
-	// }.call(this));
-</script>
 
 <?php get_footer(); ?>

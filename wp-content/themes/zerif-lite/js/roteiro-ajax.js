@@ -22,7 +22,31 @@ function BlogFilter( $author, $category, $order ) {
             jQuery(window).resize();
         },
         complete: function() {
+        }
+    });
+}
 
+function SubscriberMail( $email ) {
+    var params = 'action=add_subscriber';
+    params += '&email=' + $email;
+
+    jQuery.ajax({
+        dataType: 'json',
+        method: 'POST',
+        url: RoteiroAjax.ajaxurl,
+        data: params,
+        beforeSend: function() {
+            jQuery('.subscriber-form').hide();
+            jQuery('.subscriber-form').after('<div class="loading"><img src="'+ templateDir +'/images/icons/movie_countdown.gif" alt="loading gif" title="loading gif" /></div>');
+        },
+        success: function( data ) {
+            jQuery('.loading').remove();
+
+            if ( data.type == 'success' ) {
+                jQuery('.subscriber-form').after('<div><p>Seu e-mail foi cadastrado com sucesso! <br> Agora você ficará nos trilhos com as novidades da Locomotiva!</p></div>');
+            } else {
+                jQuery('.subscriber-form').show();
+            }
         }
     });
 }
