@@ -52,15 +52,16 @@ jQuery(document).ready(function($) {
     });
 
     // subscriber function
-    $('#subscriber-email').keypress(function(e) {
-        if ( e.which == 13 ) {
-            SubscriberMail( $(this).val() );
-        }
-
+    $('#subscriber-email').blur(function() {
         if ( $(this).val().length == 0 ) {
             $(this).removeClass('not-empty');
         } else {
             $(this).addClass('not-empty');
+        }
+    });
+    $('#subscriber-email').keypress(function(e) {
+        if ( e.which == 13 ) {
+            SubscriberMail( $(this).val() );
         }
     });
     $('#subscriber-btn').click(function() {
